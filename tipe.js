@@ -1,7 +1,8 @@
 class TipeProperty {
-    constructor(name, tipe) {
+    constructor(name, inTipe, outTipe) {
         this.name = name;
-        this.tipe = tipe;
+        this.inTipe = inTipe;
+        this.outTipe = outTipe;
     }
 }
 
@@ -9,10 +10,10 @@ class Tipe {
     static name = 'top';
     static properties = {};
     static new() { console.log('unimplemented!') }
-    static draw() { console.log('draw unimplemented for ' + name); }
-    static drawShadow() { console.log('draw unimplemented for ' + name); }
+    static draw(centerX, centerY, tipe) { console.log('draw unimplemented for ' + name); }
+    static drawShadow(centerX, centerY) { console.log('drawShadow unimplemented for ' + name); }
 
-    static defaultFactory(tipe) {
+    static newFactory(tipe) {
         return function(defaults={}) {
             let out = { tipe: tipe };
             for (const key in tipe.properties) {
@@ -50,33 +51,34 @@ class TextTipe extends Tipe {
 class ColorTipe extends Tipe {
     static name = 'Color';
     static properties = {
-        green: new TipeProperty('green', NumberTipe),
-        blue: new TipeProperty('blue', NumberTipe),
-        red: new TipeProperty('red', NumberTipe),
+        green: new TipeProperty('green', ColorTipe, NumberTipe),
+        blue: new TipeProperty('blue', ColorTipe, NumberTipe),
+        red: new TipeProperty('red', ColorTipe, NumberTipe),
     }
-    static new = Tipe.defaultFactory(ColorTipe);
+    static new = Tipe.newFactory(ColorTipe);
 }
 
 class IDCardTipe extends Tipe {
     static name = 'IDCard';
     static properties = {
-        name: new TipeProperty('name', TextTipe),
-        age: new TipeProperty('age', NumberTipe),
-        eyes: new TipeProperty('eyes', ColorTipe),
+        name: new TipeProperty('name', IDCardTipe, TextTipe),
+        age: new TipeProperty('age', IDCardTipe, NumberTipe),
+        eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
     }
-    static new = Tipe.defaultFactory(IDCardTipe);
+    static new = Tipe.newFactory(IDCardTipe);
 }
 
 class BallTipe extends Tipe {
     static name = 'Ball';
     static properties = {
-        size: new TipeProperty('size', NumberTipe),
-        color: new TipeProperty('color', ColorTipe),
+        size: new TipeProperty('size', BallTipe, NumberTipe),
+        color: new TipeProperty('color', BallTipe, ColorTipe),
     }
-    static new = Tipe.defaultFactory(BallTipe);
+    static new = Tipe.newFactory(BallTipe);
 
-    static drawShadow(centerX, centerY, radius) {
+    static drawShadow(centerX, centerY) {
         push();
+        const radius = Machine.width / 4;
         const deviation = PI * 0.15;
         fill(150);
         translate(centerX, centerY - radius * sin(deviation));

@@ -4,13 +4,19 @@ class Editor {
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
 
+    get pipeTipeChecks() { return true; }
+
+    get pipelineHeight() {
+        return this.pipeline.reduce((sum, pipe) => sum + pipe.height + Pipe.height, Pipe.height);
+    }
+
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
 
-        this.pipeline = [new Pipe(Editor.darkMargin, 100, true, false)];
+        this.pipeline = [];
     }
 
     draw() {
@@ -23,48 +29,51 @@ class Editor {
         fill(66);
         rect(0, 0, this.width, Editor.darkMargin);
 
+        // set new baseline
+        translate(0, Editor.darkMargin);
+
         if (Pipe.mainWidth) {
             fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, Editor.darkMargin - 10, Pipe.innerWidth, 10)
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
         }
 
-        let bottomStart = Editor.darkMargin + this.pipelineHeight;
         this.renderPipeline();
 
+        const pHeight = this.pipelineHeight;
         fill(66);
-        rect(0, bottomStart, this.width, this.height - bottomStart);
+        rect(0, pHeight, this.width, this.height - pHeight);
         
         if (Pipe.mainWidth) {
             fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomStart, Pipe.innerWidth, 10);
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, pHeight, Pipe.innerWidth, 10);
         }
         pop();
     }
 
     renderPipeline() {
-        let machines = this.pipeline.reduce(function(list, item) {
-            if (item instanceof Machine) {
-                list.push(item);
-            } else {
-                item.draw();
-            }
-            return list;
-        }, []);
+        push();
+        translate(Editor.pipeGutterSize, 0);
+        new Pipe(true, false).draw();
+        translate(-Editor.pipeIndent, Pipe.height);
+        this.pipeline.forEach((machine, i) => {
+            // draw botttom pipe
+            let height = machine.height;
+            translate(Editor.pipeIndent, height);
+            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw();
 
-        machines.forEach(mach => mach.draw());
+            // draw machine
+            translate(-Editor.pipeIndent, -height);
+            machine.draw();
+            translate(0, height + Pipe.height);
+        });
+        pop();
     }
 
     checkHighlight() {
-        this.pipeline.forEach(pipe => pipe.testHighlight(mouseX - this.x, mouseY - this.y));
-    }
-
-    get pipelineHeight() {
-        return this.pipeline.reduce((sum, pipe) => sum + pipe.height, 0);
+        // check regions for adding machines
     }
 
     pushMachine(machine) {
         this.pipeline.push(machine);
-        let pipeIsDone = false;
-        this.pipeline.push(new Pipe(Editor.darkMargin + 200, 100, false, pipeIsDone));
     }
 }

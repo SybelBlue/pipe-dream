@@ -3,13 +3,12 @@ class Pipe {
     static mainWidth = 140;
     static edgeWidth = 6;
     static innerWidth = Pipe.mainWidth - 2 * Pipe.edgeWidth;
+    static height = 100;
 
     static get edgeColor() { return color(240); }
     static get innerColor() { return color(240 * .2 + 66 * (1.0 - .2)); }
 
-    constructor(y, height, drawTop, drawBottom) {
-        this.y = y;
-        this.height = height;
+    constructor(drawTop, drawBottom) {
         this.drawTop = drawTop;
         this.drawBottom = drawBottom;
     }
@@ -25,28 +24,28 @@ class Pipe {
         }
 
         // center the coordinate system on upper left corner (w/o lip)
-        translate(Editor.pipeGutterSize, this.y);
+        // translate(Editor.pipeGutterSize, this.y);
 
         // interior color
         fill(Pipe.innerColor);
-        rect(0, 0, Pipe.mainWidth, this.height);
+        rect(0, 0, Pipe.mainWidth, Pipe.height);
         
 
         fill(Pipe.edgeColor);
 
-        const topOfBottomLip = this.height - Pipe.lipHeight;
+        const topOfBottomLip = Pipe.height - Pipe.lipHeight;
 
         // left half
         beginShape();
         vertex(Pipe.edgeWidth, 0);
-        vertex(Pipe.edgeWidth, this.height);
+        vertex(Pipe.edgeWidth, Pipe.height);
         // bottom lip
         if (this.drawBottom) {
-            vertex(-Pipe.edgeWidth, this.height);
+            vertex(-Pipe.edgeWidth, Pipe.height);
             vertex(-Pipe.edgeWidth, topOfBottomLip);
             vertex(0, topOfBottomLip);
         } else {
-            vertex(0, this.height);
+            vertex(0, Pipe.height);
         }
         // upper lip
         if (this.drawTop) {
@@ -64,14 +63,14 @@ class Pipe {
 
         beginShape();
         vertex(-Pipe.edgeWidth, 0);
-        vertex(-Pipe.edgeWidth, this.height);
+        vertex(-Pipe.edgeWidth, Pipe.height);
         // bottom lip
         if (this.drawBottom) {
-            vertex(Pipe.edgeWidth, this.height);
+            vertex(Pipe.edgeWidth, Pipe.height);
             vertex(Pipe.edgeWidth, topOfBottomLip);
             vertex(0, topOfBottomLip);
         } else {
-            vertex(0, this.height);
+            vertex(0, Pipe.height);
         }
         // upper lip
         if (this.drawTop) {
@@ -88,7 +87,7 @@ class Pipe {
 
     testHighlight(x, y) {
         this.highlighting =
-            Editor.pipeGutterSize <= x && x <= Editor.pipeGutterSize + Pipe.mainWidth &&
-            this.y <= y && y <= this.y + this.height;
+            0 <= x && x <= Pipe.mainWidth &&
+            0 <= y && y <= Pipe.height;
     }
 }

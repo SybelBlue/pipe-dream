@@ -2,9 +2,11 @@ class Machine extends PipelineObject {
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static get textColor() { return color(11); }
 
-    constructor(y, height, bodyColor, text) {
-        super(y, height);
-        
+    get height() { return 100; }
+
+    constructor(bodyColor, text) {
+        super();
+
         this.color = bodyColor;
         this.text = text;
         this.drawShadow = true;
@@ -12,8 +14,6 @@ class Machine extends PipelineObject {
 
     draw() {
         push();
-        translate(Editor.gutterSize, this.y);
-
         if (this.highlighting) {
             stroke(0);
         } else {
@@ -32,7 +32,7 @@ class Machine extends PipelineObject {
 
         if (this.drawShadow) {
             // draw shadow output
-            BallTipe.drawShadow(2 * radius, this.height, radius);
+            BallTipe.drawShadow(2 * radius, this.height);
         }
 
         BallTipe.draw(2 * radius, this.height + radius, { radius: radius, color: {red: 200, green: 20, blue: 0}});
@@ -41,7 +41,7 @@ class Machine extends PipelineObject {
 
     testHighlight(x, y) {
         this.highlighting =
-            Editor.gutterSize <= x && x <= Editor.gutterSize + Machine.width &&
-            this.y <= y && y <= this.y + this.height;
+            0 <= x && x <= Machine.width &&
+            0 <= y && y <= this.height;
     }
 }
