@@ -36,6 +36,27 @@ class NumberTipe extends Tipe {
     static basic = true;
     static isNumberTipe = true;
     static new() { return 0; }
+    static shadowTextWidth = null;
+    static shadowText = '#';
+
+    static drawShadow() {
+        NumberTipe.draw(this.shadowText);
+    }
+
+    static draw(num) {
+        if (num > 9999) {
+            num = 'Big#';
+        }
+        push();
+        textSize(45);
+        // textFont('Georgia');
+        if (!NumberTipe.shadowTextWidth) {
+            NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
+        }
+        fill(30, 30, 30)
+        text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, 0);
+        pop();
+    }
 }
 
 class TextTipe extends Tipe {
@@ -76,19 +97,21 @@ class BallTipe extends Tipe {
     }
     static new = Tipe.newFactory(BallTipe);
 
+    // expects top center
     static drawShadow() {
         push();
         const radius = Machine.width / 4;
         const deviation = PI * 0.15;
         fill(150);
-        translate(0, -radius * sin(deviation));
-        arc(0, 0, 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
+        arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
         pop();
     }
     
+    // expects middle center
     static draw(ball) {
         push();
         let color = ball.color;
+        stroke(66);
         fill(color.red, color.green, color.blue);
         circle(0, 0, ball.radius * 2);
         pop();

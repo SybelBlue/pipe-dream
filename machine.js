@@ -37,7 +37,8 @@ class Machine extends PipelineObject {
         }
 
         translate(0, radius);
-        BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
+        NumberTipe.draw(80000)
+        // BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
         pop();
     }
 
