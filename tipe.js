@@ -10,8 +10,8 @@ class Tipe {
     static name = 'top';
     static properties = {};
     static new() { console.log('unimplemented!') }
-    static draw(centerX, centerY, tipe) { console.log('draw unimplemented for ' + name); }
-    static drawShadow(centerX, centerY) { console.log('drawShadow unimplemented for ' + name); }
+    static draw(tipe) { console.log('draw unimplemented for ' + name); }
+    static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
 
     static newFactory(tipe) {
         return function(defaults={}) {
@@ -76,21 +76,21 @@ class BallTipe extends Tipe {
     }
     static new = Tipe.newFactory(BallTipe);
 
-    static drawShadow(centerX, centerY) {
+    static drawShadow() {
         push();
         const radius = Machine.width / 4;
         const deviation = PI * 0.15;
         fill(150);
-        translate(centerX, centerY - radius * sin(deviation));
+        translate(0, -radius * sin(deviation));
         arc(0, 0, 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
         pop();
     }
     
-    static draw(centerX, centerY, ball) {
+    static draw(ball) {
         push();
         let color = ball.color;
         fill(color.red, color.green, color.blue);
-        circle(centerX, centerY, ball.radius * 2);
+        circle(0, 0, ball.radius * 2);
         pop();
     }
 }

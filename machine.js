@@ -2,7 +2,7 @@ class Machine extends PipelineObject {
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static get textColor() { return color(11); }
 
-    get height() { return 100; }
+    get height() { return 100; } // must always be accurate!
 
     constructor(bodyColor, text) {
         super();
@@ -30,12 +30,14 @@ class Machine extends PipelineObject {
 
         const radius = Machine.width / 4;
 
+        translate(2 * radius, this.height);
         if (this.drawShadow) {
             // draw shadow output
-            BallTipe.drawShadow(2 * radius, this.height);
+            BallTipe.drawShadow();
         }
 
-        BallTipe.draw(2 * radius, this.height + radius, { radius: radius, color: {red: 200, green: 20, blue: 0}});
+        translate(0, radius);
+        BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
         pop();
     }
 
