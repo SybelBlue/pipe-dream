@@ -35,7 +35,6 @@ class Machine extends PipelineObject {
         Renderer.translate(2 * radius, this.height);
         if (this.drawShadow) {
             // draw shadow output
-            BallTipe.drawShadow();
         }
 
         Renderer.translate(0, radius);
@@ -43,7 +42,7 @@ class Machine extends PipelineObject {
         // NumberTipe.drawShadow()
         // TextTipe.draw('Hi there!!');
         TextTipe.drawShadow();
-        // BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
+        BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
         Renderer.pop(this);
     }
 

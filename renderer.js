@@ -33,6 +33,10 @@ class Renderer {
         Renderer.translationStack = [(Renderer.stackTop = new TranslationNode(null, 'Renderer Head', 0, 0))];
     }
 
+    static get yTranslation() { return this.stackTop.y; }
+
+    static get xTranslation() { return this.stackTop.x; }
+
     static translate(x, y) {
         this.stackTop.x += x;
         this.stackTop.y += y;
@@ -41,7 +45,7 @@ class Renderer {
     static push(source) {
         if (source == null) throw new Error('null source!');
 
-        const node = new TranslationNode(this.stackTop, source, this.stackTop.x, this.stackTop.y);
+        const node = new TranslationNode(this.stackTop, source, this.xTranslation, this.yTranslation);
         Renderer.translationStack.push(node);
         Renderer.stackTop = node;
     }
@@ -53,7 +57,7 @@ class Renderer {
     }
     
     static renderObject(layer, drawCallback) {
-        const renderable = new Renderable(drawCallback, layer, this.stackTop.x, this.stackTop.y);
+        const renderable = new Renderable(drawCallback, layer, this.xTranslation, this.yTranslation);
         for (let i = 0; i < this.toRender.length; i++) {
             const element = this.toRender[i];
             if (element.layer > layer) {
