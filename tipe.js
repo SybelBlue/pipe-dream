@@ -49,7 +49,7 @@ class NumberTipe extends Tipe {
         }
         push();
         textSize(45);
-        // textFont('Georgia');
+        textFont('Georgia');
         if (!NumberTipe.shadowTextWidth) {
             NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
         }
@@ -66,6 +66,27 @@ class TextTipe extends Tipe {
         let obj = new String();
         obj.tipe = TextTipe;
         return obj;
+    }
+    static shadowTextWidth = null;
+    static shadowText = 'text';
+
+    static drawShadow() {
+        TextTipe.draw(this.shadowText);
+    }
+
+    static draw(str) {
+        if (str.length > 10) {
+            str = str.substring(0, 7) + '...';
+        }
+        push();
+        textSize(20);
+        textFont('Courier New');
+        if (!TextTipe.shadowTextWidth) {
+            TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
+        }
+        fill(30, 30, 30)
+        text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, 0);
+        pop();
     }
 }
 
