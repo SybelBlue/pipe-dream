@@ -47,15 +47,15 @@ class NumberTipe extends Tipe {
         if (num > 9999) {
             num = 'Big#';
         }
-        push();
-        textSize(45);
-        textFont('Georgia');
-        if (!NumberTipe.shadowTextWidth) {
-            NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
-        }
-        fill(30, 30, 30)
-        text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, 0);
-        pop();
+        Renderer.renderObject(Layers.Data, () => {
+            textSize(45);
+            textFont('Georgia');
+            if (!NumberTipe.shadowTextWidth) {
+                NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
+            }
+            fill(30, 30, 30)
+            text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, -textAscent() * 0.7);
+        });
     }
 }
 
@@ -78,15 +78,15 @@ class TextTipe extends Tipe {
         if (str.length > 10) {
             str = str.substring(0, 7) + '...';
         }
-        push();
-        textSize(20);
-        textFont('Courier New');
-        if (!TextTipe.shadowTextWidth) {
-            TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
-        }
-        fill(30, 30, 30)
-        text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, 0);
-        pop();
+        Renderer.renderObject(Layers.Data, () => {
+            textSize(20);
+            textFont('Courier New');
+            if (!TextTipe.shadowTextWidth) {
+                TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
+            }
+            fill(30, 30, 30)
+            text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, 0);
+        });
     }
 }
 

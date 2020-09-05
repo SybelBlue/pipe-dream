@@ -9,6 +9,7 @@ function setup() {
 
 function draw() {
     model.editor.draw();
+
     Renderer.renderAll();
     Renderer.clearStack();
 }
