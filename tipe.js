@@ -10,7 +10,9 @@ class Tipe {
     static name = 'top';
     static properties = {};
     static new() { console.log('unimplemented!') }
+    // provide middle top
     static draw(tipe) { console.log('draw unimplemented for ' + name); }
+    // provide middle top
     static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
 
     static newFactory(tipe) {
@@ -40,21 +42,21 @@ class NumberTipe extends Tipe {
     static shadowText = '#';
 
     static drawShadow() {
-        NumberTipe.draw(this.shadowText);
+        NumberTipe.draw(this.shadowText, Layers.Shadow);
     }
 
-    static draw(num) {
+    static draw(num, layer=Layers.Data) {
         if (num > 9999) {
             num = 'Big#';
         }
-        Renderer.renderObject(Layers.Data, () => {
+        Renderer.renderObject(layer, () => {
             textSize(45);
             textFont('Georgia');
             if (!NumberTipe.shadowTextWidth) {
                 NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
             }
             fill(30, 30, 30)
-            text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, -textAscent() * 0.7);
+            text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, textAscent() * 0.7);
         });
     }
 }
@@ -71,25 +73,26 @@ class TextTipe extends Tipe {
     static shadowText = 'text';
 
     static drawShadow() {
-        TextTipe.draw(this.shadowText);
+        TextTipe.draw(this.shadowText, Layers.Shadow);
     }
 
-    static draw(str) {
+    static draw(str, layer=Layers.Data) {
         if (str.length > 10) {
             str = str.substring(0, 7) + '...';
         }
-        Renderer.renderObject(Layers.Data, () => {
+        Renderer.renderObject(layer, () => {
             textSize(20);
             textFont('Courier New');
             if (!TextTipe.shadowTextWidth) {
                 TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
             }
             fill(30, 30, 30)
-            text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, 0);
+            text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, textAscent() * 0.7);
         });
     }
 }
 
+// maybe this should be an enumeration
 class ColorTipe extends Tipe {
     static name = 'Color';
     static properties = {
@@ -98,6 +101,19 @@ class ColorTipe extends Tipe {
         red: new TipeProperty('red', ColorTipe, NumberTipe),
     }
     static new = Tipe.newFactory(ColorTipe);
+    static asP5Color(c) { return color(c.red, c.green, c.blue); }
+
+    static drawShadow() {
+        ColorTipe.draw({red: 20, green: 20, blue: 200}, Layers.Shadow);
+    }
+
+    static draw(color, layer=Layers.Data) {
+        Renderer.renderObject(layer, () => {
+            fill(ColorTipe.asP5Color(color));
+            stroke(10);
+            rect(-Pipe.mainWidth/3, 0, 2 * Pipe.mainWidth/3, Pipe.mainWidth/4);
+        })
+    }
 }
 
 class IDCardTipe extends Tipe {
@@ -128,13 +144,12 @@ class BallTipe extends Tipe {
         });
     }
     
-    // expects middle center
     static draw(ball) {
         Renderer.renderObject(Layers.Data, () => {
             let color = ball.color;
             stroke(66);
-            fill(color.red, color.green, color.blue);
-            circle(0, 0, ball.radius * 2);
+            fill(ColorTipe.asP5Color(color));
+            circle(0, ball.radius, ball.radius * 2);
         });
     }
 }
