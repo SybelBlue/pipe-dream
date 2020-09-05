@@ -120,21 +120,21 @@ class BallTipe extends Tipe {
 
     // expects top center
     static drawShadow() {
-        push();
-        const radius = Machine.width / 4;
-        const deviation = PI * 0.15;
-        fill(150);
-        arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
-        pop();
+        Renderer.renderObject(Layers.Shadow, function() {
+            const radius = Machine.width / 4;
+            const deviation = PI * 0.15;
+            fill(150);
+            arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
+        });
     }
     
     // expects middle center
     static draw(ball) {
-        push();
-        let color = ball.color;
-        stroke(66);
-        fill(color.red, color.green, color.blue);
-        circle(0, 0, ball.radius * 2);
-        pop();
+        Renderer.renderObject(Layers.Data, () => {
+            let color = ball.color;
+            stroke(66);
+            fill(color.red, color.green, color.blue);
+            circle(0, 0, ball.radius * 2);
+        });
     }
 }

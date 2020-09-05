@@ -13,36 +13,38 @@ class Machine extends PipelineObject {
     }
 
     draw() {
-        push();
-        if (this.highlighting) {
-            stroke(0);
-        } else {
-            noStroke();
-        }
-        fill(this.color);
-        rect(0, 0, Machine.width, this.height, 10, 10, 10, 0);
+        Renderer.push(this);
+        Renderer.renderObject(Layers.Machine, () => {
+            if (this.highlighting) {
+                stroke(0);
+            } else {
+                noStroke();
+            }
+            fill(this.color);
+            rect(0, 0, Machine.width, this.height, 10, 10, 10, 0);
 
-        if (this.highlighting) noStroke();
-        textSize(16);
-        textFont('Georgia');
-        fill(Machine.textColor);
-        text(this.text, 10, 30);
+            if (this.highlighting) noStroke();
+            textSize(16);
+            textFont('Georgia');
+            fill(Machine.textColor);
+            text(this.text, 10, 30);
+        });
 
         const radius = Machine.width / 4;
 
-        translate(2 * radius, this.height);
+        Renderer.translate(2 * radius, this.height);
         if (this.drawShadow) {
             // draw shadow output
             BallTipe.drawShadow();
         }
 
-        translate(0, radius);
+        Renderer.translate(0, radius);
         // NumberTipe.draw(8000)
         // NumberTipe.drawShadow()
         // TextTipe.draw('Hi there!!');
         TextTipe.drawShadow();
         // BallTipe.draw({ radius: radius, color: {red: 200, green: 20, blue: 0}});
-        pop();
+        Renderer.pop(this);
     }
 
     testHighlight(x, y) {

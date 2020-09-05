@@ -20,53 +20,58 @@ class Editor {
     }
 
     draw() {
-        push();
-        translate(this.x, this.y);
-        noStroke();
-        fill(100);
-        rect(0, 0, this.width, this.height);
+        Renderer.push(this);
+        Renderer.translate(this.x, this.y);
+        Renderer.renderObject(Layers.Background, () => {
+            noStroke();
+            fill(100);
+            rect(0, 0, this.width, this.height);
 
-        fill(66);
-        rect(0, 0, this.width, Editor.darkMargin);
+            fill(66);
+            rect(0, 0, this.width, Editor.darkMargin);
+        });
 
         // set new baseline
-        translate(0, Editor.darkMargin);
+        Renderer.translate(0, Editor.darkMargin);
+
 
         if (Pipe.mainWidth) {
-            fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+            Renderer.renderObject(Layers.Background, () => {
+                fill(20);
+                rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+            });
         }
 
         this.renderPipeline();
 
-        const pHeight = this.pipelineHeight;
-        fill(66);
-        rect(0, pHeight, this.width, this.height - pHeight);
-        
-        if (Pipe.mainWidth) {
-            fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, pHeight, Pipe.innerWidth, 10);
-        }
-        pop();
+        Renderer.renderObject(Layers.Background, () => {
+            const pHeight = this.pipelineHeight;
+            fill(66);
+            rect(0, pHeight, this.width, this.height - pHeight);
+            
+            if (Pipe.mainWidth) {
+                fill(20);
+                rect(Editor.pipeGutterSize + Pipe.edgeWidth, pHeight, Pipe.innerWidth, 10);
+            }
+        });
+        Renderer.pop(this);
     }
 
     renderPipeline() {
-        push();
-        translate(Editor.pipeGutterSize, 0);
+        Renderer.push(this);
+        
+        Renderer.translate(Editor.pipeGutterSize, 0);
         new Pipe(true, false).draw();
-        translate(-Editor.pipeIndent, Pipe.height);
-        this.pipeline.forEach((machine, i) => {
-            // draw botttom pipe
-            let height = machine.height;
-            translate(Editor.pipeIndent, height);
-            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw();
 
-            // draw machine
-            translate(-Editor.pipeIndent, -height);
+        Renderer.translate(-Editor.pipeIndent, Pipe.height);
+        this.pipeline.forEach((machine, i) => {
             machine.draw();
-            translate(0, height + Pipe.height);
+            Renderer.translate(Editor.pipeIndent, machine.height);
+            
+            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw()
+            Renderer.translate(-Editor.pipeIndent, Pipe.height);
         });
-        pop();
+        Renderer.pop(this);
     }
 
     checkHighlight() {
