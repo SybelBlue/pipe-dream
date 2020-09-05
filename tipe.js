@@ -31,6 +31,20 @@ class Tipe {
         }
         return value.tipe;
     }
+
+    static Stream(tipe) {
+        return class InnerTipe extends Tipe {
+            static name = `Stream<${tipe.name}>`
+            static innerTipe = tipe;
+            static basic = true;
+            static isStreamTipe = true;
+            static new() { 
+                const out = [];
+                out.tipe = InnerTipe;
+                return out;
+            }
+        }
+    }
 }
 
 class NumberTipe extends Tipe {
@@ -42,7 +56,10 @@ class NumberTipe extends Tipe {
     static shadowText = '#';
 
     static drawShadow() {
+        Renderer.push(this);
+        Renderer.translate(0, -textAscent()*0.5);
         NumberTipe.draw(this.shadowText, Layers.Shadow);
+        Renderer.pop(this);
     }
 
     static draw(num, layer=Layers.Data) {

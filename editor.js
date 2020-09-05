@@ -10,7 +10,8 @@ class Editor {
         return this.pipeline.reduce((sum, pipe) => sum + pipe.height + Pipe.height, Pipe.height);
     }
 
-    constructor(x, y, width, height) {
+    constructor(startingTipe, x, y, width, height) {
+        this.startingTipe = startingTipe;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -34,13 +35,10 @@ class Editor {
         // set new baseline
         Renderer.translate(0, Editor.darkMargin);
 
-
-        if (Pipe.mainWidth) {
-            Renderer.renderObject(Layers.Background, () => {
-                fill(20);
-                rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
-            });
-        }
+        Renderer.renderObject(Layers.Background, () => {
+            fill(20);
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+        });
 
         this.renderPipeline();
 
@@ -61,16 +59,18 @@ class Editor {
         Renderer.push(this);
         
         Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(true, false).draw();
+        new Pipe(true, false).draw(this.startingTipe);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
-        this.pipeline.forEach((machine, i) => {
+        for (let i = 0; i < this.pipeline.length; i++) {
+            const machine = this.pipeline[i];
+
             machine.draw();
             Renderer.translate(Editor.pipeIndent, machine.height);
             
-            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw()
+            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw(machine.outputTipe)
             Renderer.translate(-Editor.pipeIndent, Pipe.height);
-        });
+        }
         Renderer.pop(this);
     }
 

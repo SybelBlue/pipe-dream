@@ -2,14 +2,15 @@ class Machine extends PipelineObject {
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static get textColor() { return color(11); }
 
-    get height() { return 100; } // must always be accurate!
+    height = 100;
+
+    get outputTipe() { return BallTipe; }
 
     constructor(bodyColor, text) {
         super();
 
         this.color = bodyColor;
         this.text = text;
-        this.drawShadow = true;
     }
 
     draw() {
@@ -33,17 +34,6 @@ class Machine extends PipelineObject {
         const radius = Machine.width / 4;
 
         Renderer.translate(2 * radius, this.height);
-        if (this.drawShadow) {
-            // draw shadow output
-        }
-
-        // NumberTipe.draw(8000)
-        // NumberTipe.drawShadow()
-        // TextTipe.draw('Hi there!!');
-        // TextTipe.drawShadow();
-        BallTipe.draw({ radius: radius / 2, color: {red: 200, green: 20, blue: 0}});
-        BallTipe.drawShadow();
-        // ColorTipe.drawShadow();
         Renderer.pop(this);
     }
 
@@ -52,4 +42,8 @@ class Machine extends PipelineObject {
             0 <= x && x <= Machine.width &&
             0 <= y && y <= this.height;
     }
+}
+
+class MapMachine extends Machine {
+    // constructor
 }

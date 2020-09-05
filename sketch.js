@@ -2,7 +2,7 @@ const model = {};
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    model.editor = new Editor(0, 0, windowWidth, windowHeight);
+    model.editor = new Editor(NumberTipe, 0, 0, windowWidth, windowHeight);
     model.editor.pushMachine(new Machine(color('#EC4E20'), 'machine'));
     Renderer.initialize();
 }

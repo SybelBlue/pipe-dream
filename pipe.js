@@ -13,7 +13,13 @@ class Pipe {
         this.drawBottom = drawBottom;
     }
 
-    draw() {
+    draw(shadowTipe=null) {
+        if (shadowTipe) {
+            Renderer.push(this);
+            Renderer.translate(Pipe.mainWidth/2, 0);
+            shadowTipe.drawShadow();
+            Renderer.pop(this);
+        }
         Renderer.push(this);
         Renderer.renderObject(Layers.Pipe, () => {
             if (this.highlighting) {
