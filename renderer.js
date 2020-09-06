@@ -7,14 +7,6 @@ class TranslationNode {
     }
 }
 
-class Renderable {
-    constructor(drawCallback, layer, x, y) {
-        this.draw = drawCallback;
-        this.layer = layer;
-        this.translation = [x, y];
-    }
-}
-
 const Layers = {
     Background: 0,
     Pipe: 3,
@@ -57,7 +49,12 @@ class Renderer {
     }
     
     static renderObject(layer, drawCallback) {
-        const renderable = new Renderable(drawCallback, layer, this.xTranslation, this.yTranslation);
+        const renderable = {
+            draw: drawCallback,
+            layer: layer,
+            translation: [this.xTranslation, this.yTranslation],
+        };
+
         for (let i = 0; i < this.toRender.length; i++) {
             const element = this.toRender[i];
             if (element.layer > layer) {
@@ -65,6 +62,7 @@ class Renderer {
                 return;
             }
         }
+        
         this.toRender.push(renderable);
     }
     
