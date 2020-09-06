@@ -39,8 +39,8 @@ class Machine extends PipelineObject {
 
 class MapMachine extends Machine {
     get outputTipe() { return this.startingTipe; }
-    get height() { return Machine.bodyHeight + this.innerHeight + this.tailHeight; }
-    tailHeight = 20;
+    get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
+    static tailHeight = 20;
     get finsished() { return false; }
     get innerHeight() { return this.finsished ? 0 : 20; }
     constructor(inTipe) {
@@ -58,6 +58,10 @@ class MapMachine extends Machine {
         Renderer.push(this);
         Renderer.translate(Machine.bodyIndent, 0);
         Renderer.pop(this);
-        Renderer.renderObject
+        Renderer.renderObject(Layers.Machine, () => {
+            noStroke();
+            fill(this.color);
+            rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10)
+        })
     }
 }
