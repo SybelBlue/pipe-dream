@@ -38,11 +38,13 @@ class Machine extends PipelineObject {
 }
 
 class MapMachine extends Machine {
-    get outputTipe() { return this.startingTipe; }
-    get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
     static tailHeight = 20;
+
+    get outputTipe() { return this.inTipe; }
+    get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
     get finsished() { return false; }
     get innerHeight() { return this.finsished ? 0 : 20; }
+
     constructor(inTipe) {
         super(inTipe, color('#E8E288'), 'map');
     }

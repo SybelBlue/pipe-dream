@@ -1,13 +1,19 @@
 const model = {};
+let requestRescaleCanvas = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    model.editor = new Editor(NumberTipe, 0, 0, windowWidth, windowHeight);
+    model.editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
     model.editor.pushMachine(MapMachine);
     Renderer.initialize();
 }
 
 function draw() {
+    if (requestRescaleCanvas) {
+        resizeCanvas(model.editor.x + model.editor.width, model.editor.y + model.editor.minHeight);
+        model.editor.height = model.editor.minHeight;
+    }
+
     model.editor.draw();
 
     Renderer.renderAll();

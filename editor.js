@@ -4,7 +4,7 @@ class Editor {
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
 
-    get pipeTipeChecks() { return true; }
+    get pipeTipeChecks() { return this.endingTipe.name === this.lastOutputTipe.name; }
 
     get pipelineHeight() {
         return this.pipeline.reduce((sum, pipe) => sum + pipe.height + Pipe.height, Pipe.height);
@@ -14,12 +14,14 @@ class Editor {
         return this.pipeline.length ? this.pipeline[this.pipeline.length - 1].outputTipe : this.startingTipe;
     }
 
-    constructor(startingTipe, x, y, width, height) {
+    constructor(startingTipe, endingTipe, x, y, width, height) {
         this.startingTipe = startingTipe;
+        this.endingTipe = endingTipe;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.minHeight = height;
 
         this.pipeline = [];
     }
@@ -48,12 +50,21 @@ class Editor {
 
         Renderer.renderObject(Layers.Background, () => {
             const pHeight = this.pipelineHeight;
+            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin * 2);
+
+            noStroke();
             fill(66);
-            rect(0, pHeight, this.width, this.height - pHeight);
+            rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
             
-            if (Pipe.mainWidth) {
-                fill(20);
-                rect(Editor.pipeGutterSize + Pipe.edgeWidth, pHeight, Pipe.innerWidth, 10);
+            fill(20);
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
+
+            const newMinHeight = bottomBarHeight + Editor.darkMargin;
+            if (newMinHeight > this.minHeight) {
+                this.minHeight = newMinHeight;
+                if (this.minHeight > height) {
+                    requestRescaleCanvas = true;
+                }
             }
         });
         Renderer.pop(this);
