@@ -1,8 +1,24 @@
 class TipeProperty {
+    static height = 20;
     constructor(name, inTipe, outTipe) {
         this.name = name;
         this.inTipe = inTipe;
         this.outTipe = outTipe;
+    }
+
+    // expects upper left corner is baseline
+    draw() {
+        Renderer.push(this);
+        Renderer.renderObject(Layers.CodeFragment, () => {
+            stroke(0);
+            fill(this.outTipe.color);
+            textFont('Courier New');
+            textSize(20);
+            rect(0, 0, textWidth(this.name) + 10, TipeProperty.height, 0, 10, 10, 0);
+            fill(0);
+            text(this.name, 5, 2 + textAscent() * 0.8)
+        })
+        Renderer.pop(this);
     }
 }
 
@@ -46,6 +62,7 @@ class Tipe {
     static name = 'top';
     static properties = {};
     static methods = {};
+    static get color() { return color('#e8e288') };
     static new() { throw new Error('TopTipe cannot be instantiated') }
     // provide middle top
     static draw(tipe) { console.log('draw unimplemented for ' + name); }

@@ -35,6 +35,8 @@ class Machine extends PipelineObject {
         Renderer.translate(2 * radius, this.height);
         Renderer.pop(this);
     }
+
+    apply(tipedValue) { return tipedValue; }
 }
 
 class MapMachine extends Machine {
@@ -58,12 +60,16 @@ class MapMachine extends Machine {
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
         })
         Renderer.push(this);
-        Renderer.translate(Machine.bodyIndent, 0);
+        Renderer.translate(Machine.bodyIndent, Machine.bodyHeight);
+        this.inTipe.methods['absoluteValue'].draw();
+
         Renderer.pop(this);
         Renderer.renderObject(Layers.Machine, () => {
             noStroke();
             fill(this.color);
-            rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10)
+            rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
         })
     }
+
+    apply(tipedValue) { tipedValue }
 }

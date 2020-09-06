@@ -1,6 +1,10 @@
 const model = {};
 let requestRescaleCanvas = false;
 
+// pallete ideas: 
+// orange-yellow-green-dark blue-light blue
+// https://coolors.co/ff8360-e8e288-7dce82-3cdbd3-00fff5
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     model.editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);

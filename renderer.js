@@ -13,6 +13,7 @@ const Layers = {
     Shadow: 6,
     Data: 7,
     Machine: 10,
+    CodeFragment: 13,
 }
 
 class Renderer {
@@ -62,7 +63,7 @@ class Renderer {
                 return;
             }
         }
-        
+
         this.toRender.push(renderable);
     }
     
