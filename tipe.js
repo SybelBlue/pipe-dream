@@ -13,11 +13,11 @@ class TipeMethod extends TipeProperty {
     }
     
     run(tipedValue) {
-        if (Tipe.of(tipedValue).name !== this.inTipe.name) {
+        if (tipedValue.tipe.name !== this.inTipe.name) {
             throw new Error('mismatched in tipes!', tipedValue, this);
         }
         const out = this.compute(tipedValue);
-        if (Tipe.of(out).name !== this.outTipe.name) {
+        if (out.tipe.name !== this.outTipe.name) {
             throw new Error('mismatched out tipes!', out, this);
         }
         return out;
@@ -33,14 +33,12 @@ class TipedValue {
         for (const key in tipe.properties) {
             this[key] = defaults[key] || tipe.properties[key].outTipe.new();
         }
-    }
-    
-    callMethod(methodName) {
-        const method = this.tipe.methods[methodName];
-        if (!method) {
-            throw new Error(`method ${methodName} does not exist on ${tipe.name}`);
+        for (const key in tipe.methods) {
+            const method = tipe.methods[key];
+            this[key] = (...args) => method.run(this, ...args);
+            this[key].outTipe = method.outTipe;
+            this[key].inTipe = method.inTipe;
         }
-        return method.run(value);
     }
 }
 
@@ -48,7 +46,7 @@ class Tipe {
     static name = 'top';
     static properties = {};
     static methods = {};
-    static new() { console.log('unimplemented!') }
+    static new() { throw new Error('TopTipe cannot be instantiated') }
     // provide middle top
     static draw(tipe) { console.log('draw unimplemented for ' + name); }
     // provide middle top
@@ -71,6 +69,7 @@ class Tipe {
 
 class BooleanTipe extends Tipe {
     static name = 'Boolean';
+    static variableName = 'boolean';
     static basic = true;
     static isBooleanTipe = true;
     static methods = {
@@ -89,6 +88,7 @@ class BooleanTipe extends Tipe {
 
 class NumberTipe extends Tipe {
     static name = 'Number';
+    static variableName = 'num';
     static basic = true;
     static isNumberTipe = true;
     static methods = {
@@ -123,6 +123,7 @@ class NumberTipe extends Tipe {
 
 class TextTipe extends Tipe {
     static name = 'Text';
+    static variableName = 'text';
     static methods = {
         length: new TipeMethod('length', TextTipe, NumberTipe, function(self) { return NumberTipe.new(self.value.length); }),
         firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, function(self) { return TextTipe.new(self.value.substring(0, 1)); }),
@@ -155,6 +156,7 @@ class TextTipe extends Tipe {
 // maybe this should be an enumeration
 class ColorTipe extends Tipe {
     static name = 'Color';
+    static variableName = 'color';
     static properties = {
         green: new TipeProperty('green', ColorTipe, NumberTipe),
         blue: new TipeProperty('blue', ColorTipe, NumberTipe),
@@ -178,6 +180,7 @@ class ColorTipe extends Tipe {
 
 class IDCardTipe extends Tipe {
     static name = 'IDCard';
+    static variableName = 'idCard';
     static properties = {
         name: new TipeProperty('name', IDCardTipe, TextTipe),
         age: new TipeProperty('age', IDCardTipe, NumberTipe),
@@ -188,6 +191,7 @@ class IDCardTipe extends Tipe {
 
 class BallTipe extends Tipe {
     static name = 'Ball';
+    static variableName = 'ball';
     static properties = {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),

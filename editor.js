@@ -10,6 +10,10 @@ class Editor {
         return this.pipeline.reduce((sum, pipe) => sum + pipe.height + Pipe.height, Pipe.height);
     }
 
+    get lastOutputTipe() {
+        return this.pipeline.length ? this.pipeline[this.pipeline.length - 1].outputTipe : this.startingTipe;
+    }
+
     constructor(startingTipe, x, y, width, height) {
         this.startingTipe = startingTipe;
         this.x = x;
@@ -78,7 +82,7 @@ class Editor {
         // check regions for adding machines
     }
 
-    pushMachine(machine) {
-        this.pipeline.push(machine);
+    pushMachine(machineType, ...args) {
+        this.pipeline.push(new machineType(this.lastOutputTipe, ...args));
     }
 }

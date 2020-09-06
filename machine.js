@@ -2,13 +2,14 @@ class Machine extends PipelineObject {
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static get textColor() { return color(11); }
 
-    height = 100;
+    get height() { return 50; }
 
     get outputTipe() { return BallTipe; }
 
-    constructor(bodyColor, text) {
+    constructor(inTipe, bodyColor, text) {
         super();
 
+        this.inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
     }
@@ -16,11 +17,7 @@ class Machine extends PipelineObject {
     draw() {
         Renderer.push(this);
         Renderer.renderObject(Layers.Machine, () => {
-            if (this.highlighting) {
-                stroke(0);
-            } else {
-                noStroke();
-            }
+            noStroke();
             fill(this.color);
             rect(0, 0, Machine.width, this.height, 10, 10, 10, 0);
 
@@ -36,14 +33,16 @@ class Machine extends PipelineObject {
         Renderer.translate(2 * radius, this.height);
         Renderer.pop(this);
     }
-
-    testHighlight(x, y) {
-        this.highlighting =
-            0 <= x && x <= Machine.width &&
-            0 <= y && y <= this.height;
-    }
 }
 
 class MapMachine extends Machine {
-    // constructor
+    get outputTipe() { return this.startingTipe; }
+    get height() { return 50; }
+    constructor(inTipe) {
+        super(inTipe, color('#E8E288'), 'map');
+    }
+
+    draw() {
+        super.draw();
+    }
 }
