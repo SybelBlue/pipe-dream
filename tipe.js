@@ -154,6 +154,7 @@ class NumberTipe extends Tipe {
 class TextTipe extends Tipe {
     static name = 'Text';
     static variableName = 'text';
+    static basic = true;
     static methods = {
         length: new TipeMethod('length', TextTipe, NumberTipe, function(self) { return NumberTipe.new(self.value.length); }),
         firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, function(self) { return TextTipe.new(self.value.substring(0, 1)); }),
