@@ -109,15 +109,12 @@ class Renderer {
             regions: regions,
         };
 
-        for (let i = 0; i < Renderer.toRender.length; i++) {
-            const element = Renderer.toRender[i];
-            if (element.layer > layer) {
-                Renderer.toRender.splice(i, 0, renderable);
-                return;
-            }
+        let i = 0;
+        while (i < Renderer.toRender.length && Renderer.toRender[i].layer <= layer) {
+            i++;
         }
 
-        Renderer.toRender.push(renderable);
+        Renderer.toRender.splice(i, 0, renderable);
     }
 
     static registerRegion(region) {
@@ -125,6 +122,7 @@ class Renderer {
         while (i < Renderer.regions.length && Renderer.regions[i].layer > region.layer) {
             i++;
         }
+        
         Renderer.regions.splice(i, 0, region);
     }
 
