@@ -1,6 +1,30 @@
+class Tray {
+    static maxWidth = 200;
+    static indent = 10;
+
+    options = [];
+
+    draw() {
+        if (!this.options || !this.options.length)
+        Renderer.push(this);
+        Renderer.newRenderable(Layers.TrayBackground, function() {
+            stroke(80);
+            fill(20, 20, 25);
+            rect(0, 0, Tray.maxWidth, editor.height, 0, 20, 20, 0);
+        })
+
+        Renderer.translate(Tray.indent, 10);
+        this.options.forEach(function (fragment) {
+            Renderer.newRenderable(Layers.CodeFragment, fragment.draw)
+            Renderer.translate(fragment.height, 0);
+        })
+        Renderer.pop(this);
+    }
+
+}
+
 class Editor {
-    static get traySize() { return 200; }
-    static gutterSize = this.traySize + 30;
+    static gutterSize = Tray.maxWidth + 30;
     static pipeIndent = 30;
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
@@ -25,11 +49,14 @@ class Editor {
         this.minHeight = height;
 
         this.pipeline = [];
+        this.tray = new Tray();
     }
 
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
+        this.tray.draw();
+
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
             fill(100);

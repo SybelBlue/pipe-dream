@@ -1,5 +1,6 @@
 const Layers = {
     Background: 0,
+    TrayBackground: 1,
     Pipe: 3,
     Shadow: 6,
     Data: 7,
