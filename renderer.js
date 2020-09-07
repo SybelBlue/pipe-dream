@@ -34,6 +34,34 @@ class Renderer {
         }
     }
 
+    static Renderable = class {
+        constructor(layer, draw, translation, regions) {
+            this.layer = layer;
+            this.draw = draw;
+            this.translation = translation;
+            this.regions = regions;
+        }
+
+        static from(layer, drawCallback, regionStubs) {
+            const regions = {};
+
+            regionStubs.forEach((stub) => { 
+                const region = new Renderer.Region(
+                    layer, 
+                    Renderer.xTranslation + stub.x, 
+                    Renderer.yTranslation + stub.y, 
+                    stub.width, 
+                    stub.height, 
+                    stub.blocking
+                );
+                Renderer.registerRegion(region);
+                regions[stub.name] = region;
+            });
+
+            return new this(layer, drawCallback, [Renderer.xTranslation, Renderer.yTranslation], regions);
+        }
+    }
+
     static stackTop = null;
     static toRender = [];
     static regions = [];
@@ -83,34 +111,12 @@ class Renderer {
     }
     
     static newRenderable(layer, drawCallback, ...regionStubs) {
-        const regions = {};
-
-        regionStubs.forEach((stub) => { 
-            const region = new Renderer.Region(
-                layer, 
-                Renderer.xTranslation + stub.x, 
-                Renderer.yTranslation + stub.y, 
-                stub.width, 
-                stub.height, 
-                stub.blocking
-            );
-            Renderer.registerRegion(region);
-            regions[stub.name] = region;
-        });
-
-        const renderable = {
-            draw: drawCallback,
-            layer: layer,
-            translation: [Renderer.xTranslation, Renderer.yTranslation],
-            regions: regions,
-        };
-
         let i = 0;
         while (i < Renderer.toRender.length && Renderer.toRender[i].layer <= layer) {
             i++;
         }
 
-        Renderer.toRender.splice(i, 0, renderable);
+        Renderer.toRender.splice(i, 0, Renderer.Renderable.from(layer, drawCallback, regionStubs));
     }
 
     static registerRegion(region) {
