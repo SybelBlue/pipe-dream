@@ -19,31 +19,30 @@ class Renderer {
     static translationStack = null;
     static stackTop = null;
     static toRender = [];
-    
-    static initialize() { this.clearStack(); }
     static clearStack() { 
         Renderer.translationStack = [(Renderer.stackTop = Renderer.TranslationNode(null, 'Renderer Head', 0, 0))];
     }
+    static initialize = Renderer.clearStack;
 
-    static get yTranslation() { return this.stackTop.y; }
+    static get yTranslation() { return Renderer.stackTop.y; }
 
-    static get xTranslation() { return this.stackTop.x; }
+    static get xTranslation() { return Renderer.stackTop.x; }
 
     static translate(x, y) {
-        this.stackTop.x += x;
-        this.stackTop.y += y;
+        Renderer.stackTop.x += x;
+        Renderer.stackTop.y += y;
     }
 
     static push(source) {
         if (source == null) throw new Error('null source!');
 
-        const node = Renderer.TranslationNode(this.stackTop, source, this.xTranslation, this.yTranslation);
+        const node = Renderer.TranslationNode(Renderer.stackTop, source, Renderer.xTranslation, Renderer.yTranslation);
         Renderer.translationStack.push(node);
         Renderer.stackTop = node;
     }
     
     static pop(source) {
-        if (source !== this.stackTop.source) throw new Error('Unexpected Pop from ' + source);
+        if (source !== Renderer.stackTop.source) throw new Error('Unexpected Pop from ' + source);
 
         Renderer.stackTop = Renderer.translationStack.pop().previous;
     }
@@ -52,27 +51,27 @@ class Renderer {
         const renderable = {
             draw: drawCallback,
             layer: layer,
-            translation: [this.xTranslation, this.yTranslation],
+            translation: [Renderer.xTranslation, Renderer.yTranslation],
         };
 
-        for (let i = 0; i < this.toRender.length; i++) {
-            const element = this.toRender[i];
+        for (let i = 0; i < Renderer.toRender.length; i++) {
+            const element = Renderer.toRender[i];
             if (element.layer > layer) {
-                this.toRender.splice(i, 0, renderable);
+                Renderer.toRender.splice(i, 0, renderable);
                 return;
             }
         }
 
-        this.toRender.push(renderable);
+        Renderer.toRender.push(renderable);
     }
 
     static renderAll() {
-        for (const renderable of this.toRender) {
+        for (const renderable of Renderer.toRender) {
             push();
             translate(renderable.translation[0], renderable.translation[1]);
             renderable.draw();
             pop();
         }
-        this.toRender = [];
+        Renderer.toRender = [];
     }
 }
