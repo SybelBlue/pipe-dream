@@ -1,12 +1,3 @@
-class TranslationNode {
-    constructor(previous, source, previousX, previousY) {
-        this.previous = previous;
-        this.source = source;
-        this.x = previousX;
-        this.y = previousY;
-    }
-}
-
 const Layers = {
     Background: 0,
     Pipe: 3,
@@ -17,13 +8,21 @@ const Layers = {
 }
 
 class Renderer {
+    static TranslationNode(previous, source, previousX, previousY) {
+        return {
+            previous: previous,
+            source: source,
+            x: previousX,
+            y: previousY
+        }
+    }
     static translationStack = null;
     static stackTop = null;
     static toRender = [];
     
     static initialize() { this.clearStack(); }
     static clearStack() { 
-        Renderer.translationStack = [(Renderer.stackTop = new TranslationNode(null, 'Renderer Head', 0, 0))];
+        Renderer.translationStack = [(Renderer.stackTop = Renderer.TranslationNode(null, 'Renderer Head', 0, 0))];
     }
 
     static get yTranslation() { return this.stackTop.y; }
@@ -38,7 +37,7 @@ class Renderer {
     static push(source) {
         if (source == null) throw new Error('null source!');
 
-        const node = new TranslationNode(this.stackTop, source, this.xTranslation, this.yTranslation);
+        const node = Renderer.TranslationNode(this.stackTop, source, this.xTranslation, this.yTranslation);
         Renderer.translationStack.push(node);
         Renderer.stackTop = node;
     }
@@ -66,7 +65,7 @@ class Renderer {
 
         this.toRender.push(renderable);
     }
-    
+
     static renderAll() {
         for (const renderable of this.toRender) {
             push();
