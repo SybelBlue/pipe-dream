@@ -47,6 +47,8 @@ class MapMachine extends Machine {
     get finsished() { return false; }
     get innerHeight() { return this.finsished ? 0 : 20; }
 
+    fragmentStack = [];
+
     constructor(inTipe) {
         super(inTipe, color('#E8E288'), 'map');
     }

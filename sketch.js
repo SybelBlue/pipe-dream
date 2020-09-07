@@ -1,4 +1,4 @@
-const model = {};
+let editor;
 let requestRescaleCanvas = false;
 
 // pallete ideas: 
@@ -7,18 +7,18 @@ let requestRescaleCanvas = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    model.editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
-    model.editor.pushMachine(MapMachine);
+    editor = new Editor(NumberTipe, NumberTipe, 60, 0, windowWidth - 60, windowHeight);
+    editor.pushMachine(MapMachine);
     Renderer.initialize();
 }
 
 function draw() {
     if (requestRescaleCanvas) {
-        resizeCanvas(model.editor.x + model.editor.width, model.editor.y + model.editor.minHeight);
-        model.editor.height = model.editor.minHeight;
+        resizeCanvas(editor.x + editor.width, editor.y + editor.minHeight);
+        editor.height = editor.minHeight;
     }
 
-    model.editor.draw();
+    editor.draw();
 
     Renderer.renderAll();
     Renderer.clearStack();
@@ -26,10 +26,10 @@ function draw() {
 
 function windowResized() { 
     resizeCanvas(windowWidth, windowHeight);
-    model.editor.width = windowWidth;
-    model.editor.height = windowHeight;
+    editor.width = windowWidth;
+    editor.height = max(editor.minHeight, windowHeight);
 }
 
-function mouseMoved() { model.editor.checkHighlight(); }
-function mouseDragged() { model.editor.checkHighlight(); }
-function mouseClicked() { model.editor.pushMachine(Machine, color('#EC4E20'), 'machine' + model.editor.pipeline.length) }
+function mouseMoved() { editor.checkHighlight(); }
+function mouseDragged() { editor.checkHighlight(); }
+function mouseClicked() { editor.pushMachine(Machine, color('#EC4E20'), 'machine' + editor.pipeline.length) }
