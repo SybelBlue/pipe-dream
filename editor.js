@@ -1,5 +1,6 @@
 class Editor {
-    static gutterSize = 80;
+    static get traySize() { return 200; }
+    static gutterSize = this.traySize + 30;
     static pipeIndent = 30;
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;

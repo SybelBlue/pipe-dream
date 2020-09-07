@@ -1,11 +1,30 @@
-class TipeProperty {
+class TipeMethod {
     static height = 20;
     static font = 'Courier New';
     static fontSize = 20;
-    constructor(name, inTipe, outTipe) {
+
+    constructor(name, inTipe, outTipe, compute) {
         this.name = name;
         this.inTipe = inTipe;
         this.outTipe = outTipe;
+        this.compute = compute;
+    }
+
+    graftOnto(object, _defaults) {
+        object[this.name] = (...args) => this.run(object, ...args);
+        object[this.name].outTipe = this.outTipe;
+        object[this.name].inTipe = this.inTipe;
+    }
+    
+    run(tipedValue) {
+        if (tipedValue.tipe.name !== this.inTipe.name) {
+            throw new Error('mismatched in tipes!', tipedValue, this);
+        }
+        const out = this.compute(tipedValue);
+        if (out.tipe.name !== this.outTipe.name) {
+            throw new Error('mismatched out tipes!', out, this);
+        }
+        return out;
     }
 
     // expects upper left corner is baseline
@@ -30,21 +49,13 @@ class TipeProperty {
     }
 }
 
-class TipeMethod extends TipeProperty {
-    constructor(name, inTipe, outTipe, compute) {
-        super(name, inTipe, outTipe);
-        this.compute = compute;
+class TipeProperty extends TipeMethod {
+    constructor(name, inTipe, outTipe) {
+        super(name, inTipe, outTipe, function(self) { return self[name]; });
     }
-    
-    run(tipedValue) {
-        if (tipedValue.tipe.name !== this.inTipe.name) {
-            throw new Error('mismatched in tipes!', tipedValue, this);
-        }
-        const out = this.compute(tipedValue);
-        if (out.tipe.name !== this.outTipe.name) {
-            throw new Error('mismatched out tipes!', out, this);
-        }
-        return out;
+
+    graftOnto(object, defaults) {
+        object[this.name] = defaults[this.name] || this.outTipe.new();
     }
 }
 
@@ -54,21 +65,15 @@ class TipedValue {
         if (tipe.basic) {
             this.value = defaults.value;
         }
-        for (const key in tipe.properties) {
-            this[key] = defaults[key] || tipe.properties[key].outTipe.new();
-        }
-        for (const key in tipe.methods) {
-            const method = tipe.methods[key];
-            this[key] = (...args) => method.run(this, ...args);
-            this[key].outTipe = method.outTipe;
-            this[key].inTipe = method.inTipe;
+        for (const methodName in tipe.methods) {
+            const method = tipe.methods[methodName];
+            method.graftOnto(this, defaults);
         }
     }
 }
 
 class Tipe {
     static name = 'top';
-    static properties = {};
     static methods = {};
     static get color() { return color('#e8e288') };
     static new() { throw new Error('TopTipe cannot be instantiated') }
@@ -182,7 +187,7 @@ class TextTipe extends Tipe {
 class ColorTipe extends Tipe {
     static name = 'Color';
     static variableName = 'color';
-    static properties = {
+    static methods = {
         green: new TipeProperty('green', ColorTipe, NumberTipe),
         blue: new TipeProperty('blue', ColorTipe, NumberTipe),
         red: new TipeProperty('red', ColorTipe, NumberTipe),
@@ -206,7 +211,7 @@ class ColorTipe extends Tipe {
 class IDCardTipe extends Tipe {
     static name = 'IDCard';
     static variableName = 'idCard';
-    static properties = {
+    static methods = {
         name: new TipeProperty('name', IDCardTipe, TextTipe),
         age: new TipeProperty('age', IDCardTipe, NumberTipe),
         eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
@@ -217,7 +222,7 @@ class IDCardTipe extends Tipe {
 class BallTipe extends Tipe {
     static name = 'Ball';
     static variableName = 'ball';
-    static properties = {
+    static methods = {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }

@@ -51,6 +51,7 @@ class MapMachine extends Machine {
 
     constructor(inTipe) {
         super(inTipe, color('#E8E288'), 'map');
+        this.fragmentStack.push('absoluteValue');
     }
 
     draw() {
@@ -62,14 +63,24 @@ class MapMachine extends Machine {
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
         })
         Renderer.push(this);
+
         Renderer.translate(Machine.bodyIndent, Machine.bodyHeight);
-        this.inTipe.methods['absoluteValue'].draw();
+        this.drawFragmentStack();
 
         Renderer.pop(this);
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);
             rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
+        })
+    }
+
+    drawFragmentStack() {
+        let currentTipe = this.inTipe;
+        this.fragmentStack.forEach((methodName) => {
+            const method = currentTipe.methods[methodName];
+            method.draw();
+            currentTipe = method.outputTipe;
         })
     }
 

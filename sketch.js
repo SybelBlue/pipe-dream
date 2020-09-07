@@ -7,7 +7,7 @@ let requestRescaleCanvas = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    editor = new Editor(NumberTipe, NumberTipe, 60, 0, windowWidth - 60, windowHeight);
+    editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
     editor.pushMachine(MapMachine);
     Renderer.initialize();
 }
