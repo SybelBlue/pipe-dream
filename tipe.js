@@ -9,15 +9,18 @@ class TipeProperty {
     // expects upper left corner is baseline
     draw() {
         Renderer.push(this);
-        Renderer.renderObject(Layers.CodeFragment, () => {
+        Renderer.newRenderable(Layers.CodeFragment, (regions) => {
             stroke(0);
             fill(this.outTipe.color);
             textFont('Courier New');
             textSize(20);
             rect(0, 0, textWidth(this.name) + 10, TipeProperty.height, 0, 10, 10, 0);
             fill(0);
-            text(this.name, 5, 2 + textAscent() * 0.8)
-        })
+            text(this.name, 5, 2 + textAscent() * 0.8);
+            // console.log(regions.fragment.hovering);
+        } 
+        //, Renderer.region('fragment', 0, 0, textWidth(this.name) + 10, TipeProperty.height)
+        );
         Renderer.pop(this);
     }
 }
@@ -126,7 +129,7 @@ class NumberTipe extends Tipe {
         if (num > 9999) {
             num = 'Big#';
         }
-        Renderer.renderObject(layer, () => {
+        Renderer.newRenderable(layer, () => {
             textSize(45);
             textFont('Georgia');
             if (!NumberTipe.shadowTextWidth) {
@@ -158,7 +161,7 @@ class TextTipe extends Tipe {
         if (str.length > 10) {
             str = str.substring(0, 7) + '...';
         }
-        Renderer.renderObject(layer, () => {
+        Renderer.newRenderable(layer, () => {
             textSize(20);
             textFont('Courier New');
             if (!TextTipe.shadowTextWidth) {
@@ -187,7 +190,7 @@ class ColorTipe extends Tipe {
     }
 
     static draw(color, layer=Layers.Data) {
-        Renderer.renderObject(layer, () => {
+        Renderer.newRenderable(layer, () => {
             fill(ColorTipe.asP5Color(color));
             stroke(10);
             rect(-Pipe.mainWidth/3, 0, 2 * Pipe.mainWidth/3, Pipe.mainWidth/4);
@@ -217,7 +220,7 @@ class BallTipe extends Tipe {
 
     // expects top center
     static drawShadow() {
-        Renderer.renderObject(Layers.Shadow, function() {
+        Renderer.newRenderable(Layers.Shadow, function() {
             const radius = Machine.width / 4;
             const deviation = PI * 0.15;
             fill(150);
@@ -226,7 +229,7 @@ class BallTipe extends Tipe {
     }
     
     static draw(ball) {
-        Renderer.renderObject(Layers.Data, () => {
+        Renderer.newRenderable(Layers.Data, () => {
             let color = ball.color;
             stroke(66);
             fill(ColorTipe.asP5Color(color));

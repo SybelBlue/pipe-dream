@@ -29,7 +29,7 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
-        Renderer.renderObject(Layers.Background, () => {
+        Renderer.newRenderable(Layers.Background, () => {
             noStroke();
             fill(100);
             rect(0, 0, this.width, this.height);
@@ -41,14 +41,14 @@ class Editor {
         // set new baseline
         Renderer.translate(0, Editor.darkMargin);
 
-        Renderer.renderObject(Layers.Background, () => {
+        Renderer.newRenderable(Layers.Background, () => {
             fill(20);
             rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
         });
 
         this.renderPipeline();
 
-        Renderer.renderObject(Layers.Background, () => {
+        Renderer.newRenderable(Layers.Background, () => {
             const pHeight = this.pipelineHeight;
             const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin * 2);
 

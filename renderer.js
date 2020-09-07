@@ -7,6 +7,22 @@ const Layers = {
     CodeFragment: 13,
 }
 
+class Region {
+    constructor(layer, x, y, width, height, blocking=true) {
+        this.layer = layer;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.blocking = blocking;
+        this.hovering = false;
+    }
+
+    test(x, y) {
+        return this.x <= x && x <= this.x + this.width && this.y <= y && y <= this.y + this.height;
+    }
+}
+
 class Renderer {
     static TranslationNode(previous, source, previousX, previousY) {
         return {
@@ -19,6 +35,8 @@ class Renderer {
     static translationStack = null;
     static stackTop = null;
     static toRender = [];
+    static regions = [];
+
     static clearStack() { 
         Renderer.translationStack = [(Renderer.stackTop = Renderer.TranslationNode(null, 'Renderer Head', 0, 0))];
     }
@@ -47,7 +65,7 @@ class Renderer {
         Renderer.stackTop = Renderer.translationStack.pop().previous;
     }
     
-    static renderObject(layer, drawCallback) {
+    static newRenderable(layer, drawCallback) {
         const renderable = {
             draw: drawCallback,
             layer: layer,

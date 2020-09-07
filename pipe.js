@@ -21,7 +21,7 @@ class Pipe {
             Renderer.pop(this);
         }
         Renderer.push(this);
-        Renderer.renderObject(Layers.Pipe, () => {
+        Renderer.newRenderable(Layers.Pipe, () => {
             if (this.highlighting) {
                 const c = mouseIsPressed ? color(200, 20, 200) : color(20, 200, 200);
                 stroke(c);
@@ -37,7 +37,7 @@ class Pipe {
 
         const topOfBottomLip = Pipe.height - Pipe.lipHeight;
 
-        Renderer.renderObject(Layers.Pipe, () => {
+        Renderer.newRenderable(Layers.Pipe, () => {
             fill(Pipe.edgeColor);
 
             // left half
@@ -66,7 +66,7 @@ class Pipe {
         // right half
         // recenter on upper right corner (w/o lip)
         Renderer.translate(Pipe.mainWidth, 0);
-        Renderer.renderObject(Layers.Pipe, () => {
+        Renderer.newRenderable(Layers.Pipe, () => {
             beginShape();
             vertex(-Pipe.edgeWidth, 0);
             vertex(-Pipe.edgeWidth, Pipe.height);

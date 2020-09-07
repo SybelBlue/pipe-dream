@@ -18,7 +18,7 @@ class Machine extends PipelineObject {
 
     draw() {
         Renderer.push(this);
-        Renderer.renderObject(Layers.Machine, () => {
+        Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);
             rect(0, 0, Machine.width, Machine.bodyHeight, 10, 10, 10, 0);
@@ -54,7 +54,7 @@ class MapMachine extends Machine {
     draw() {
         super.draw();
         
-        Renderer.renderObject(Layers.Machine, () => {
+        Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
@@ -64,7 +64,7 @@ class MapMachine extends Machine {
         this.inTipe.methods['absoluteValue'].draw();
 
         Renderer.pop(this);
-        Renderer.renderObject(Layers.Machine, () => {
+        Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);
             rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
