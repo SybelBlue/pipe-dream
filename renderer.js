@@ -9,6 +9,7 @@ const Layers = {
 
 class Renderer {
     static Node = class {
+        static get Head() { return new Renderer.Node(null, 'Renderer Head'); }
         constructor(previous, source) {
             this.previous = previous;
             this.source = source;
@@ -32,15 +33,12 @@ class Renderer {
             return this.x <= x && x <= this.x + this.width && this.y <= y && y <= this.y + this.height;
         }
     }
-    static translationStack = null;
+
     static stackTop = null;
     static toRender = [];
     static regions = [];
 
-    static clearStack() { 
-        Renderer.translationStack = [(Renderer.stackTop = new Renderer.Node(null, 'Renderer Head'))];
-    }
-
+    static clearStack() { Renderer.stackTop = Renderer.Node.Head; }
     static initialize = Renderer.clearStack;
 
     static get yTranslation() { return Renderer.stackTop.y; }
@@ -64,15 +62,13 @@ class Renderer {
     static push(source) {
         if (source == null) throw new Error('null source!');
 
-        const node = new Renderer.Node(Renderer.stackTop, source);
-        Renderer.translationStack.push(node);
-        Renderer.stackTop = node;
+        Renderer.stackTop = new Renderer.Node(Renderer.stackTop, source);
     }
     
     static pop(source) {
         if (source !== Renderer.stackTop.source) throw new Error('Unexpected Pop from ' + source);
 
-        Renderer.stackTop = Renderer.translationStack.pop().previous;
+        Renderer.stackTop = Renderer.stackTop.previous;
     }
 
     static regionStub(name, x, y, width, height, blocking=true) {
@@ -122,7 +118,7 @@ class Renderer {
         while (i < Renderer.regions.length && Renderer.regions[i].layer > region.layer) {
             i++;
         }
-        
+
         Renderer.regions.splice(i, 0, region);
     }
 
