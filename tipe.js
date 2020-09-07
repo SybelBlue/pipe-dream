@@ -1,5 +1,7 @@
 class TipeProperty {
     static height = 20;
+    static font = 'Courier New';
+    static fontSize = 20;
     constructor(name, inTipe, outTipe) {
         this.name = name;
         this.inTipe = inTipe;
@@ -9,17 +11,20 @@ class TipeProperty {
     // expects upper left corner is baseline
     draw() {
         Renderer.push(this);
-        Renderer.newRenderable(Layers.CodeFragment, (regions) => {
-            stroke(0);
-            fill(this.outTipe.color);
-            textFont('Courier New');
-            textSize(20);
-            rect(0, 0, textWidth(this.name) + 10, TipeProperty.height, 0, 10, 10, 0);
-            fill(0);
-            text(this.name, 5, 2 + textAscent() * 0.8);
-            // console.log(regions.fragment.hovering);
-        } 
-        //, Renderer.region('fragment', 0, 0, textWidth(this.name) + 10, TipeProperty.height)
+
+        const width = Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10;
+
+        Renderer.newRenderable(Layers.CodeFragment, 
+            (regions) => {
+                stroke(regions.fragment.hovering ? 255 : 0, 0, 0)
+                fill(this.outTipe.color);
+                textFont(TipeProperty.font);
+                textSize(TipeProperty.fontSize);
+                rect(0, 0, width, TipeProperty.height, 0, 10, 10, 0);
+                fill(0);
+                text(this.name, 5, 2 + textAscent() * 0.8);
+            },
+            Renderer.regionStub('fragment', 0, 0, width, TipeProperty.height)
         );
         Renderer.pop(this);
     }
