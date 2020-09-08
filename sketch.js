@@ -33,6 +33,4 @@ function windowResized() {
     editor.height = max(editor.minHeight, windowHeight);
 }
 
-function mouseMoved() { editor.checkHighlight(); }
-function mouseDragged() { editor.checkHighlight(); }
 function mouseClicked() { clickThisFrame = true; }

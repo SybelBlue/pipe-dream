@@ -31,9 +31,17 @@ class Tray {
         }
     }
 
+    clearAllOptions() {
+        this.loadOptionsFor();
+    }
+
+    displayMachineOptions() {
+        console.log('display machines');
+    }
+
     fragmentClicked(fragment) {
         this.selectedMachine && this.selectedMachine.pushFragment(fragment, this.machineIndex);
-        this.loadOptionsFor();
+        this.clearAllOptions();
     }
 }
 
@@ -43,6 +51,8 @@ class Editor {
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
+    
+    _keyCount = 0;
 
     get pipeTipeChecks() { return this.endingTipe.name === this.lastOutputTipe.name; }
 
@@ -133,11 +143,22 @@ class Editor {
         Renderer.pop(this);
     }
 
-    checkHighlight() {
-        // check regions for adding machines
+    removeMachine(key) {
+        let i = this.pipeline.findIndex(machine => machine.key === key);
+        if (i < 0) throw new Error('removing non existent machine');
+
+        let currentTipe = this.pipeline[i].inTipe;
+        // if it doesn't break the pipeline to remove the ith machine...
+        if (i + 1 < this.pipeline.length && this.pipeline[i + 1].inTipe.name === currentTipe.name) {
+            // cut it out
+            this.pipeline.splice(i, 1);
+        } else {
+            // else truncate the pipeline to a valid state
+            this.pipeline = this.pipeline.slice(0, i);
+        }
     }
 
     pushMachine(machineType, ...args) {
-        this.pipeline.push(new machineType(this.lastOutputTipe, ...args));
+        this.pipeline.push(new machineType(this._keyCount++, this.lastOutputTipe, ...args));
     }
 }

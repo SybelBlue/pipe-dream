@@ -4,13 +4,18 @@ class Machine extends PipelineObject {
     static bodyHeight = 50;
     static get textColor() { return color(11); }
 
+    static deleteButtonWidth = 15;
+    static deleteButtonIndent = Machine.width - Machine.deleteButtonWidth - 10;
+    static deleteButtonMidline = Machine.bodyHeight / 2;
+
     get height() { return Machine.bodyHeight; }
 
     get outputTipe() { return BallTipe; }
 
-    constructor(inTipe, bodyColor, text) {
+    constructor(key, inTipe, bodyColor, text) {
         super();
 
+        this.key = key;
         this.inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
@@ -19,7 +24,14 @@ class Machine extends PipelineObject {
     draw() {
         Renderer.newRenderable(Layers.Machine, 
             (regions) => {
-                if (regions.body.hovering && clickThisFrame) this.onClick();
+                if (regions.body.hovering && clickThisFrame) {
+                    if (regions.deleteButton.hovering) {
+                        editor.removeMachine(this.key);
+                        editor.tray.loadOptionsFor();
+                    } else {
+                        this.onClick();
+                    }
+                }
                 noStroke();
                 fill(this.color);
                 rect(0, 0, Machine.width, Machine.bodyHeight, 10, 10, 10, 0);
@@ -29,12 +41,36 @@ class Machine extends PipelineObject {
                 textFont('Courier New');
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
+
+                if (regions.body.hovering) {
+                    textSize(16)
+                    text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 'Courier New', 26), 30);
+
+                    stroke(255, 20, 20);
+                    strokeWeight(5);
+                    const halfWidth = Machine.deleteButtonWidth / 2;
+                    line(
+                        Machine.deleteButtonIndent, Machine.deleteButtonMidline - halfWidth, 
+                        Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline + halfWidth
+                    );
+                    line(
+                        Machine.deleteButtonIndent, Machine.deleteButtonMidline + halfWidth, 
+                        Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline - halfWidth
+                    );
+                }
             },
-            Renderer.regionStub('body', 0, 0, Machine.width, Machine.bodyHeight)
+            Renderer.regionStub('body', 0, 0, Machine.width, Machine.bodyHeight),
+            Renderer.regionStub('deleteButton', 
+                Machine.deleteButtonIndent, Machine.deleteButtonMidline - Machine.deleteButtonWidth/2, 
+                20, 20, 
+                false)
         );
     }
 
-    onClick() { console.log('machine body clicked'); }
+    onClick() { 
+        editor.tray.loadOptionsFor(this.inTipe, this, -1);
+        Renderer
+    }
 
     apply(tipedValue) { return tipedValue; }
 }
@@ -52,8 +88,8 @@ class MapMachine extends Machine {
 
     methodStack = [];
 
-    constructor(inTipe) {
-        super(inTipe, color('#E8E288'), 'map');
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#E8E288'), 'map');
         this.methodStack.push(inTipe.methods['absoluteValue']);
         this.methodStack.push(inTipe.methods['isPositive']);
     }
