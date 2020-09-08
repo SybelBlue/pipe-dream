@@ -1,4 +1,6 @@
 class Machine extends PipelineObject {
+    static get machines() { return [new MapMachine(-1, Tipe)]; }
+
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static bodyIndent = Editor.pipeIndent;
     static bodyHeight = 50;
@@ -19,6 +21,7 @@ class Machine extends PipelineObject {
         this.inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
+        this.dummy = inTipe.name === Tipe.name;
     }
 
     draw() {
@@ -27,7 +30,7 @@ class Machine extends PipelineObject {
                 if (regions.body.hovering && clickThisFrame) {
                     if (regions.deleteButton.hovering) {
                         editor.removeMachine(this.key);
-                        editor.tray.loadOptionsFor();
+                        editor.tray.loadMachineOptions();
                     } else {
                         this.onClick();
                     }
@@ -42,7 +45,7 @@ class Machine extends PipelineObject {
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
 
-                if (regions.body.hovering) {
+                if (!this.dummy && regions.body.hovering) {
                     textSize(16)
                     text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 'Courier New', 26), 30);
 
@@ -68,8 +71,11 @@ class Machine extends PipelineObject {
     }
 
     onClick() { 
-        editor.tray.loadOptionsFor(this.inTipe, this, -1);
-        Renderer
+        if (this.dummy) {
+            editor.pushMachine(MapMachine);
+        } else {
+            editor.tray.loadOptionsFor(this.inTipe, this, -1);
+        }
     }
 
     apply(tipedValue) { return tipedValue; }
@@ -84,14 +90,12 @@ class MapMachine extends Machine {
     }
     get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
     get finsished() { return true; }
-    get innerHeight() { return this.methodStack.length * TipeMethod.height + (this.finsished ? 0 : 20); }
+    get innerHeight() { return max(10, this.methodStack.length * TipeMethod.height + (this.finsished ? 0 : 20)); }
 
     methodStack = [];
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#E8E288'), 'map');
-        this.methodStack.push(inTipe.methods['absoluteValue']);
-        this.methodStack.push(inTipe.methods['isPositive']);
     }
 
     draw() {

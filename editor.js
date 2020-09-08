@@ -1,9 +1,9 @@
 class Tray {
-    static maxWidth = 200;
+    static maxWidth = 230;
     static indent = 10;
 
     drawable = [];
-    selectedMachine = null;
+    mode = null;
 
     draw() {
         Renderer.push(this);
@@ -14,8 +14,8 @@ class Tray {
         })
 
         Renderer.translate(Tray.indent, 10);
-        for (const method of this.drawable) {
-            method.draw(() => this.fragmentClicked(method));
+        for (const option of this.drawable) {
+            option.draw(() => this.optionClicked(option));
             Renderer.translate(0, TipeMethod.height + 10);
         }
         Renderer.pop(this);
@@ -23,8 +23,11 @@ class Tray {
 
     loadOptionsFor(tipe={methods:[]}, machine, index) {
         this.drawable = [];
-        this.selectedMachine = machine;
-        this.machineIndex = index;
+        this.mode = {
+            type: 'fragment',
+            selectedMachine: machine,
+            machineIndex: index,
+        };
 
         for (const key in tipe.methods) {
             this.drawable.push(tipe.methods[key]);
@@ -35,12 +38,18 @@ class Tray {
         this.loadOptionsFor();
     }
 
-    displayMachineOptions() {
-        console.log('display machines');
+    loadMachineOptions() {
+        this.drawable = Machine.machines;
+        this.mode = { type: 'machine' };
     }
 
-    fragmentClicked(fragment) {
-        this.selectedMachine && this.selectedMachine.pushFragment(fragment, this.machineIndex);
+    optionClicked(option) {
+        if (!this.mode) return;
+        if (this.mode.type === 'fragment') {
+            this.mode.selectedMachine && this.mode.selectedMachine.pushFragment(option, this.machineIndex);
+        } else if (this.mode.type === 'machine') {
+            console.log('something weird happened');
+        }
         this.clearAllOptions();
     }
 }
@@ -158,7 +167,7 @@ class Editor {
         }
     }
 
-    pushMachine(machineType, ...args) {
-        this.pipeline.push(new machineType(this._keyCount++, this.lastOutputTipe, ...args));
+    pushMachine(machineConstructor, ...args) {
+        this.pipeline.push(new machineConstructor(this._keyCount++, this.lastOutputTipe, ...args));
     }
 }
