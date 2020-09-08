@@ -44,14 +44,15 @@ class MapMachine extends Machine {
 
     get outputTipe() { return this.inTipe; }
     get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
-    get finsished() { return false; }
-    get innerHeight() { return this.finsished ? 0 : 20; }
+    get finsished() { return true; }
+    get innerHeight() { return this.methodStack.length * TipeMethod.height + (this.finsished ? 0 : 20); }
 
-    fragmentStack = [];
+    methodStack = [];
 
     constructor(inTipe) {
         super(inTipe, color('#E8E288'), 'map');
-        this.fragmentStack.push('absoluteValue');
+        this.methodStack.push(inTipe.methods['absoluteValue']);
+        this.methodStack.push(inTipe.methods['plusOne']);
     }
 
     draw() {
@@ -59,6 +60,9 @@ class MapMachine extends Machine {
         
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
+            fill(Editor.backgroundColor);
+            rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
+            
             fill(this.color);
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
         })
@@ -76,13 +80,19 @@ class MapMachine extends Machine {
     }
 
     drawFragmentStack() {
+        Renderer.push(this);
         let currentTipe = this.inTipe;
-        this.fragmentStack.forEach((methodName) => {
-            const method = currentTipe.methods[methodName];
+        this.methodStack.forEach(method => {
             method.draw();
             currentTipe = method.outputTipe;
+            Renderer.translate(0, TipeMethod.height);
         })
+        Renderer.pop(this);
     }
 
-    apply(tipedValue) { tipedValue }
+    apply(tipedValue) { 
+        return this.methodStack.reduce(function (prev, method) {
+            return method.run(prev);
+        }, tipedValue);
+    }
 }

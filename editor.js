@@ -33,6 +33,7 @@ class Editor {
     static pipeIndent = 30;
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
+    static get backgroundColor() { return color(100); }
 
     get pipeTipeChecks() { return this.endingTipe.name === this.lastOutputTipe.name; }
 
@@ -64,7 +65,7 @@ class Editor {
 
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
-            fill(100);
+            fill(Editor.backgroundColor);
             rect(0, 0, this.width, this.height);
 
             fill(66);

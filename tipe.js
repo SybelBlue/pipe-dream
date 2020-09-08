@@ -123,6 +123,7 @@ class NumberTipe extends Tipe {
     static isNumberTipe = true;
     static methods = {
         absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(abs(self.value)); }),
+        plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(self.value + 1); }),
     }
     static new(value=0) { return new TipedValue(NumberTipe, { value: value }); }
     static shadowTextWidth = null;
