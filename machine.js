@@ -17,18 +17,24 @@ class Machine extends PipelineObject {
     }
 
     draw() {
-        Renderer.newRenderable(Layers.Machine, () => {
-            noStroke();
-            fill(this.color);
-            rect(0, 0, Machine.width, Machine.bodyHeight, 10, 10, 10, 0);
+        Renderer.newRenderable(Layers.Machine, 
+            (regions) => {
+                if (regions.body.hovering && clickThisFrame) this.onClick();
+                noStroke();
+                fill(this.color);
+                rect(0, 0, Machine.width, Machine.bodyHeight, 10, 10, 10, 0);
 
-            if (this.highlighting) noStroke();
-            textSize(16);
-            textFont('Georgia');
-            fill(Machine.textColor);
-            text(this.text, 10, 30);
-        });
+                stroke(0);
+                textSize(26);
+                textFont('Courier New');
+                fill(Machine.textColor);
+                text(this.text, 10, 30);
+            },
+            Renderer.regionStub('body', 0, 0, Machine.width, Machine.bodyHeight)
+        );
     }
+
+    onClick() { console.log('machine body clicked'); }
 
     apply(tipedValue) { return tipedValue; }
 }
