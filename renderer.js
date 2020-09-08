@@ -71,6 +71,8 @@ class Renderer {
     static toRender = [];
     static regions = [];
 
+    static keyListeners = [];
+
     static clearStack() { Renderer.stackTop = Renderer.Node.Head; }
     static initialize = Renderer.clearStack;
 
@@ -85,6 +87,15 @@ class Renderer {
         const width = textWidth(text);
         pop();
         return width;
+    }
+
+    static textHeight(font, size) {
+        push();
+        textFont(font);
+        textSize(size);
+        const height = textAscent();
+        pop();
+        return height;
     }
 
     static translate(x, y) {
@@ -148,7 +159,7 @@ class Renderer {
 
     static renderAll() {
         const hit = Renderer.recomputeRegions();
-        
+
         for (const renderable of Renderer.toRender) {
             push();
             translate(renderable.translation[0], renderable.translation[1]);
