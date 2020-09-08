@@ -1,5 +1,5 @@
 class TipeMethod {
-    static height = 20;
+    static height = 25;
     static font = 'Courier New';
     static fontSize = 20;
 
@@ -35,15 +35,15 @@ class TipeMethod {
 
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
-                stroke(regions.fragment.hovering ? 255 : 0, 0, 0)
+                stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
-                textFont(TipeProperty.font);
-                textSize(TipeProperty.fontSize);
-                rect(0, 0, width, TipeProperty.height, 0, 10, 10, 0);
+                textFont(TipeMethod.font);
+                textSize(TipeMethod.fontSize);
+                rect(0, 0, width, TipeMethod.height, 0, 10, 10, 0);
                 fill(0);
-                text(this.name, 5, 2 + textAscent() * 0.8);
+                text(this.name, 5, textAscent());
             },
-            Renderer.regionStub('fragment', 0, 0, width, TipeProperty.height)
+            Renderer.regionStub('fragment', 0, 0, width, TipeMethod.height)
         );
         Renderer.pop(this);
     }
@@ -75,7 +75,7 @@ class TipedValue {
 class Tipe {
     static name = 'top';
     static methods = {};
-    static get color() { return color('#e8e288') };
+    static get color() { return color('#3cdbd3') };
     static new() { throw new Error('TopTipe cannot be instantiated') }
     // provide middle top
     static draw(tipe) { console.log('draw unimplemented for ' + name); }

@@ -2,10 +2,9 @@ class Tray {
     static maxWidth = 200;
     static indent = 10;
 
-    options = [];
+    methods = [];
 
     draw() {
-        if (!this.options || !this.options.length)
         Renderer.push(this);
         Renderer.newRenderable(Layers.TrayBackground, function() {
             stroke(80);
@@ -14,13 +13,19 @@ class Tray {
         })
 
         Renderer.translate(Tray.indent, 10);
-        this.options.forEach(function (fragment) {
-            Renderer.newRenderable(Layers.CodeFragment, fragment.draw)
-            Renderer.translate(fragment.height, 0);
-        })
+        for (const method of this.methods) {
+            method.draw();
+            Renderer.translate(0, TipeMethod.height + 10);
+        }
         Renderer.pop(this);
     }
 
+    setOptionsFor(tipe) {
+        this.methods = [];
+        for (const key in tipe.methods) {
+            this.methods.push(tipe.methods[key]);
+        }
+    }
 }
 
 class Editor {
