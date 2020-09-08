@@ -1,7 +1,12 @@
-function exists(item) {
+function exists(item, _throw=true) {
     if (item === null || item === undefined) {
-        throw new Error('null value!');
+        if (_throw) {
+            throw new Error('null value!');
+        } else {
+            return false;
+        }
     }
+    return true;
 }
 
 class TipeMethod {
@@ -97,7 +102,7 @@ class Tipe {
     static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
     // provide middle top
     static drawShape(color=null) {
-        Renderer.newRenderable(Layers.FragmentTab, () => {
+        Renderer.newRenderable(Layers.FragmentShape, () => {
             noStroke();
             fill(0)
             this.shapeOutline(0);
