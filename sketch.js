@@ -24,7 +24,6 @@ function draw() {
     Renderer.renderAll();
     Renderer.clearStack();
 
-    if (clickThisFrame) console.log(frameCount);
     clickThisFrame = false;
 }
 

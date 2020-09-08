@@ -34,6 +34,9 @@ class TipeMethod {
             + 10 + Tipe.shapeIndent;
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
+                if (clickThisFrame && regions.fragment.hovering) {
+                    editor.tray.setOptionsFor(this.outTipe);
+                }
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
