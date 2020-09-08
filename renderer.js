@@ -22,12 +22,12 @@ class Renderer {
 
     static Region = class {
         constructor(layer, x, y, width, height, blocking) {
-            this.layer = layer;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            this.blocking = blocking;
+            exists(this.layer = layer);
+            exists(this.x = x);
+            exists(this.y = y);
+            exists(this.width = width);
+            exists(this.height = height);
+            exists(this.blocking = blocking);
             this.hovering = false;
         }
     

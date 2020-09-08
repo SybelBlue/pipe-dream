@@ -1,3 +1,9 @@
+function exists(item) {
+    if (item === null || item === undefined) {
+        throw new Error('null value!');
+    }
+}
+
 class TipeMethod {
     static height = 25;
     static font = 'Courier New';
@@ -29,11 +35,11 @@ class TipeMethod {
 
     // expects upper left corner is baseline
     draw() {
+        const width = 
+            Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
+            + 10 + Tipe.shapeIndent;
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
-                const width = 
-                    Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
-                    + 10 + Tipe.shapeIndent;
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
@@ -78,6 +84,7 @@ class TipedValue {
 class Tipe {
     static shapeIndent = 16;
     static get shapeMidline() { return Tipe.shapeIndent / 2; }
+    static get shapeHalfWidth() { return Tipe.shapeMidline * 0.8; }
     static shapeHeight = 8;
 
     static name = 'top';
@@ -90,22 +97,21 @@ class Tipe {
     static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
     // provide middle top
     static drawShape(color=null) {
-        Renderer.newRenderable(Layers.FragmentTab, function() {
-            const halfWidth = Tipe.shapeMidline * 0.8;
+        Renderer.newRenderable(Layers.FragmentTab, () => {
             noStroke();
             fill(0)
-            triangle(
-                -halfWidth, 0,
-                halfWidth,  0,
-                0,          Tipe.shapeHeight - 2
-            );
+            this.shapeOutline(0);
             fill(color || Tipe.color);
-            triangle(
-                -halfWidth, -2,
-                halfWidth,  -2,
-                0,          Tipe.shapeHeight - 4
-            );
+            this.shapeOutline(-2);
         });
+    }
+
+    static shapeOutline(yOffset) {
+        triangle(
+            -Tipe.shapeHalfWidth,                        yOffset,
+             Tipe.shapeHalfWidth,                        yOffset,
+                               0, Tipe.shapeHeight - 2 + yOffset
+        );
     }
 
     static Stream(tipe) {
@@ -140,6 +146,10 @@ class BooleanTipe extends Tipe {
     static draw(bool) {
         TextTipe.draw(bool ? 'True' : 'False');
     }
+
+    static shapeOutline(yOffset) {
+        arc(0, yOffset, Tipe.shapeHalfWidth * 2, Tipe.shapeHeight - 2, 0, PI, OPEN);
+    }
 }
 
 class NumberTipe extends Tipe {
@@ -150,6 +160,7 @@ class NumberTipe extends Tipe {
     static methods = {
         absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(abs(self.value)); }),
         plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(self.value + 1); }),
+        isPositive: new TipeMethod('isPositive', NumberTipe, BooleanTipe, function(self) { return BooleanTipe.new(self.value > 0); }),
     }
     static new(value=0) { return new TipedValue(NumberTipe, { value: value }); }
     static shadowTextWidth = null;

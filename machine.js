@@ -46,7 +46,7 @@ class MapMachine extends Machine {
     constructor(inTipe) {
         super(inTipe, color('#E8E288'), 'map');
         this.methodStack.push(inTipe.methods['absoluteValue']);
-        this.methodStack.push(inTipe.methods['plusOne']);
+        this.methodStack.push(inTipe.methods['isPositive']);
     }
 
     draw() {
