@@ -142,6 +142,7 @@ class BooleanTipe extends Tipe {
     static methods = {
         negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, function(self) { return BooleanTipe.new(!self.value); }),
     };
+
     static new(value=false) { return new TipedValue(BooleanTipe, { value: value }); }
     
     static drawShadow() {

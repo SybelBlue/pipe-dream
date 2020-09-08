@@ -53,29 +53,31 @@ class MapMachine extends Machine {
     }
 
     draw() {
+        // draw body
         super.draw();
         
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
+
+            // clean interior
             fill(Editor.backgroundColor);
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
-            
+
+            // draw arm
             fill(this.color);
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
+
+            // draw tail
+            rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
         })
         
+        // draw fragment stack
         Renderer.push(this);
 
         Renderer.translate(Machine.bodyIndent, Machine.bodyHeight);
         this.drawFragmentStack();
 
         Renderer.pop(this);
-
-        Renderer.newRenderable(Layers.Machine, () => {
-            noStroke();
-            fill(this.color);
-            rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
-        })
     }
 
     drawFragmentStack() {
