@@ -43,7 +43,7 @@ class Editor {
 
     get lastOutputTipe() {
         const last = Array.last(this.pipeline);
-        return last ? last.outTipe : this.startingTipe;
+        return last ? last.outputTipe : this.startingTipe;
     }
 
     constructor(startingTipe, endingTipe, x, y, width, height) {
