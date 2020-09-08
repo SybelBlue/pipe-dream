@@ -46,7 +46,9 @@ class Tray {
     optionClicked(option) {
         if (!this.mode) return;
         if (this.mode.type === 'fragment') {
-            this.mode.selectedMachine && this.mode.selectedMachine.pushFragment(option, this.machineIndex);
+            if (this.mode.selectedMachine) {
+                this.mode.selectedMachine.pushFragment(option, this.mode.machineIndex);
+            }
         } else if (this.mode.type === 'machine') {
             console.log('something weird happened');
         }
