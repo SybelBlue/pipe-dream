@@ -2,7 +2,7 @@ class Tray {
     static maxWidth = 200;
     static indent = 10;
 
-    methods = [];
+    drawable = [];
 
     draw() {
         Renderer.push(this);
@@ -13,7 +13,7 @@ class Tray {
         })
 
         Renderer.translate(Tray.indent, 10);
-        for (const method of this.methods) {
+        for (const method of this.drawable) {
             method.draw();
             Renderer.translate(0, TipeMethod.height + 10);
         }
@@ -21,9 +21,9 @@ class Tray {
     }
 
     setOptionsFor(tipe) {
-        this.methods = [];
+        this.drawable = [];
         for (const key in tipe.methods) {
-            this.methods.push(tipe.methods[key]);
+            this.drawable.push(tipe.methods[key]);
         }
     }
 }
