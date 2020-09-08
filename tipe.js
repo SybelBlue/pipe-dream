@@ -2,6 +2,7 @@ class TipeMethod {
     static height = 25;
     static font = 'Courier New';
     static fontSize = 20;
+    static tipeShapeIndent = 16;
 
     constructor(name, inTipe, outTipe, compute) {
         this.name = name;
@@ -31,7 +32,7 @@ class TipeMethod {
     draw() {
         Renderer.push(this);
 
-        const width = Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10;
+        const width = Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + TipeMethod.tipeShapeIndent;
 
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
@@ -41,7 +42,7 @@ class TipeMethod {
                 textSize(TipeMethod.fontSize);
                 rect(0, 0, width, TipeMethod.height, 0, 10, 10, 0);
                 fill(0);
-                text(this.name, 5, textAscent());
+                text(this.name, TipeMethod.tipeShapeIndent + 5, textAscent());
             },
             Renderer.regionStub('fragment', 0, 0, width, TipeMethod.height)
         );
