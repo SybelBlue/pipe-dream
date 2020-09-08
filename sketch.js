@@ -1,5 +1,6 @@
 let editor;
 let requestRescaleCanvas = false;
+let clickThisFrame = false;
 
 // pallete ideas: 
 // orange-yellow-green-dark blue-light blue
@@ -22,6 +23,9 @@ function draw() {
 
     Renderer.renderAll();
     Renderer.clearStack();
+
+    if (clickThisFrame) console.log(frameCount);
+    clickThisFrame = false;
 }
 
 function windowResized() { 
@@ -32,4 +36,4 @@ function windowResized() {
 
 function mouseMoved() { editor.checkHighlight(); }
 function mouseDragged() { editor.checkHighlight(); }
-function mouseClicked() { editor.pushMachine(Machine, color('#EC4E20'), 'machine' + editor.pipeline.length) }
+function mouseClicked() { clickThisFrame = true; }

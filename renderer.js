@@ -11,8 +11,9 @@ const Layers = {
 
 class Renderer {
     static Node = class {
-        static get Head() { return new Renderer.Node(null, 'Renderer Head'); }
-        constructor(previous, source) {
+        static get Head() { return new Renderer.Node(0, null, 'Renderer Head'); }
+        constructor(key, previous, source) {
+            this.key = key;
             this.previous = previous;
             this.source = source;
             this.x = previous ? previous.x : 0;
@@ -64,6 +65,7 @@ class Renderer {
         }
     }
 
+    static _keyCount = 1;
     static stackTop = null;
     static toRender = [];
     static regions = [];
@@ -92,7 +94,11 @@ class Renderer {
     static push(source) {
         if (source == null) throw new Error('null source!');
 
-        Renderer.stackTop = new Renderer.Node(Renderer.stackTop, source);
+        const key = Renderer._keyCount++;
+
+        Renderer.stackTop = new Renderer.Node(key, Renderer.stackTop, source);
+
+        // return function () { Renderer.pop(key); } // make pop take key?
     }
     
     static pop(source) {
@@ -149,5 +155,8 @@ class Renderer {
         }
         Renderer.toRender = [];
         Renderer.regions = [];
+
+        Renderer.stackTop = Renderer.Node.Head;
+        Renderer._keyCount = 1;
     }
 }
