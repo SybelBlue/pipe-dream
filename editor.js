@@ -3,6 +3,7 @@ class Tray {
     static indent = 10;
 
     drawable = [];
+    selectedMachine = null;
 
     draw() {
         Renderer.push(this);
@@ -14,17 +15,25 @@ class Tray {
 
         Renderer.translate(Tray.indent, 10);
         for (const method of this.drawable) {
-            method.draw();
+            method.draw(() => this.fragmentClicked(method));
             Renderer.translate(0, TipeMethod.height + 10);
         }
         Renderer.pop(this);
     }
 
-    setOptionsFor(tipe) {
+    loadOptionsFor(tipe={methods:[]}, machine, index) {
         this.drawable = [];
+        this.selectedMachine = machine;
+        this.machineIndex = index;
+
         for (const key in tipe.methods) {
             this.drawable.push(tipe.methods[key]);
         }
+    }
+
+    fragmentClicked(fragment) {
+        this.selectedMachine && this.selectedMachine.pushFragment(fragment, this.machineIndex);
+        this.loadOptionsFor();
     }
 }
 

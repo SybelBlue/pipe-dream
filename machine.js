@@ -88,12 +88,21 @@ class MapMachine extends Machine {
 
         Renderer.push(this);
         let currentTipe = this.inTipe;
-        this.methodStack.forEach(method => {
-            method.draw();
+        this.methodStack.forEach((method, index) => {
+            method.draw(() => {
+                editor.tray.loadOptionsFor(method.outTipe, this, index);
+                this.fragmentClicked(method, index);
+            });
             currentTipe = method.outputTipe;
             Renderer.translate(0, TipeMethod.height);
         })
         Renderer.pop(this);
+    }
+
+    fragmentClicked() { console.log('click within machine'); }
+
+    pushFragment(fragment, sourceIndex) { 
+        this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
     }
 
     apply(tipedValue) { 

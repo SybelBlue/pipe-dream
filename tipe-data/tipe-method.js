@@ -28,15 +28,14 @@ class TipeMethod {
     }
 
     // expects upper left corner is baseline
-    draw() {
+    draw(onClick) {
         const width = 
             Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
             + 10 + Tipe.shapeIndent;
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
-                if (clickThisFrame && regions.fragment.hovering) {
-                    editor.tray.setOptionsFor(this.outTipe);
-                }
+                if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
+                
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
