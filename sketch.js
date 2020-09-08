@@ -21,7 +21,11 @@ function draw() {
 
     editor.draw();
 
-    Renderer.renderAll();
+    const focused = Renderer.renderAll().found;
+
+    if (!focused && clickThisFrame) {
+        editor.tray.loadMachineOptions();
+    }
     Renderer.clearStack();
 
     clickThisFrame = false;

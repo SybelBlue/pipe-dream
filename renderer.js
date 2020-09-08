@@ -147,7 +147,8 @@ class Renderer {
     }
 
     static renderAll() {
-        Renderer.recomputeRegions();
+        const hit = Renderer.recomputeRegions();
+        
         for (const renderable of Renderer.toRender) {
             push();
             translate(renderable.translation[0], renderable.translation[1]);
@@ -159,5 +160,7 @@ class Renderer {
 
         Renderer.stackTop = Renderer.Node.Head;
         Renderer._keyCount = 1;
+
+        return hit;
     }
 }

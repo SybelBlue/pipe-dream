@@ -13,7 +13,7 @@ class Tray {
             rect(0, 0, Tray.maxWidth, editor.height, 0, 20, 20, 0);
         })
 
-        Renderer.translate(Tray.indent, 10);
+        Renderer.translate(Tray.indent, 20);
         for (const option of this.drawable) {
             option.draw(() => this.optionClicked(option));
             Renderer.translate(0, TipeMethod.height + 10);
@@ -52,7 +52,6 @@ class Tray {
         } else if (this.mode.type === 'machine') {
             console.log('something weird happened');
         }
-        this.clearAllOptions();
     }
 }
 
@@ -87,6 +86,7 @@ class Editor {
 
         this.pipeline = [];
         this.tray = new Tray();
+        this.tray.loadMachineOptions();
     }
 
     draw() {
@@ -157,19 +157,24 @@ class Editor {
     removeMachine(key) {
         let i = this.pipeline.findIndex(machine => machine.key === key);
         if (i < 0) throw new Error('removing non existent machine');
+        this.pipeline.splice(i, 1);
 
-        let currentTipe = this.pipeline[i].inTipe;
-        // if it doesn't break the pipeline to remove the ith machine...
-        if (i + 1 < this.pipeline.length && this.pipeline[i + 1].inTipe.name === currentTipe.name) {
-            // cut it out
-            this.pipeline.splice(i, 1);
-        } else {
-            // else truncate the pipeline to a valid state
-            this.pipeline = this.pipeline.slice(0, i);
-        }
+        this.validatePipeline();
     }
 
     pushMachine(machineConstructor, ...args) {
         this.pipeline.push(new machineConstructor(this._keyCount++, this.lastOutputTipe, ...args));
+    }
+
+    validatePipeline() {
+        let i = 0;
+        let currentTipe = this.startingTipe.name;
+
+        while (i < this.pipeline.length && currentTipe === this.pipeline[i].inTipe.name) {
+            currentTipe = this.pipeline[i].outputTipe.name;
+            i++;
+        }
+
+        this.pipeline = this.pipeline.slice(0, i);
     }
 }

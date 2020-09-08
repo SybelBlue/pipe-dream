@@ -149,6 +149,8 @@ class MapMachine extends Machine {
 
     pushFragment(fragment, sourceIndex) { 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
+        editor.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);
+        editor.validatePipeline();
     }
 
     apply(tipedValue) { 
