@@ -2,8 +2,6 @@ class TipeMethod {
     static height = 25;
     static font = 'Courier New';
     static fontSize = 20;
-    static tipeShapeIndent = 16;
-    static tipeShapeHeight = 8;
 
     constructor(name, inTipe, outTipe, compute) {
         this.name = name;
@@ -31,22 +29,26 @@ class TipeMethod {
 
     // expects upper left corner is baseline
     draw() {
-
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 const width = 
                     Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
-                    + 10 + TipeMethod.tipeShapeIndent;
+                    + 10 + Tipe.shapeIndent;
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
                 textSize(TipeMethod.fontSize);
                 rect(0, 0, width, TipeMethod.height, 0, 10, 10, 0);
                 fill(0);
-                text(this.name, TipeMethod.tipeShapeIndent + 5, textAscent());
+                text(this.name, Tipe.shapeIndent + 5, textAscent());
             },
             Renderer.regionStub('fragment', 0, 0, width, TipeMethod.height)
         );
+
+        Renderer.push(this);
+        Renderer.translate(Tipe.shapeMidline, TipeMethod.height);
+        Tipe.drawShape(this.outTipe.color);
+        Renderer.pop(this);
     }
 }
 
@@ -74,6 +76,10 @@ class TipedValue {
 }
 
 class Tipe {
+    static shapeIndent = 16;
+    static get shapeMidline() { return Tipe.shapeIndent / 2; }
+    static shapeHeight = 8;
+
     static name = 'top';
     static methods = {};
     static get color() { return color('#3cdbd3') };
@@ -83,13 +89,21 @@ class Tipe {
     // provide middle top
     static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
     // provide middle top
-    static drawShape() {
+    static drawShape(color=null) {
         Renderer.newRenderable(Layers.FragmentTab, function() {
-            const halfWidth = TipeMethod.tipeShapeIndent * 0.8 * 0.5;
+            const halfWidth = Tipe.shapeMidline * 0.8;
+            noStroke();
+            fill(0)
             triangle(
                 -halfWidth, 0,
                 halfWidth,  0,
-                0,          TipeMethod.tipeShapeHeight
+                0,          Tipe.shapeHeight - 2
+            );
+            fill(color || Tipe.color);
+            triangle(
+                -halfWidth, -2,
+                halfWidth,  -2,
+                0,          Tipe.shapeHeight - 4
             );
         });
     }

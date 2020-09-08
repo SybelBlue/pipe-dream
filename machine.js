@@ -77,6 +77,11 @@ class MapMachine extends Machine {
 
     drawFragmentStack() {
         Renderer.push(this);
+        Renderer.translate(Tipe.shapeMidline, 0);
+        this.inTipe.drawShape(this.color);
+        Renderer.pop(this);
+
+        Renderer.push(this);
         let currentTipe = this.inTipe;
         this.methodStack.forEach(method => {
             method.draw();
