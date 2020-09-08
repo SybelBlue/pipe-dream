@@ -17,7 +17,6 @@ class Machine extends PipelineObject {
     }
 
     draw() {
-        Renderer.push(this);
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);
@@ -29,11 +28,6 @@ class Machine extends PipelineObject {
             fill(Machine.textColor);
             text(this.text, 10, 30);
         });
-
-        const radius = Machine.width / 4;
-
-        Renderer.translate(2 * radius, this.height);
-        Renderer.pop(this);
     }
 
     apply(tipedValue) { return tipedValue; }
@@ -66,12 +60,14 @@ class MapMachine extends Machine {
             fill(this.color);
             rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
         })
+        
         Renderer.push(this);
 
         Renderer.translate(Machine.bodyIndent, Machine.bodyHeight);
         this.drawFragmentStack();
 
         Renderer.pop(this);
+
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
             fill(this.color);

@@ -3,6 +3,7 @@ class TipeMethod {
     static font = 'Courier New';
     static fontSize = 20;
     static tipeShapeIndent = 16;
+    static tipeShapeHeight = 8;
 
     constructor(name, inTipe, outTipe, compute) {
         this.name = name;
@@ -30,12 +31,12 @@ class TipeMethod {
 
     // expects upper left corner is baseline
     draw() {
-        Renderer.push(this);
-
-        const width = Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + TipeMethod.tipeShapeIndent;
 
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
+                const width = 
+                    Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
+                    + 10 + TipeMethod.tipeShapeIndent;
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
@@ -46,7 +47,6 @@ class TipeMethod {
             },
             Renderer.regionStub('fragment', 0, 0, width, TipeMethod.height)
         );
-        Renderer.pop(this);
     }
 }
 
@@ -82,6 +82,17 @@ class Tipe {
     static draw(tipe) { console.log('draw unimplemented for ' + name); }
     // provide middle top
     static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
+    // provide middle top
+    static drawShape() {
+        Renderer.newRenderable(Layers.FragmentTab, function() {
+            const halfWidth = TipeMethod.tipeShapeIndent * 0.8 * 0.5;
+            triangle(
+                -halfWidth, 0,
+                halfWidth,  0,
+                0,          TipeMethod.tipeShapeHeight
+            );
+        });
+    }
 
     static Stream(tipe) {
         return class InnerTipe extends Tipe {
@@ -138,7 +149,7 @@ class NumberTipe extends Tipe {
     }
 
     static draw(num, layer=Layers.Data) {
-        if (num > 9999) {
+        if (typeof(num) === typeof(0) && num > 9999) {
             num = 'Big#';
         }
         Renderer.newRenderable(layer, () => {

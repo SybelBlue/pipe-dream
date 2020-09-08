@@ -6,6 +6,7 @@ const Layers = {
     Data: 7,
     Machine: 10,
     CodeFragment: 13,
+    FragmentTab: 14,
 }
 
 class Renderer {
