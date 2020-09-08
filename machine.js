@@ -36,7 +36,10 @@ class Machine extends PipelineObject {
 class MapMachine extends Machine {
     static tailHeight = 20;
 
-    get outputTipe() { return this.inTipe; }
+    get outputTipe() { 
+        const last = Array.last(this.methodStack);
+        return last ? last.outTipe : this.inTipe;
+    }
     get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
     get finsished() { return true; }
     get innerHeight() { return this.methodStack.length * TipeMethod.height + (this.finsished ? 0 : 20); }

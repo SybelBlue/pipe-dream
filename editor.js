@@ -42,7 +42,8 @@ class Editor {
     }
 
     get lastOutputTipe() {
-        return this.pipeline.length ? this.pipeline[this.pipeline.length - 1].outputTipe : this.startingTipe;
+        const last = Array.last(this.pipeline);
+        return last ? last.outTipe : this.startingTipe;
     }
 
     constructor(startingTipe, endingTipe, x, y, width, height) {

@@ -58,7 +58,7 @@ class TipeMethod {
 
         Renderer.push(this);
         Renderer.translate(Tipe.shapeMidline, TipeMethod.height);
-        Tipe.drawShape(this.outTipe.color);
+        this.outTipe.drawShape(this.outTipe.color);
         Renderer.pop(this);
     }
 }
@@ -106,7 +106,7 @@ class Tipe {
             noStroke();
             fill(0)
             this.shapeOutline(0);
-            fill(color || Tipe.color);
+            fill(color || this.color);
             this.shapeOutline(-2);
         });
     }
@@ -153,7 +153,7 @@ class BooleanTipe extends Tipe {
     }
 
     static shapeOutline(yOffset) {
-        arc(0, yOffset, Tipe.shapeHalfWidth * 2, Tipe.shapeHeight - 2, 0, PI, OPEN);
+        arc(0, yOffset, Tipe.shapeHalfWidth * 2, 1.5 * Tipe.shapeHeight, 0, PI, OPEN);
     }
 }
 
