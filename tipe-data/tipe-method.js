@@ -3,6 +3,9 @@ class TipeMethod {
     static font = 'Courier New';
     static fontSize = 20;
 
+    get width() {
+        return Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + Tipe.shapeIndent;
+    }
     constructor(name, inTipe, outTipe, compute) {
         this.name = name;
         this.inTipe = inTipe;
@@ -29,13 +32,12 @@ class TipeMethod {
 
     // expects upper left corner is baseline
     draw(onClick) {
-        const width = 
-            Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) 
-            + 10 + Tipe.shapeIndent;
+        const width = this.width;
+            
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
-                
+
                 stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
@@ -61,5 +63,28 @@ class TipeProperty extends TipeMethod {
 
     graftOnto(object, defaults) {
         object[this.name] = defaults[this.name] || this.outTipe.new();
+    }
+}
+
+class TipeUserMethod extends TipeMethod {
+    static gap = 5;
+    get height() {
+        return super.height + 8;
+    }
+    get width() {
+        return this.inputBox.width + TipeUserMethod.gap + super.width;
+    }
+
+    constructor(name, inTipe, outTipe, textBox, compute) {
+        super(name, inTipe, outTipe, compute);
+        this.inputBox = textBox;
+    }
+
+    draw() {
+        super.draw();
+        Renderer.push(this);
+        Renderer.translate(super.width + TipeUserMethod.gap, 0);
+        this.inputBox.draw();
+        Renderer.pop(this);
     }
 }

@@ -44,6 +44,7 @@ function keyTyped() {
         TextBox.keyListeners.forEach(l => l.keyDown(key)); 
     }
 }
+
 function keyPressed() { 
     switch (keyCode) {
         case BACKSPACE:

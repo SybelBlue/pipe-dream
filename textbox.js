@@ -80,6 +80,7 @@ class TextBox {
 }
 
 class NumberBox extends TextBox{
+    get value() { return Number.parseFloat(this.text); }
     validate() {
         this.text = this.text.trim();
         return !this.text.includes(' ') && !Number.isNaN(Number.parseFloat(this.text));
