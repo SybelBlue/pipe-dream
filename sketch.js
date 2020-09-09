@@ -13,7 +13,7 @@ function setup() {
     editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
     editor.pushMachine(MapMachine);
     Renderer.initialize();
-    textbox = new TextBox({ defaultText: 'hello' });
+    textbox = new NumberBox({ defaultText: 'float' });
 }
 
 function draw() {

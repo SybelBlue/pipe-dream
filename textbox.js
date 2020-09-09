@@ -46,13 +46,12 @@ class TextBox {
     }
 
     keyDown(key) {
-        console.log(key);
         if (!this.selected) return;
-        this.text = !this.used && this.text === this.defaultText ? key : this.text + key;
+        this.text = !this.used ? key : this.text + key;
         this.used = true;
     }
     backspaceDown() {
-        if (this.text.length === 0) return;
+        if (this.text.length === 0 || !this.used) return;
         this.text = this.text.substring(0, this.text.length - 1);
         if (this.text.length === 0) {
             this.used = false;
@@ -61,6 +60,7 @@ class TextBox {
     }
 
     reject() { 
+        this.used = this.last !== this.defaultText;
         this.text = this.last;
         this.selected = false;
     }
@@ -76,5 +76,12 @@ class TextBox {
 
     validate() {
         return true;
+    }
+}
+
+class NumberBox extends TextBox{
+    validate() {
+        this.text = this.text.trim();
+        return !this.text.includes(' ') && !Number.isNaN(Number.parseFloat(this.text));
     }
 }
