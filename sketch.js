@@ -2,6 +2,8 @@ let editor;
 let requestRescaleCanvas = false;
 let clickThisFrame = false;
 
+let textbox;
+
 // pallete ideas: 
 // orange-yellow-green-dark blue-light blue
 // https://coolors.co/ff8360-e8e288-7dce82-3cdbd3-00fff5
@@ -11,6 +13,7 @@ function setup() {
     editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
     editor.pushMachine(MapMachine);
     Renderer.initialize();
+    textbox = new TextBox({ defaultText: 'hello' });
 }
 
 function draw() {
@@ -20,6 +23,8 @@ function draw() {
     }
 
     editor.draw();
+
+    textbox.draw(Layers.Debug);
 
     const focused = Renderer.renderAll().found;
 
@@ -38,3 +43,23 @@ function windowResized() {
 }
 
 function mouseClicked() { clickThisFrame = true; }
+
+function keyTyped() { 
+    if (/[\S ]+/.test(key)) {
+        TextBox.keyListeners.forEach(l => l.keyDown(key)); 
+    }
+}
+function keyPressed() { 
+    switch (keyCode) {
+        case BACKSPACE:
+            TextBox.keyListeners.forEach(l => l.backspaceDown()); 
+            break;
+        case ESCAPE:
+            TextBox.keyListeners.forEach(l => l.reject());
+            break;
+        case ENTER:
+        case RETURN:
+            TextBox.keyListeners.forEach(l => l.accept());
+            break;
+    }
+}

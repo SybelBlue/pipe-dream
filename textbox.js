@@ -1,16 +1,21 @@
 class TextBox {
+    static keyListeners = [];
+
     get height() { return Renderer.textHeight(this.font, this.fontSize) + 10; }
     get width() { return max(20, Renderer.textWidth(this.text, this.font, this.fontSize) + 10); }
-    
+
     selected = false;
     used = false;
 
     constructor(config={}) {
         this.defaultText = config.defaultText || '';
         this.text = this.defaultText;
+        this.last = this.defaultText;
 
         this.font = config.font || 'Courier New';
         this.fontSize = config.fontSize || 16;
+
+        TextBox.keyListeners.push(this);
     }
 
     draw(layer=Layers.CodeFragment) {
@@ -27,28 +32,49 @@ class TextBox {
                     this.selected = hasFocus;
                 }
 
-                text(this.text, 5, 5);
-                fill(255);
+                fill(this.selected ? color(20, 200, 200) : color(200));
                 rect(0, 0, width, height);
+
+                fill(this.used ? 0 : 100);
+                stroke(0);
+                textSize(this.fontSize);
+                textFont(this.font);
+                text(this.text, 5, 5 + height / 2);
             },
             Renderer.regionStub('body', 0, 0, width, height)
         )
     }
 
     keyDown(key) {
-        if (!selected) return;
-        this.text = !used && this.text === this.defaultText ? key : this.text + key;
+        console.log(key);
+        if (!this.selected) return;
+        this.text = !this.used && this.text === this.defaultText ? key : this.text + key;
         this.used = true;
     }
-
     backspaceDown() {
-        if (!this.text.length) return;
-        this.text = this.text.substring(0, this.length - 1);
-        if (!this.text.length) {
+        if (this.text.length === 0) return;
+        this.text = this.text.substring(0, this.text.length - 1);
+        if (this.text.length === 0) {
             this.used = false;
             this.text = this.defaultText;
         }
     }
 
-    valiate() {}
+    reject() { 
+        this.text = this.last;
+        this.selected = false;
+    }
+
+    accept() {
+        if (!this.validate()) {
+            this.reject();
+        } else {
+            this.last = this.text;
+            this.selected = false;
+        }
+    }
+
+    validate() {
+        return true;
+    }
 }

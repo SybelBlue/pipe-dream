@@ -4,7 +4,7 @@ class Editor {
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
-    
+
     _keyCount = 0;
 
     get pipeTipeChecks() { return this.endingTipe.name === this.lastOutputTipe.name; }
