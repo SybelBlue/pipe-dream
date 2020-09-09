@@ -9,9 +9,9 @@ class Tipe {
     static get color() { return color('#3cdbd3') };
     static new() { throw new Error('TopTipe cannot be instantiated') }
     // provide middle top
-    static draw(tipe) { console.log('draw unimplemented for ' + name); }
+    static draw(tipe) { console.log('draw unimplemented for ' + this.name); }
     // provide middle top
-    static drawShadow() { console.log('drawShadow unimplemented for ' + name); }
+    static drawShadow() { console.log('drawShadow unimplemented for ' + this.name); }
     // provide middle top
     static drawShape(color=null) {
         Renderer.newRenderable(Layers.FragmentShape, () => {
@@ -41,22 +41,21 @@ class Tipe {
         }
     }
 
-    static Function(inTipe, outTipe, func) {
+    static Function(inTipe, outTipe) {
         return class InnerTipe extends Tipe {
             static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
             static inTipe = inTipe;
             static outTipe = outTipe;
             static isFunctionTipe = true;
-            static compute = func;
             static basic = true;
-            static new() { return new TipedValue(InnerTipe, { value: func })}
+            static new(func) { return new TipedValue(InnerTipe, { value: func })}
         }
     }
 }
 
 class BooleanTipe extends Tipe {
     static name = 'Boolean';
-    static variableName = 'boolean';
+    static variableName = 'bool';
     static basic = true;
     static isBooleanTipe = true;
     static methods = {
@@ -87,7 +86,19 @@ class NumberTipe extends Tipe {
     static methods = {
         absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(abs(self.value)); }),
         plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(self.value + 1); }),
-        isPositive: new TipeMethod('isPositive', NumberTipe, BooleanTipe, function(self) { return BooleanTipe.new(self.value > 0); }),
+        isPositive: new TipeMethod(
+            'isPositive', 
+            NumberTipe, 
+            BooleanTipe, 
+            function(self) { return BooleanTipe.new(self.value > 0); }),
+        greaterThan: new TipeMethod(
+            'greaterThan', 
+            NumberTipe, 
+            Tipe.Function(NumberTipe, BooleanTipe),
+            function(self) { 
+                return Tipe.Function(NumberTipe, BooleanTipe).new((nVal) => BooleanTipe.new(self.value > nVal.value))
+            }
+        )
     }
     static new(value=0) { return new TipedValue(NumberTipe, { value: value }); }
     static shadowTextWidth = null;
@@ -176,7 +187,7 @@ class ColorTipe extends Tipe {
 
 class IDCardTipe extends Tipe {
     static name = 'IDCard';
-    static variableName = 'idCard';
+    static variableName = 'id';
     static methods = {
         name: new TipeProperty('name', IDCardTipe, TextTipe),
         age: new TipeProperty('age', IDCardTipe, NumberTipe),
