@@ -1,10 +1,19 @@
 class TextBox {
     static keyListeners = [];
 
-    get height() { return Renderer.textHeight(this.font, this.fontSize) + 10; }
+    get value() { return this.text; }
+    get height() { 
+        return Renderer.textHeight(this.font, this.fontSize) + 10;
+    }
     get width() { return max(20, Renderer.textWidth(this.text, this.font, this.fontSize) + 10); }
 
-    selected = false;
+    _selected = false;
+    get selected() { return this._selected; }
+    set selected(value) {
+        if (!value) this.accept();
+        this._selected = value;
+    }
+
     used = false;
 
     constructor(config={}) {
@@ -25,11 +34,7 @@ class TextBox {
         Renderer.newRenderable(layer, 
             (regions) => {
                 if (clickThisFrame) {
-                    const hasFocus = regions.body.hovering;
-                    if (this.selected && !hasFocus) {
-                        this.validate();
-                    }
-                    this.selected = hasFocus;
+                    this.selected = regions.body.hovering;
                 }
 
                 fill(this.selected ? color(20, 200, 200) : color(200));
@@ -62,7 +67,7 @@ class TextBox {
     reject() { 
         this.used = this.last !== this.defaultText;
         this.text = this.last;
-        this.selected = false;
+        this._selected = false;
     }
 
     accept() {
@@ -70,19 +75,22 @@ class TextBox {
             this.reject();
         } else {
             this.last = this.text;
-            this.selected = false;
+            this._selected = false;
         }
     }
 
-    validate() {
-        return true;
-    }
+    validate() { return true; }
 }
 
 class NumberBox extends TextBox{
-    get value() { return Number.parseFloat(this.text); }
+    get value() { return Number.parseFloat(this.last); }
     validate() {
         this.text = this.text.trim();
-        return !this.text.includes(' ') && !Number.isNaN(Number.parseFloat(this.text));
+        const parsed = Number.parseFloat(this.text);
+        if (this.text.includes(' ') || Number.isNaN(parsed)) {
+            return false;
+        }
+        this.text = '' + parsed;
+        return true;
     }
 }

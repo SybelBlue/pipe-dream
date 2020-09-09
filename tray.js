@@ -16,7 +16,7 @@ class Tray {
         Renderer.translate(Tray.indent, 20);
         for (const option of this.drawable) {
             option.draw(() => this.optionClicked(option));
-            Renderer.translate(0, TipeMethod.height + 10);
+            Renderer.translate(0, option.height + 10);
         }
         Renderer.pop(this);
     }

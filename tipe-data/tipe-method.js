@@ -1,11 +1,14 @@
 class TipeMethod {
-    static height = 25;
     static font = 'Courier New';
     static fontSize = 20;
 
+    showName = true;
+
+    get height() { return 25; }
     get width() {
         return Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + Tipe.shapeIndent;
     }
+
     constructor(name, inTipe, outTipe, compute, prewrapped=false) {
         this.name = name;
         this.inTipe = inTipe;
@@ -33,8 +36,6 @@ class TipeMethod {
 
     // expects upper left corner is baseline
     draw(onClick) {
-        const width = this.width;
-            
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
@@ -43,15 +44,17 @@ class TipeMethod {
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
                 textSize(TipeMethod.fontSize);
-                rect(0, 0, width, TipeMethod.height, 0, 10, 10, 0);
-                fill(0);
-                text(this.name, Tipe.shapeIndent + 5, textAscent());
+                rect(0, 0, this.width, this.height, 0, 10, 10, 0);
+                if (this.showName) {
+                    fill(0);
+                    text(this.name, Tipe.shapeIndent + 5, textAscent());
+                }
             },
-            Renderer.regionStub('fragment', 0, 0, width, TipeMethod.height)
+            Renderer.regionStub('fragment', 0, 0, this.width, this.height)
         );
 
         Renderer.push(this);
-        Renderer.translate(Tipe.shapeMidline, TipeMethod.height);
+        Renderer.translate(Tipe.shapeMidline, this.height);
         this.outTipe.drawShape(this.outTipe.color);
         Renderer.pop(this);
     }
@@ -67,24 +70,25 @@ class TipeProperty extends TipeMethod {
     }
 }
 
-class TipeUserMethod extends TipeMethod {
-    static gap = 5;
+class UIMethod extends TipeMethod {
     get height() {
-        return super.height + 8;
+        return this.inputBox.height + 8;
     }
+
     get width() {
-        return this.inputBox.width + TipeUserMethod.gap + super.width;
+        return this.inputBox.width + 10 + Tipe.shapeIndent;
     }
 
-    constructor(name, inTipe, outTipe, textBox, compute) {
+    constructor(name, inTipe, outTipe, inputBox, compute) {
         super(name, inTipe, outTipe, compute);
-        this.inputBox = textBox;
+        this.inputBox = inputBox;
+        this.showName = false;
     }
 
-    draw() {
-        super.draw();
+    draw(onClick) {
+        super.draw(onClick);
         Renderer.push(this);
-        Renderer.translate(super.width + TipeUserMethod.gap, 0);
+        Renderer.translate(Tipe.shapeIndent, 4);
         this.inputBox.draw();
         Renderer.pop(this);
     }

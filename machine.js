@@ -90,7 +90,7 @@ class MapMachine extends Machine {
     }
     get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
     get finsished() { return true; }
-    get innerHeight() { return max(10, this.methodStack.length * TipeMethod.height + (this.finsished ? 0 : 20)); }
+    get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finsished ? 0 : 20)); }
 
     methodStack = [];
 
@@ -140,7 +140,7 @@ class MapMachine extends Machine {
                 this.fragmentClicked(method, index);
             });
             currentTipe = method.outputTipe;
-            Renderer.translate(0, TipeMethod.height);
+            Renderer.translate(0, method.height);
         })
         Renderer.pop(this);
     }
