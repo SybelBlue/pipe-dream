@@ -37,11 +37,19 @@ class Tipe {
             static innerTipe = tipe;
             static basic = true;
             static isStreamTipe = true;
-            static new() { 
-                const out = [];
-                out.tipe = InnerTipe;
-                return out;
-            }
+            static new(...values) { return new TipedValue(InnerTipe, { value: values }); }
+        }
+    }
+
+    static Function(inTipe, outTipe, func) {
+        return class InnerTipe extends Tipe {
+            static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
+            static inTipe = inTipe;
+            static outTipe = outTipe;
+            static isFunctionTipe = true;
+            static compute = func;
+            static basic = true;
+            static new() { return new TipedValue(InnerTipe, { value: func })}
         }
     }
 }
@@ -66,7 +74,8 @@ class BooleanTipe extends Tipe {
     }
 
     static shapeOutline(yOffset) {
-        arc(0, yOffset, Tipe.shapeHalfWidth * 2, 1.5 * Tipe.shapeHeight, 0, PI, OPEN);
+        const halfWidth = Tipe.shapeHalfWidth * 0.8 + yOffset/2;
+        rect(-halfWidth, yOffset, halfWidth * 2, Tipe.shapeHeight * 0.8);
     }
 }
 
