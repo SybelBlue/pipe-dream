@@ -2,8 +2,6 @@ let editor;
 let requestRescaleCanvas = false;
 let clickThisFrame = false;
 
-let textbox;
-
 // pallete ideas: 
 // orange-yellow-green-dark blue-light blue
 // https://coolors.co/ff8360-e8e288-7dce82-3cdbd3-00fff5
@@ -13,7 +11,6 @@ function setup() {
     editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
     editor.pushMachine(MapMachine);
     Renderer.initialize();
-    textbox = new NumberBox({ defaultText: 'float' });
 }
 
 function draw() {
@@ -23,8 +20,6 @@ function draw() {
     }
 
     editor.draw();
-
-    textbox.draw(Layers.Debug);
 
     const focused = Renderer.renderAll().found;
 
