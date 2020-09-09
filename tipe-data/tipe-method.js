@@ -6,15 +6,16 @@ class TipeMethod {
     get width() {
         return Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + Tipe.shapeIndent;
     }
-    constructor(name, inTipe, outTipe, compute) {
+    constructor(name, inTipe, outTipe, compute, prewrapped=false) {
         this.name = name;
         this.inTipe = inTipe;
         this.outTipe = outTipe;
-        this.compute = compute;
+        this.compute = prewrapped ? compute : 
+            function(tipedValue) { return outTipe.new(compute(tipedValue)); }
     }
 
     graftOnto(object, _defaults) {
-        object[this.name] = (...args) => this.run(object, ...args);
+        object[this.name] = (tipedValue) => this.run(object, tipedValue);
         object[this.name].outTipe = this.outTipe;
         object[this.name].inTipe = this.inTipe;
     }
@@ -58,7 +59,7 @@ class TipeMethod {
 
 class TipeProperty extends TipeMethod {
     constructor(name, inTipe, outTipe) {
-        super(name, inTipe, outTipe, function(self) { return self[name]; });
+        super(name, inTipe, outTipe, function(self) { return self[name]; }, true);
     }
 
     graftOnto(object, defaults) {

@@ -59,7 +59,7 @@ class BooleanTipe extends Tipe {
     static basic = true;
     static isBooleanTipe = true;
     static methods = {
-        negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, function(self) { return BooleanTipe.new(!self.value); }),
+        negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, self => !self.value),
     };
 
     static new(value=false) { return new TipedValue(BooleanTipe, { value: value }); }
@@ -84,19 +84,19 @@ class NumberTipe extends Tipe {
     static basic = true;
     static isNumberTipe = true;
     static methods = {
-        absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(abs(self.value)); }),
-        plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, function(self) { return NumberTipe.new(self.value + 1); }),
+        absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, self => abs(self.value)),
+        plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, self => self.value + 1),
         isPositive: new TipeMethod(
             'isPositive', 
             NumberTipe, 
             BooleanTipe, 
-            function(self) { return BooleanTipe.new(self.value > 0); }),
+            self => self.value > 0),
         greaterThan: new TipeMethod(
             'greaterThan', 
             NumberTipe, 
             Tipe.Function(NumberTipe, BooleanTipe),
             function(self) { 
-                return Tipe.Function(NumberTipe, BooleanTipe).new((nVal) => BooleanTipe.new(self.value > nVal.value))
+                return (nVal) => BooleanTipe.new(self.value > nVal.value)
             }
         )
     }
@@ -132,9 +132,9 @@ class TextTipe extends Tipe {
     static variableName = 'text';
     static basic = true;
     static methods = {
-        length: new TipeMethod('length', TextTipe, NumberTipe, function(self) { return NumberTipe.new(self.value.length); }),
-        firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, function(self) { return TextTipe.new(self.value.substring(0, 1)); }),
-        firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, function(self) { return TextTipe.new(self.value.split(' ')[0]); }),
+        length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
+        firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
+        firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
     };
     static new(value='') { return new TipedValue(TextTipe, { value: value }); }
     static shadowTextWidth = null;
