@@ -33,7 +33,7 @@ class Tipe {
 
     static Stream(tipe) {
         return class InnerTipe extends Tipe {
-            static name = `Stream<${tipe.name}>`
+            static name = `Stream(${tipe.name})`
             static innerTipe = tipe;
             static basic = true;
             static isStreamTipe = true;
@@ -57,6 +57,7 @@ class Tipe {
             static drawShadow() {
                 TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
             }
+            static draw = InnerTipe.drawShadow;
         }
     }
 }
