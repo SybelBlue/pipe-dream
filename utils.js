@@ -16,3 +16,14 @@ function exists(item, _throw=true) {
     }
     return true;
 }
+
+function assert(bool, msg, _throw=true) {
+    if (!bool) {
+        if (_throw) {
+            throw new Error(msg);
+        } else {
+            console.warn(msg);
+        }
+    }
+    return bool;
+}

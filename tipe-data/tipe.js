@@ -49,7 +49,7 @@ class Tipe {
             static inputBox = inputBox;
             static isFunctionTipe = true;
             static methods = {
-                getInput: new UIMethod('getInput', inTipe, outTipe, InnerTipe.inputBox, self => self.value(InnerTipe.inputBox.value) )
+                getInput: new UIMethod('getInput', InnerTipe, outTipe, InnerTipe.inputBox, self => self.value(InnerTipe.inputBox.value) )
             };
             static basic = true;
             static new(func) { return new TipedValue(InnerTipe, { value: func })}
