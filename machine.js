@@ -115,7 +115,7 @@ class MapMachine extends Machine {
 
             // draw tail
             rect(0, this.height - MapMachine.tailHeight, Machine.width, MapMachine.tailHeight, 0, 10, 10, 10);
-        })
+        });
         
         // draw fragment stack
         Renderer.push(this);
@@ -174,6 +174,20 @@ class FilterMachine extends MapMachine {
     }
 
     apply(tipedValue) {
-        return super.apply(tipedValue).value ? tipedValue : null;
+        const result = super.apply(tipedValue);
+        return result.value ? tipedValue : null;
+    }
+
+    draw() {
+        super.draw();
+        
+        Renderer.push(this);
+        Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
+        Renderer.newRenderable(Layers.Machine, () => {
+            noStroke();
+            fill(Editor.backgroundColor);
+            BooleanTipe.shapeOutline(0)
+        });
+        Renderer.pop(this);
     }
 }

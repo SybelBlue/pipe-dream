@@ -1,5 +1,5 @@
 class Editor {
-    static gutterSize = Tray.maxWidth + 30;
+    static gutterSize = Tray.maxWidth + 50;
     static pipeIndent = 30;
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
@@ -119,5 +119,26 @@ class Editor {
         }
 
         this.pipeline = this.pipeline.slice(0, i);
+    }
+
+    acceptValue(tipedValue) {
+        let value = tipedValue;
+        for (const machine of this.pipeline) {
+            if (!machine.finished) {
+                throw new Error('pipeline not finished');
+            }
+
+            value = machine.apply(value);
+            if (!exists(value, false)) {
+                return null;
+            }
+        }
+
+        return value;
+    }
+
+    performChallenge(challenge) {
+        // todo: animate challenge
+        return challenge.data.map(value => this.acceptValue(value)).filter(Boolean);
     }
 }
