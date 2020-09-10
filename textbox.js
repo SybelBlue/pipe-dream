@@ -27,13 +27,13 @@ class TextBox {
         TextBox.keyListeners.push(this);
     }
 
-    draw(layer=Layers.CodeFragment) {
+    draw(layer=Layers.CodeFragment, interactable=true) {
         const width = this.width;
         const height = this.height;
 
         Renderer.newRenderable(layer, 
             (regions) => {
-                if (clickThisFrame) {
+                if (interactable && clickThisFrame) {
                     this.selected = regions.body.hovering;
                 }
 

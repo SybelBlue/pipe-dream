@@ -40,7 +40,7 @@ class TipeMethod {
             (regions) => {
                 if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
 
-                stroke(regions.fragment.hovering ? 255 : 0, 0, 0);
+                stroke(!editor.running && regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
                 textSize(TipeMethod.fontSize);
@@ -62,7 +62,7 @@ class TipeMethod {
     // expects upper left corner is baseline
     drawWithDeleteButton(onClick, onDelete) {
         this.draw(onClick);
-        
+
         const mWidth = this.width;
         const mHeight = this.height;
         const midline = mHeight * 0.5

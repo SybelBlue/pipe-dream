@@ -13,6 +13,9 @@ class StackedMachine extends Machine {
 
     constructor(key, inTipe, color, text) {
         super(key, inTipe, color, text);
+        if (key >= 0) {
+            editor.tray.loadOptionsFor(inTipe, this, 0);
+        }
     }
 
     draw() {
@@ -52,8 +55,9 @@ class StackedMachine extends Machine {
         Renderer.push(this);
         let currentTipe = this.inTipe;
         this.methodStack.forEach((method, index) => {
-            method.drawWithDeleteButton(
+            method[editor.running ? 'draw' : 'drawWithDeleteButton'](
                 () => {
+                    if (editor.running) return;
                     editor.tray.loadOptionsFor(method.outTipe, this, index);
                     this.fragmentClicked(method, index);
                 },

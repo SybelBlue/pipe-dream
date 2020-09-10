@@ -1,9 +1,23 @@
 class Editor {
-    static gutterSize = Tray.maxWidth + 50;
     static pipeIndent = 30;
-    static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
+
+    get topMargin() { return this.running ? 200 : Editor.darkMargin; }
+    get gutterSize() { return (this.running ? 0 : Tray.maxWidth) + 50; }
+    get pipeGutterSize() { return this.gutterSize + Editor.pipeIndent; }
+    get pipelineFinished() { return !this.pipeline.find(machine => !machine.finished); }
+
+    _running = false;
+    get running() { return this._running; }
+    set running(value) { 
+        if (value && !this.pipelineFinished) {
+            console.warn('cannot start');
+            return;
+        }
+
+        this._running = value;
+    }
 
     _keyCount = 0;
 
@@ -35,7 +49,7 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
-        this.tray.draw();
+        if (!this.running) this.tray.draw();
 
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
@@ -43,31 +57,31 @@ class Editor {
             rect(0, 0, this.width, this.height);
 
             fill(66);
-            rect(0, 0, this.width, Editor.darkMargin);
+            rect(0, 0, this.width, this.topMargin);
         });
 
         // set new baseline
-        Renderer.translate(0, Editor.darkMargin);
+        Renderer.translate(0, this.topMargin);
 
         Renderer.newRenderable(Layers.Background, () => {
             fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+            rect(this.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
         });
 
         this.renderPipeline();
 
         Renderer.newRenderable(Layers.Background, () => {
             const pHeight = this.pipelineHeight;
-            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin * 2);
+            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - this.topMargin);
 
             noStroke();
             fill(66);
             rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
             
             fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
+            rect(this.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
 
-            const newMinHeight = bottomBarHeight + Editor.darkMargin;
+            const newMinHeight = bottomBarHeight + Editor.darkMargin + this.topMargin;
             if (newMinHeight > this.minHeight) {
                 this.minHeight = newMinHeight;
                 if (this.minHeight > height) {
@@ -81,7 +95,7 @@ class Editor {
     renderPipeline() {
         Renderer.push(this);
         
-        Renderer.translate(Editor.pipeGutterSize, 0);
+        Renderer.translate(this.pipeGutterSize, 0);
         new Pipe(true, false).draw(this.startingTipe);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
@@ -98,6 +112,11 @@ class Editor {
     }
 
     removeMachine(key) {
+        if (this.running) {
+            console.warn('Couldnt remove, running!');
+            return;
+        }
+        
         let i = this.pipeline.findIndex(machine => machine.key === key);
         if (i < 0) throw new Error('removing non existent machine');
         this.pipeline.splice(i, 1);
@@ -106,6 +125,11 @@ class Editor {
     }
 
     pushMachine(machineConstructor, ...args) {
+        if (this.running) {
+            console.warn('Couldnt push, running!');
+            return;
+        }
+
         this.pipeline.push(new machineConstructor(this._keyCount++, this.lastOutputTipe, ...args));
     }
 
@@ -138,8 +162,7 @@ class Editor {
         return value;
     }
 
-    performChallenge(challenge) {
-        // todo: animate challenge, make pipeline immutable
+    challengeResults(challenge) {
         let data = challenge.data;
         for (const machine of this.pipeline) {
             if (!machine.finished) {
@@ -150,5 +173,12 @@ class Editor {
         }
 
         return data;
+    }
+
+    runChallenge(challenge) {
+        this.running = true;
+        if (!this.running) return false;
+
+        return true;
     }
 }
