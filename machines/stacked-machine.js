@@ -56,13 +56,50 @@ class StackedMachine extends Machine {
                 editor.tray.loadOptionsFor(method.outTipe, this, index);
                 this.fragmentClicked(method, index);
             });
-            currentTipe = method.outputTipe;
+
+            const mWidth = method.width;
+            const mHeight = method.height;
+            const midline = mHeight * 0.5
+            const halfWidth = midline * 0.5;
+            const start = mWidth + 5;
+
+            Renderer.newRenderable(Layers.FragmentShape, 
+                (regions) => {
+                    if (!regions.fragment.hovering && !regions.deleteButton.hovering) return;
+                    if (regions.deleteButton.hovering && clickThisFrame) this.deleteFragment(index);
+                    stroke(255, 20, 20);
+                    strokeWeight(3);
+                    line(
+                        start, midline - halfWidth, 
+                        start + 2 * halfWidth, midline + halfWidth
+                    );
+                    line(
+                        start, midline + halfWidth, 
+                        start + 2 * halfWidth, midline - halfWidth
+                    );
+                },
+                Renderer.regionStub('fragment', 0, 0, start, mHeight),
+                Renderer.regionStub('deleteButton', start, midline - halfWidth, 2 * halfWidth, 2 * halfWidth)
+            );
+
             Renderer.translate(0, method.height);
+            
+            currentTipe = method.outputTipe;
         })
         Renderer.pop(this);
     }
 
     fragmentClicked() { console.log('click within stacked machine'); }
+
+    deleteFragment(index) {
+        this.methodStack = this.methodStack.slice(0, index);
+        editor.tray.loadOptionsFor(
+            Array.last(this.methodStack) ? Array.last(this.methodStack).outTipe : this.inTipe, 
+            this, 
+            index
+        ); 
+        editor.validatePipeline();
+    }
 
     pushFragment(fragment, sourceIndex) { 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
