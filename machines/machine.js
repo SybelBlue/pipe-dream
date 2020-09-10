@@ -6,6 +6,7 @@ class Machine extends PipelineObject {
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static bodyIndent = Editor.pipeIndent;
     static bodyHeight = 50;
+
     static get textColor() { return color(11); }
 
     static deleteButtonWidth = 15;
@@ -14,6 +15,8 @@ class Machine extends PipelineObject {
 
     get height() { return Machine.bodyHeight; }
     get bodyHeight() { return Machine.bodyHeight; }
+
+    textSize = 26;
 
     get outputTipe() { return BallTipe; }
 
@@ -43,7 +46,7 @@ class Machine extends PipelineObject {
                 rect(0, 0, Machine.width, this.bodyHeight, 10, 10, 10, 0);
 
                 stroke(0);
-                textSize(26);
+                textSize(this.textSize);
                 textFont('Courier New');
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
