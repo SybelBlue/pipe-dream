@@ -139,6 +139,6 @@ class Editor {
 
     performChallenge(challenge) {
         // todo: animate challenge
-        return challenge.data.map(value => this.acceptValue(value)).filter(Boolean);
+        return challenge.data.map(value => this.acceptValue(value)).filter(x => exists(x, false));
     }
 }
