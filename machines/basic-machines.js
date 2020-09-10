@@ -45,7 +45,7 @@ class TakeMachine extends Machine {
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#38369A'), 'take');
-        this.inputBox = new NumberBox({ defaultText: '5' });
+        this.inputBox = new IntegerBox({ defaultText: '5' });
     }
 
     draw() {
