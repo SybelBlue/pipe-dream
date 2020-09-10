@@ -13,6 +13,7 @@ class Machine extends PipelineObject {
     static deleteButtonMidline = Machine.bodyHeight / 2;
 
     get height() { return Machine.bodyHeight; }
+    get bodyHeight() { return Machine.bodyHeight; }
 
     get outputTipe() { return BallTipe; }
 
@@ -39,7 +40,7 @@ class Machine extends PipelineObject {
                 }
                 noStroke();
                 fill(this.color);
-                rect(0, 0, Machine.width, Machine.bodyHeight, 10, 10, 10, 0);
+                rect(0, 0, Machine.width, this.bodyHeight, 10, 10, 10, 0);
 
                 stroke(0);
                 textSize(26);
@@ -64,7 +65,7 @@ class Machine extends PipelineObject {
                     );
                 }
             },
-            Renderer.regionStub('body', 0, 0, Machine.width, Machine.bodyHeight),
+            Renderer.regionStub('body', 0, 0, Machine.width, this.bodyHeight),
             Renderer.regionStub('deleteButton', 
                 Machine.deleteButtonIndent, Machine.deleteButtonMidline - Machine.deleteButtonWidth/2, 
                 20, 20, 
