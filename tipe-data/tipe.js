@@ -178,7 +178,7 @@ class ColorTipe extends Tipe {
         blue: new TipeProperty('blue', ColorTipe, NumberTipe),
         red: new TipeProperty('red', ColorTipe, NumberTipe),
     }
-    static new() { return new TipedValue(ColorTipe); }
+    static new(defaults={}) { return new TipedValue(ColorTipe, defaults); }
     static asP5Color(c) { return color(c.red.value, c.green.value, c.blue.value); }
 
     static drawShadow() {
@@ -202,7 +202,7 @@ class IDCardTipe extends Tipe {
         age: new TipeProperty('age', IDCardTipe, NumberTipe),
         eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
     }
-    static new() { return new TipedValue(IDCardTipe); }
+    static new(defaults={}) { return new TipedValue(IDCardTipe, defaults); }
 }
 
 class BallTipe extends Tipe {
@@ -212,7 +212,7 @@ class BallTipe extends Tipe {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }
-    static new() { return new TipedValue(BallTipe); }
+    static new(defaults={}) { return new TipedValue(BallTipe, defaults); }
 
     // expects top center
     static drawShadow() {
@@ -224,12 +224,11 @@ class BallTipe extends Tipe {
         });
     }
     
-    static draw(ball) {
-        Renderer.newRenderable(Layers.Data, () => {
-            let color = ball.color;
+    static draw(ball, layer=Layers.Data) {
+        Renderer.newRenderable(layer, () => {
             stroke(66);
-            fill(ColorTipe.asP5Color(color));
-            circle(0, ball.radius, ball.radius * 2);
+            fill(ColorTipe.asP5Color(ball.color));
+            circle(0, ball.size.value, ball.size.value * 2);
         });
     }
 }

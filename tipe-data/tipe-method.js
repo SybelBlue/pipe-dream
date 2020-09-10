@@ -66,7 +66,10 @@ class TipeProperty extends TipeMethod {
     }
 
     graftOnto(object, defaults) {
-        object[this.name] = defaults[this.name] || this.outTipe.new();
+        object[this.name] = 
+            defaults[this.name] ? 
+                (defaults[this.name].tipe ? defaults[this.name] : this.outTipe.new(defaults[this.name])) : 
+                this.outTipe.new();
     }
 }
 
