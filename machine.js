@@ -1,5 +1,5 @@
 class Machine extends PipelineObject {
-    static get machines() { return [new MapMachine(-1, Tipe)]; }
+    static get machines() { return [new MapMachine(-1, Tipe), new FilterMachine(-1, Tipe)]; }
 
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static bodyIndent = Editor.pipeIndent;
@@ -70,9 +70,9 @@ class Machine extends PipelineObject {
         );
     }
 
-    onClick() { 
+    onClick() {
         if (this.dummy) {
-            editor.pushMachine(MapMachine);
+            editor.pushMachine(this.constructor);
         } else {
             editor.tray.loadOptionsFor(this.inTipe, this, -1);
         }
@@ -89,8 +89,8 @@ class MapMachine extends Machine {
         return last ? last.outTipe : this.inTipe;
     }
     get height() { return Machine.bodyHeight + this.innerHeight + MapMachine.tailHeight; }
-    get finsished() { return true; }
-    get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finsished ? 0 : 20)); }
+    get finished() { return true; }
+    get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finished ? 0 : 20)); }
 
     methodStack = [];
 
@@ -157,5 +157,23 @@ class MapMachine extends Machine {
         return this.methodStack.reduce(function (prev, method) {
             return method.run(prev);
         }, tipedValue);
+    }
+}
+
+class FilterMachine extends MapMachine {
+    get outputTipe() { return this.inTipe; }
+    get finished() { 
+        const last = Array.last(this.methodStack);
+        return (last ? last.outTipe : this.inTipe).name === BooleanTipe.name;
+    }
+
+    constructor(key, inTipe) {
+        super(key, inTipe);
+        this.text = 'filter';
+        this.color = color('#7dce82');
+    }
+
+    apply(tipedValue) {
+        return super.apply(tipedValue).value ? tipedValue : null;
     }
 }

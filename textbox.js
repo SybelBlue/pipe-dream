@@ -37,11 +37,11 @@ class TextBox {
                     this.selected = regions.body.hovering;
                 }
 
-                fill(this.selected ? color(20, 200, 200) : color(200));
+                fill(this.selected ? color(100, 200, 200) : color(200));
                 rect(0, 0, width, height);
 
-                fill(this.used ? 0 : 100);
-                stroke(0);
+                stroke(10);
+                fill(this.used ? 0 : 50);
                 textSize(this.fontSize);
                 textFont(this.font);
                 text(this.text, 5, 5 + height / 2);
