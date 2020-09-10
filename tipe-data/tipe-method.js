@@ -69,7 +69,7 @@ class TipeMethod {
         const halfWidth = midline * 0.5;
         const start = mWidth + 5;
 
-        Renderer.newRenderable(Layers.FragmentShape, 
+        Renderer.newRenderable(Layers.UI, 
             (regions) => {
                 if (!regions.fragment.hovering && !regions.deleteButton.hovering) return;
                 if (regions.deleteButton.hovering && clickThisFrame) onDelete();

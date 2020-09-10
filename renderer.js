@@ -7,6 +7,7 @@ const Layers = {
     Machine: 10,
     CodeFragment: 13,
     FragmentShape: 14,
+    UI: 16,
     Debug: 99,
 }
 

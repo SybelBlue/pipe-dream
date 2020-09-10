@@ -49,7 +49,11 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
-        if (!this.running) this.tray.draw();
+        if (!this.running) {
+            this.tray.draw();
+        } else {
+            Renderer.newRenderable(Layers.UI, () => {})
+        }
 
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
