@@ -114,7 +114,9 @@ class Renderer {
     }
     
     static pop(source) {
-        if (source !== Renderer.stackTop.source) throw new Error('Unexpected Pop from ' + source);
+        if (source !== Renderer.stackTop.source || Renderer.stackTop.key == 0) {
+            throw new Error('Unexpected Pop from ' + source);
+        }
 
         Renderer.stackTop = Renderer.stackTop.previous;
     }
