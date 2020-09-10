@@ -9,7 +9,7 @@ let clickThisFrame = false;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     editor = new Editor(NumberTipe, NumberTipe, 0, 0, windowWidth, windowHeight);
-    editor.pushMachine(MapMachine);
+    // editor.pushMachine(MapMachine);
     Renderer.initialize();
 }
 

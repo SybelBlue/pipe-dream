@@ -75,4 +75,6 @@ class StackedMachine extends Machine {
             return method.run(prev);
         }, tipedValue);
     }
+
+    process(values) { return values.map(x => this.apply(x)).filter(x => exists(x, false)); }
 }
