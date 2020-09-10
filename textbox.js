@@ -82,11 +82,24 @@ class TextBox {
     validate() { return true; }
 }
 
-class NumberBox extends TextBox{
+class FloatBox extends TextBox{
     get value() { return Number.parseFloat(this.last); }
     validate() {
         this.text = this.text.trim();
         const parsed = Number.parseFloat(this.text);
+        if (this.text.includes(' ') || Number.isNaN(parsed)) {
+            return false;
+        }
+        this.text = '' + parsed;
+        return true;
+    }
+}
+
+class IntegerBox extends TextBox{
+    get value() { return Number.parseInt(this.last); }
+    validate() {
+        this.text = this.text.trim();
+        const parsed = Number.parseInt(this.text);
         if (this.text.includes(' ') || Number.isNaN(parsed)) {
             return false;
         }

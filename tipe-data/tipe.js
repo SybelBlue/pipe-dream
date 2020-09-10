@@ -103,7 +103,7 @@ class NumberTipe extends Tipe {
         greaterThan: new TipeMethod(
             'greaterThan', 
             NumberTipe, 
-            Tipe.Function(NumberTipe, BooleanTipe, new NumberBox({ defaultText: '0' })),
+            Tipe.Function(NumberTipe, BooleanTipe, new FloatBox({ defaultText: '0' })),
             function(self) { 
                 return (nVal) => BooleanTipe.new(self.value > nVal.value)
             }
