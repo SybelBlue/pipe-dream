@@ -52,7 +52,20 @@ class Editor {
         if (!this.running) {
             this.tray.draw();
         } else {
-            Renderer.newRenderable(Layers.UI, () => {})
+            Renderer.newRenderable(Layers.UI, (regions) => {
+                fill(10);
+                rect(10, 10, 80, 45, 10);
+
+                stroke(255, 40, 60);
+                fill(regions.stopButton.hovering ? 250 : 200, 20, 50);
+                rect(20, 20, 25, 25);
+
+                stroke(30, 30, 255)
+                fill(20, 20, 250);
+                rect(55, 20, 10, 25);
+                rect(70, 20, 10, 25);
+                if (regions.stopButton.hovering && clickThisFrame) this.running = false;
+            }, Renderer.regionStub('stopButton', 20, 20, 25, 25))
         }
 
         Renderer.newRenderable(Layers.Background, () => {
