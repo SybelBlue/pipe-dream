@@ -20,6 +20,8 @@ class Machine extends PipelineObject {
 
     get outputTipe() { return BallTipe; }
 
+    textSize = 26;
+
     constructor(key, inTipe, bodyColor, text) {
         super();
 

@@ -106,4 +106,4 @@ class IntegerBox extends TextBox{
         this.text = '' + parsed;
         return true;
     }
-} 
+}
