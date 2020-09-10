@@ -52,38 +52,16 @@ class StackedMachine extends Machine {
         Renderer.push(this);
         let currentTipe = this.inTipe;
         this.methodStack.forEach((method, index) => {
-            method.draw(() => {
-                editor.tray.loadOptionsFor(method.outTipe, this, index);
-                this.fragmentClicked(method, index);
-            });
-
-            const mWidth = method.width;
-            const mHeight = method.height;
-            const midline = mHeight * 0.5
-            const halfWidth = midline * 0.5;
-            const start = mWidth + 5;
-
-            Renderer.newRenderable(Layers.FragmentShape, 
-                (regions) => {
-                    if (!regions.fragment.hovering && !regions.deleteButton.hovering) return;
-                    if (regions.deleteButton.hovering && clickThisFrame) this.deleteFragment(index);
-                    stroke(255, 20, 20);
-                    strokeWeight(3);
-                    line(
-                        start, midline - halfWidth, 
-                        start + 2 * halfWidth, midline + halfWidth
-                    );
-                    line(
-                        start, midline + halfWidth, 
-                        start + 2 * halfWidth, midline - halfWidth
-                    );
+            method.drawWithDeleteButton(
+                () => {
+                    editor.tray.loadOptionsFor(method.outTipe, this, index);
+                    this.fragmentClicked(method, index);
                 },
-                Renderer.regionStub('fragment', 0, 0, start, mHeight),
-                Renderer.regionStub('deleteButton', start, midline - halfWidth, 2 * halfWidth, 2 * halfWidth)
+                () => this.deleteFragment(index)
             );
 
+            // update for next loop
             Renderer.translate(0, method.height);
-            
             currentTipe = method.outputTipe;
         })
         Renderer.pop(this);

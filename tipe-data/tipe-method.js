@@ -58,6 +58,36 @@ class TipeMethod {
         this.outTipe.drawShape(this.outTipe.color);
         Renderer.pop(this);
     }
+
+    // expects upper left corner is baseline
+    drawWithDeleteButton(onClick, onDelete) {
+        this.draw(onClick);
+        
+        const mWidth = this.width;
+        const mHeight = this.height;
+        const midline = mHeight * 0.5
+        const halfWidth = midline * 0.5;
+        const start = mWidth + 5;
+
+        Renderer.newRenderable(Layers.FragmentShape, 
+            (regions) => {
+                if (!regions.fragment.hovering && !regions.deleteButton.hovering) return;
+                if (regions.deleteButton.hovering && clickThisFrame) onDelete();
+                stroke(255, 20, 20);
+                strokeWeight(3);
+                line(
+                    start, midline - halfWidth, 
+                    start + 2 * halfWidth, midline + halfWidth
+                );
+                line(
+                    start, midline + halfWidth, 
+                    start + 2 * halfWidth, midline - halfWidth
+                );
+            },
+            Renderer.regionStub('fragment', 0, 0, start, mHeight),
+            Renderer.regionStub('deleteButton', start, midline - halfWidth, 2 * halfWidth, 2 * halfWidth)
+        );
+    }
 }
 
 class TipeProperty extends TipeMethod {
