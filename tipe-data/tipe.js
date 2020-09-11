@@ -41,15 +41,23 @@ class Tipe {
         }
     }
 
-    static Function(inTipe, outTipe, inputBox) {
+    static Function(inTipe, outTipe, inputBoxConstructor, startingValue) {
         return class InnerTipe extends Tipe {
             static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
             static inTipe = inTipe;
             static outTipe = outTipe;
-            static inputBox = inputBox;
             static isFunctionTipe = true;
-            static methods = {
-                getInput: new UIMethod('getInput', InnerTipe, outTipe, InnerTipe.inputBox, self => self.value(InnerTipe.inputBox.value) )
+            static get methods() {
+                const box = new inputBoxConstructor({ defaultText: startingValue });
+                return { 
+                    getInput: new UIMethod(
+                        'getInput', 
+                        InnerTipe, 
+                        outTipe, 
+                        box, 
+                        self => self.value(box.value)
+                    )
+                }
             };
             static basic = true;
             static new(func) { return new TipedValue(InnerTipe, { value: func })}
@@ -103,7 +111,7 @@ class NumberTipe extends Tipe {
         greaterThan: new TipeMethod(
             'greaterThan', 
             NumberTipe, 
-            Tipe.Function(NumberTipe, BooleanTipe, new FloatBox({ defaultText: '0' })),
+            Tipe.Function(NumberTipe, BooleanTipe, FloatBox, '0'),
             function(self) { 
                 return (nVal) => BooleanTipe.new(self.value > nVal.value)
             }

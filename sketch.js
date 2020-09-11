@@ -42,21 +42,21 @@ function mouseClicked() { clickThisFrame = true; }
 
 function keyTyped() { 
     if (/[\S ]+/.test(key)) {
-        TextBox.keyListeners.forEach(l => l.keyDown(key)); 
+        InputBox.keyListeners.forEach(l => l.keyDown(key)); 
     }
 }
 
 function keyPressed() { 
     switch (keyCode) {
         case BACKSPACE:
-            TextBox.keyListeners.forEach(l => l.backspaceDown()); 
+            InputBox.keyListeners.forEach(l => l.backspaceDown()); 
             break;
         case ESCAPE:
-            TextBox.keyListeners.forEach(l => l.reject());
+            InputBox.keyListeners.forEach(l => l.reject());
             break;
         case ENTER:
         case RETURN:
-            TextBox.keyListeners.forEach(l => l.accept());
+            InputBox.keyListeners.forEach(l => l.accept());
             break;
     }
 }

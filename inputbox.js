@@ -1,4 +1,4 @@
-class TextBox {
+class InputBox {
     static keyListeners = [];
 
     get value() { return this.text; }
@@ -24,7 +24,7 @@ class TextBox {
         this.font = config.font || 'Courier New';
         this.fontSize = config.fontSize || 16;
 
-        TextBox.keyListeners.push(this);
+        InputBox.keyListeners.push(this);
     }
 
     draw(layer=Layers.CodeFragment, interactable=true) {
@@ -82,7 +82,7 @@ class TextBox {
     validate() { return true; }
 }
 
-class FloatBox extends TextBox{
+class FloatBox extends InputBox{
     get value() { return Number.parseFloat(this.last); }
     validate() {
         this.text = this.text.trim();
@@ -95,7 +95,7 @@ class FloatBox extends TextBox{
     }
 }
 
-class IntegerBox extends TextBox{
+class IntegerBox extends InputBox{
     get value() { return Number.parseInt(this.last); }
     validate() {
         this.text = this.text.trim();
