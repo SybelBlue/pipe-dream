@@ -56,13 +56,12 @@ class StackedMachine extends Machine {
         let currentTipe = this.inTipe;
         this.methodStack.forEach((method, index) => {
             const onClick = () => {
-                if (editor.running) return;
-                console.log('here')
+                if (!SceneManager.editable) return;
                 editor.tray.loadOptionsFor(method.outTipe, this, index);
                 this.fragmentClicked(method, index);
             }
             
-            if (editor.running) {
+            if (!SceneManager.editable) {
                 method.draw(onClick);
             } else {
                 method.drawWithDeleteButton(onClick, () => this.deleteFragment(index));

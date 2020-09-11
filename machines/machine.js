@@ -35,7 +35,7 @@ class Machine extends PipelineObject {
     draw() {
         Renderer.newRenderable(Layers.Machine, 
             (regions) => {
-                if (!editor.running && regions.body.hovering && clickThisFrame) {
+                if (SceneManager.editable && regions.body.hovering && clickThisFrame) {
                     if (regions.deleteButton.hovering) {
                         editor.removeMachine(this.key);
                         editor.tray.loadMachineOptions();
@@ -53,7 +53,7 @@ class Machine extends PipelineObject {
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
 
-                if (!editor.running && !this.dummy && regions.body.hovering) {
+                if (SceneManager.editable && !this.dummy && regions.body.hovering) {
                     textSize(16)
                     text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 'Courier New', 26), 30);
 

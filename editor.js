@@ -1,23 +1,16 @@
+class SceneManager {
+    static editable = true;
+}
+
 class Editor {
     static pipeIndent = 30;
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
 
-    get topMargin() { return this.running ? 200 : Editor.darkMargin; }
-    get gutterSize() { return (this.running ? 0 : Tray.maxWidth) + 50; }
+    topMargin = Editor.darkMargin;
+    get gutterSize() { return Tray.maxWidth + 50; }
     get pipeGutterSize() { return this.gutterSize + Editor.pipeIndent; }
     get pipelineFinished() { return !this.pipeline.find(machine => !machine.finished); }
-
-    _running = false;
-    get running() { return this._running; }
-    set running(value) { 
-        if (value && !this.pipelineFinished) {
-            console.warn('cannot start');
-            return;
-        }
-
-        this._running = value;
-    }
 
     _keyCount = 0;
 
@@ -49,24 +42,24 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
-        if (!this.running) {
-            this.tray.draw();
-        } else {
-            Renderer.newRenderable(Layers.UI, (regions) => {
-                fill(10);
-                rect(10, 10, 80, 45, 10);
+        // if (!this running) {
+        this.tray.draw();
+        // } else {
+        //     Renderer.newRenderable(Layers.UI, (regions) => {
+        //         fill(10);
+        //         rect(10, 10, 80, 45, 10);
 
-                stroke(255, 40, 60);
-                fill(regions.stopButton.hovering ? 250 : 200, 20, 50);
-                rect(20, 20, 25, 25);
+        //         stroke(255, 40, 60);
+        //         fill(regions.stopButton.hovering ? 250 : 200, 20, 50);
+        //         rect(20, 20, 25, 25);
 
-                stroke(30, 30, 255)
-                fill(20, 20, 250);
-                rect(55, 20, 10, 25);
-                rect(70, 20, 10, 25);
-                if (regions.stopButton.hovering && clickThisFrame) this.running = false;
-            }, Renderer.regionStub('stopButton', 20, 20, 25, 25));
-        }
+        //         stroke(30, 30, 255)
+        //         fill(20, 20, 250);
+        //         rect(55, 20, 10, 25);
+        //         rect(70, 20, 10, 25);
+        //         if (regions.stopButton.hovering && clickThisFrame) this running = false;
+        //     }, Renderer.regionStub('stopButton', 20, 20, 25, 25));
+        // }
 
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
@@ -129,11 +122,6 @@ class Editor {
     }
 
     removeMachine(key) {
-        if (this.running) {
-            console.warn('Couldnt remove, running!');
-            return;
-        }
-        
         let i = this.pipeline.findIndex(machine => machine.key === key);
         if (i < 0) throw new Error('removing non existent machine');
         this.pipeline.splice(i, 1);
@@ -142,11 +130,6 @@ class Editor {
     }
 
     pushMachine(machineConstructor, ...args) {
-        if (this.running) {
-            console.warn('Couldnt push, running!');
-            return;
-        }
-
         this.pipeline.push(new machineConstructor(this._keyCount++, this.lastOutputTipe, ...args));
     }
 
@@ -193,9 +176,6 @@ class Editor {
     }
 
     runChallenge(challenge) {
-        this.running = true;
-        if (!this.running) return false;
-
-        return true;
+        console.log('running challenge...');
     }
 }

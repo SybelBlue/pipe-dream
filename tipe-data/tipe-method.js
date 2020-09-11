@@ -40,7 +40,7 @@ class TipeMethod {
             (regions) => {
                 if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
 
-                stroke(!editor.running && regions.fragment.hovering ? 255 : 0, 0, 0);
+                stroke(SceneManager.editable && regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
                 textFont(TipeMethod.font);
                 textSize(TipeMethod.fontSize);

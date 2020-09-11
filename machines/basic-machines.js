@@ -57,7 +57,7 @@ class TakeMachine extends Machine {
 
         Renderer.push(this);
         Renderer.translate(StackedMachine.bodyIndent, TakeMachine.inputBoxStart);
-        this.inputBox.draw(Layers.CodeFragment, !editor.running);
+        this.inputBox.draw(Layers.CodeFragment, SceneManager.editable);
         Renderer.pop(this);
     }
 
