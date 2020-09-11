@@ -182,7 +182,7 @@ class ColorTipe extends Tipe {
     static asP5Color(c) { return color(c.red.value, c.green.value, c.blue.value); }
 
     static drawShadow() {
-        ColorTipe.draw({red: 20, green: 20, blue: 200}, Layers.Shadow);
+        ColorTipe.draw(ColorTipe.new({red: 20, green: 20, blue: 200}), Layers.Shadow);
     }
 
     static draw(color, layer=Layers.Data) {

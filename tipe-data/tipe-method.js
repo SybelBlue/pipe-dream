@@ -84,7 +84,7 @@ class TipeMethod {
                     start + 2 * halfWidth, midline - halfWidth
                 );
             },
-            Renderer.regionStub('fragment', 0, 0, start, mHeight),
+            Renderer.regionStub('fragment', 0, 0, start, mHeight, false), // so it doesn't block draw collider
             Renderer.regionStub('deleteButton', start, midline - halfWidth, 2 * halfWidth, 2 * halfWidth)
         );
     }
