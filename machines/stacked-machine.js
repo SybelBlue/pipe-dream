@@ -55,19 +55,23 @@ class StackedMachine extends Machine {
         Renderer.push(this);
         let currentTipe = this.inTipe;
         this.methodStack.forEach((method, index) => {
-            method[editor.running ? 'draw' : 'drawWithDeleteButton'](
-                () => {
-                    if (editor.running) return;
-                    editor.tray.loadOptionsFor(method.outTipe, this, index);
-                    this.fragmentClicked(method, index);
-                },
-                () => this.deleteFragment(index)
-            );
+            const onClick = () => {
+                if (editor.running) return;
+                console.log('here')
+                editor.tray.loadOptionsFor(method.outTipe, this, index);
+                this.fragmentClicked(method, index);
+            }
+            
+            if (editor.running) {
+                method.draw(onClick);
+            } else {
+                method.drawWithDeleteButton(onClick, () => this.deleteFragment(index));
+            }
 
             // update for next loop
             Renderer.translate(0, method.height);
             currentTipe = method.outputTipe;
-        })
+        });
         Renderer.pop(this);
     }
 

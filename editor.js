@@ -65,7 +65,7 @@ class Editor {
                 rect(55, 20, 10, 25);
                 rect(70, 20, 10, 25);
                 if (regions.stopButton.hovering && clickThisFrame) this.running = false;
-            }, Renderer.regionStub('stopButton', 20, 20, 25, 25))
+            }, Renderer.regionStub('stopButton', 20, 20, 25, 25));
         }
 
         Renderer.newRenderable(Layers.Background, () => {
