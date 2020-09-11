@@ -1,7 +1,25 @@
 class SceneManager {
     static editable = true;
 
+    static level = null;
+    static editor = null;
 
+    static startLevel(level) {
+        this.level = level;
+        return (this.editor = new Editor(level.startingTipe, level.endingTipe, 0, 0, windowWidth, windowHeight));
+    }
+
+    static draw() {
+        if (!this.editor) return;
+        this.editor.draw();
+
+        const focused = Renderer.renderAll().found;
+    
+        if (!focused && clickThisFrame) {
+            editor.tray.loadMachineOptions();
+        }
+        Renderer.clearStack();
+    }
 }
 
 class Editor {

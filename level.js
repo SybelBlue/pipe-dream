@@ -1,11 +1,21 @@
 class Level {
     tests = [];
-    constructor(startTipe, finishTipe) {
-        this.startTipe = startTipe;
-        this.finishTipe = finishTipe;
+    constructor(startingTipe, endingTipe, prompt, solutionFn) {
+        this.startingTipe = startingTipe;
+        this.endingTipe = endingTipe;
+        this.prompt = prompt;
+        this.solutionFn = solutionFn;
     }
 
-    withTest(...startTipeArgs) {
-        this.tests.push(startTipeArgs.map(this.startTipe.new));
+    withTest(...startingTipeArgs) {
+        this.tests.push(startingTipeArgs.map(this.startingTipe.new));
+        return this;
     }
 }
+
+const levelOne = 
+    new Level(NumberTipe, NumberTipe, 'only positive values', test => test.filter(x => x.value > 0))
+        .withTest(1, 2, 3, 4)
+        .withTest(2, 4, -5, 3)
+        .withTest()
+        .withTest(-1, -2, -3, 4);

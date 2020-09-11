@@ -9,7 +9,7 @@ let clickThisFrame = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    editor = new Editor(BallTipe, BallTipe, 0, 0, windowWidth, windowHeight);
+    editor = SceneManager.startLevel(levelOne);
     // editor.pushMachine(MapMachine);
     Renderer.initialize();
 }
@@ -20,14 +20,7 @@ function draw() {
         editor.height = editor.minHeight;
     }
 
-    editor.draw();
-
-    const focused = Renderer.renderAll().found;
-
-    if (!focused && clickThisFrame) {
-        editor.tray.loadMachineOptions();
-    }
-    Renderer.clearStack();
+    SceneManager.draw();
 
     clickThisFrame = false;
 }
