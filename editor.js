@@ -49,6 +49,8 @@ class SceneManager {
     static runLevel() {
         // move editor
         // close tray
+        // render all tests on top margin
+        // start test process
     }
 }
 
@@ -90,6 +92,7 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
+        
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
             fill(Editor.backgroundColor);
@@ -102,24 +105,26 @@ class Editor {
         // set new baseline
         Renderer.translate(0, this.topMargin);
 
-        Renderer.newRenderable(Layers.Background, () => {
-            fill(20);
-            rect(this.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
-        });
-
         this.renderPipeline();
 
         Renderer.newRenderable(Layers.Background, () => {
+            // pipe inlet shadow
+            fill(20);
+            rect(this.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+            
             const pHeight = this.pipelineHeight;
             const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - this.topMargin);
 
+            // bottom bar
             noStroke();
             fill(66);
             rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
             
+            // pipe outlet shadow
             fill(20);
             rect(this.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
 
+            // flag for new height if necessary
             const newMinHeight = bottomBarHeight + Editor.darkMargin + this.topMargin;
             if (newMinHeight > this.minHeight) {
                 this.minHeight = newMinHeight;
@@ -135,7 +140,7 @@ class Editor {
         Renderer.push(this);
         
         Renderer.translate(this.pipeGutterSize, 0);
-        new Pipe(true, false).draw(this.startingTipe);
+        new Pipe(true, this.pipeline.length == 0).draw(this.startingTipe);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
         for (let i = 0; i < this.pipeline.length; i++) {

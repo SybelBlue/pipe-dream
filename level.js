@@ -11,6 +11,8 @@ class Level {
         this.tests.push(startingTipeArgs.map(this.startingTipe.new));
         return this;
     }
+
+    // streamTests vs box tests
 }
 
 const levelOne = 
