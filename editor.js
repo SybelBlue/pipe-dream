@@ -1,5 +1,7 @@
 class SceneManager {
     static editable = true;
+
+
 }
 
 class Editor {
@@ -160,22 +162,5 @@ class Editor {
         }
 
         return value;
-    }
-
-    challengeResults(challenge) {
-        let data = challenge.data;
-        for (const machine of this.pipeline) {
-            if (!machine.finished) {
-                throw new Error('pipeline not finished');
-            }
-
-            data = machine.process(data);
-        }
-
-        return data;
-    }
-
-    runChallenge(challenge) {
-        console.log('running challenge...');
     }
 }
