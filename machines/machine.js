@@ -38,7 +38,7 @@ class Machine extends PipelineObject {
                 if (SceneManager.editable && regions.body.hovering && clickThisFrame) {
                     if (regions.deleteButton.hovering) {
                         editor.removeMachine(this.key);
-                        editor.tray.loadMachineOptions();
+                        SceneManager.tray.loadMachineOptions();
                     } else {
                         this.onClick();
                     }
@@ -82,7 +82,7 @@ class Machine extends PipelineObject {
         if (this.dummy) {
             editor.pushMachine(this.constructor);
         } else {
-            editor.tray.loadOptionsFor(this.inTipe, this, -1);
+            SceneManager.tray.loadOptionsFor(this.inTipe, this, -1);
         }
     }
 

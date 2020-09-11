@@ -14,7 +14,7 @@ class StackedMachine extends Machine {
     constructor(key, inTipe, color, text) {
         super(key, inTipe, color, text);
         if (key >= 0) {
-            editor.tray.loadOptionsFor(inTipe, this, 0);
+            SceneManager.tray.loadOptionsFor(inTipe, this, 0);
         }
     }
 
@@ -57,7 +57,7 @@ class StackedMachine extends Machine {
         this.methodStack.forEach((method, index) => {
             const onClick = () => {
                 if (!SceneManager.editable) return;
-                editor.tray.loadOptionsFor(method.outTipe, this, index);
+                SceneManager.tray.loadOptionsFor(method.outTipe, this, index);
                 this.fragmentClicked(method, index);
             }
             
@@ -78,7 +78,7 @@ class StackedMachine extends Machine {
 
     deleteFragment(index) {
         this.methodStack = this.methodStack.slice(0, index);
-        editor.tray.loadOptionsFor(
+        SceneManager.tray.loadOptionsFor(
             Array.last(this.methodStack) ? Array.last(this.methodStack).outTipe : this.inTipe, 
             this, 
             index
@@ -88,7 +88,7 @@ class StackedMachine extends Machine {
 
     pushFragment(fragment, sourceIndex) { 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
-        editor.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);
+        SceneManager.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);
         editor.validatePipeline();
     }
 
