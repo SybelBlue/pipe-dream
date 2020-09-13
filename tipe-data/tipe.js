@@ -181,10 +181,20 @@ class TextTipe extends Tipe {
 class ColorTipe extends Tipe {
     static name = 'Color';
     static variableName = 'color';
-    static methods = {
-        green: new TipeProperty('green', ColorTipe, NumberTipe),
-        blue: new TipeProperty('blue', ColorTipe, NumberTipe),
-        red: new TipeProperty('red', ColorTipe, NumberTipe),
+    static get methods() {
+        return {
+            green: new TipeProperty('green', ColorTipe, NumberTipe),
+            blue: new TipeProperty('blue', ColorTipe, NumberTipe),
+            red: new TipeProperty('red', ColorTipe, NumberTipe),
+            ballWithSize: new TipeMethod(
+                'ballWithSize', 
+                ColorTipe, 
+                Tipe.Function(NumberTipe, BallTipe, FloatBox, '1.5'),
+                function(self) { 
+                    return (nVal) => BallTipe.new({ size: nVal.value, color: { green: self.green, blue: self.blue, red: self.red } })
+                }
+            ),
+        }
     }
     static new(defaults={}) { return new TipedValue(ColorTipe, defaults); }
     static asP5Color(c) { return color(c.red.value, c.green.value, c.blue.value); }
