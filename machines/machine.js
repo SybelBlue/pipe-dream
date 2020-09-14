@@ -35,7 +35,7 @@ class Machine extends PipelineObject {
     draw() {
         Renderer.newRenderable(Layers.Machine, 
             (regions) => {
-                if (SceneManager.editable && regions.body.hovering && clickThisFrame) {
+                if (SceneManager.editable && regions.body.clicked) {
                     if (regions.deleteButton.hovering) {
                         editor.removeMachine(this.key);
                         SceneManager.tray.loadMachineOptions();

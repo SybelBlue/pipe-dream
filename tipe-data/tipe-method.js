@@ -39,7 +39,7 @@ class TipeMethod {
     draw(onClick) {
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
-                if (clickThisFrame && regions.fragment.hovering && onClick) onClick();
+                if (regions.fragment.clicked && onClick) onClick();
 
                 stroke(SceneManager.editable && regions.fragment.hovering ? 255 : 0, 0, 0);
                 fill(this.outTipe.color);
@@ -73,7 +73,8 @@ class TipeMethod {
         Renderer.newRenderable(Layers.UI, 
             (regions) => {
                 if (!regions.fragment.hovering && !regions.deleteButton.hovering) return;
-                if (regions.deleteButton.hovering && clickThisFrame) onDelete();
+                if (regions.deleteButton.clicked) onDelete();
+
                 stroke(255, 20, 20);
                 strokeWeight(3);
                 line(

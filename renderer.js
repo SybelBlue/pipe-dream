@@ -24,6 +24,9 @@ class Renderer {
     }
 
     static Region = class {
+        hovering = false;
+        clicked = false;
+
         constructor(layer, x, y, width, height, blocking) {
             exists(this.layer = layer);
             exists(this.x = x);
@@ -31,9 +34,8 @@ class Renderer {
             exists(this.width = width);
             exists(this.height = height);
             exists(this.blocking = blocking);
-            this.hovering = false;
         }
-    
+
         test(x, y) {
             return this.x <= x && x <= this.x + this.width && this.y <= y && y <= this.y + this.height;
         }
@@ -154,8 +156,12 @@ class Renderer {
     static recomputeRegions() {
         return Renderer.regions.reduce(function(results, region) {
             region.hovering = !results.found && region.test(mouseX, mouseY);
+
+            region.clicked = region.hovering && clickThisFrame;
             results.intercepted = results.intercepted || region.hovering;
+
             results.found = results.found || (region.hovering && region.blocking);
+
             return results;
         }, { found: false, intercepted: true });
     }
