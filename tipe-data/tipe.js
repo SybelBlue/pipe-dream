@@ -37,7 +37,33 @@ class Tipe {
             static innerTipe = tipe;
             static basic = true;
             static isStreamTipe = true;
+            static streamable = true;
             static new(...values) { return new TipedValue(InnerTipe, { value: values }); }
+        }
+    }
+
+    static Box(tipe, size) {
+        return class InnerTipe extends Tipe {
+            static name = `[${size}x${tipe.name}]`
+            static innerTipe = tipe;
+            static basic = true;
+            static size = size;
+            static methods = {
+                size: new TipeMethod('size', InnerTipe, NumberTipe, () => size)
+            };
+            static isBoxTipe = true;
+            static streamable = true;
+            static new(...values) {
+                let inner = values.slice(0, size).map(v => tipe.new(v));
+                return new TipedValue(InnerTipe, { value: inner });
+            }
+
+            static drawShadow() {
+                TextTipe.draw(InnerTipe.name, Layers.Shadow);
+            }
+            static draw() {
+                TextTipe.draw(InnerTipe.name);
+            }
         }
     }
 
@@ -65,7 +91,9 @@ class Tipe {
             static drawShadow() {
                 TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
             }
-            static draw = InnerTipe.drawShadow;
+            static draw() {
+                TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`);
+            }
         }
     }
 }
