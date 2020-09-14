@@ -18,8 +18,37 @@ class SceneManager {
         if (this.editable) {
             this.tray.draw();
             this.editor.draw();
+
+            // draw play button
+            const margin = 10;
+            const tHeight = Renderer.textHeight('Courier New', 24);
+            const height = tHeight + 2 * margin;
+            const width = Renderer.textWidth('Run', 'Courier New', 24) + 2 * margin;
+            const start = canvas.width - width - margin;
+            Renderer.newRenderable(Layers.UI, (regions) => {
+                fill(10);
+                stroke(regions.runButton.hovering ? 200 : 0);
+                rect(start, margin, width, height, 5);
+
+                noStroke();
+                fill(20, 200, 20);
+                textFont('Courier New');
+                textSize(24);
+                text('Run', start + margin, 2 * margin + tHeight * 0.8);
+                if (regions.runButton.clicked) {
+                    this.runLevel();
+                }
+            }, Renderer.regionStub('runButton', start, 10, height, height));
         } else {
             // maybe draw pipeline only?
+            Renderer.newRenderable(Layers.Background, () => {
+                fill(Editor.backgroundColor);
+                rect(0, 0, canvas.width, canvas.height);
+            });
+            Renderer.push(this);
+            Renderer.translate(200, 200);
+            this.editor.renderPipeline();
+            Renderer.pop(this);
         }
 
         // render running ui
@@ -47,6 +76,7 @@ class SceneManager {
     }
 
     static runLevel() {
+        this.editable = false;
         // move editor
         // close tray
         // render all tests on top margin
