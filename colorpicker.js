@@ -1,50 +1,54 @@
 class ColorPicker {
     get value() { return this.text; }
-    get height() { 
-        return TipeMethod.;
+    
+    static height = TipeMethod.basicHeight + 5;
+    static colorBoxHeight = ColorPicker.height - 10;
+    static colorBoxWidth = 20;
+    static colorBoxMargin = 5;
+
+    static variantNames = Object.keys(ColorTipe.variants);
+    static boxAndMargin = ColorPicker.colorBoxWidth + ColorPicker.colorBoxMargin;
+    static width = ColorPicker.variantNames.length * ColorPicker.boxAndMargin + ColorPicker.colorBoxMargin;
+
+    static colorBoxes = Object.keys(ColorTipe.variants).map((v, i) => { return {
+        tipedColor: ColorTipe.variants[v],
+        name: v, 
+        x: ColorPicker.colorBoxMargin + i * ColorPicker.boxAndMargin,
+        y: ColorPicker.colorBoxMargin, 
+        width: ColorPicker.colorBoxWidth, 
+        height: ColorPicker.colorBoxHeight
+    }});
+
+    // _selected = false;
+    // get selected() { return this._selected; }
+    // set selected(value) {
+    //     if (!value) this.accept();
+    //     this._selected = value;
+    // }
+
+    selected = variantNames.reduce((o, key) => o[key] = false, {});
+
+    constructor() {
+        this.selected[variantNames[0]] = true;
     }
-    get width() { return max(20, Renderer.textWidth(this.text, this.font, this.fontSize) + 10); }
 
-    _selected = false;
-    get selected() { return this._selected; }
-    set selected(value) {
-        if (!value) this.accept();
-        this._selected = value;
-    }
-
-    used = false;
-
-    constructor(config={}) {
-        this.defaultText = config.defaultText || '';
-        this.text = this.defaultText;
-        this.last = this.defaultText;
-
-        this.font = config.font || 'Courier New';
-        this.fontSize = config.fontSize || 16;
-
-        InputBox.keyListeners.push(this);
-    }
-
-    draw(layer=Layers.CodeFragment, interactable=true) {
-        const width = this.width;
-        const height = this.height;
-
+    draw(layer=Layers.CodeFragment, interactable=true) {        
         Renderer.newRenderable(layer, 
             (regions) => {
-                if (interactable && clickThisFrame) {
-                    this.selected = regions.body.hovering;
+                fill(ColorTipe.color);
+                rect(0, 0, this.width, this.height);
+                
+                for (const box of ColorPicker.colorBoxes) {
+                    if (interactable && regions[box.name].clicked) {
+                        this.selected[box.name] = !this.selected[box.name];
+                    }
+                    
+                    stroke(this.selected[box.name] ? color(255, 30, 30) : color(0));
+                    fill(ColorTipe.asP5Color(box.tipedColor));
+                    rect(box.x, box.y, box.width, box.height);
                 }
-
-                fill(this.selected ? color(100, 200, 200) : color(200));
-                rect(0, 0, width, height);
-
-                stroke(10);
-                fill(this.used ? 0 : 50);
-                textSize(this.fontSize);
-                textFont(this.font);
-                text(this.text, 5, 5 + height / 2);
             },
-            Renderer.regionStub('body', 0, 0, width, height)
+            ...ColorPicker.colorBoxes.map(o => Renderer.regionStub(o.name, o.x, o.y, o.width, o.height))
         )
     }
 }
