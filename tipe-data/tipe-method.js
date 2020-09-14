@@ -1,10 +1,11 @@
 class TipeMethod {
     static font = 'Courier New';
     static fontSize = 20;
+    static basicHeight = 25;
 
     showName = true;
 
-    get height() { return 25; }
+    get height() { return TipeMethod.basicHeight; }
     get width() {
         return Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + Tipe.shapeIndent;
     }
