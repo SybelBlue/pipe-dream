@@ -14,8 +14,8 @@ class ColorPicker {
         tipedColor: ColorTipe.variants[v],
         name: v, 
         x: ColorPicker.colorBoxMargin + i * ColorPicker.boxAndMargin,
-        y: ColorPicker.colorBoxMargin, 
-        width: ColorPicker.colorBoxWidth, 
+        y: ColorPicker.colorBoxMargin,
+        width: ColorPicker.colorBoxWidth,
         height: ColorPicker.colorBoxHeight
     }});
 
@@ -36,7 +36,7 @@ class ColorPicker {
                 (name) => name == this.current;
     }
 
-    draw(layer=Layers.CodeFragment, interactable=true) {        
+    draw(layer=Layers.CodeFragment, interactable=true) {
         Renderer.newRenderable(layer, 
             (regions) => {
                 fill(ColorTipe.color);
