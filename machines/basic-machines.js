@@ -62,4 +62,4 @@ class TakeMachine extends Machine {
     }
 
     process(values) { return values.slice(0, this.inputBox.value); }
-} 
+}

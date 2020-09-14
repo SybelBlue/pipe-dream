@@ -177,30 +177,38 @@ class TextTipe extends Tipe {
     }
 }
 
-// maybe this should be an enumeration
 class ColorTipe extends Tipe {
     static name = 'Color';
     static variableName = 'color';
+    static get variants() { 
+        return {
+            red: new TipedValue(ColorTipe, { name: 'red', hexString: '#C1301C' }),
+            orange: new TipedValue(ColorTipe, { name: 'orange', hexString: '#C96112' }),
+            yellow: new TipedValue(ColorTipe, { name: 'yellow', hexString: '#C4A705' }),
+            green: new TipedValue(ColorTipe, { name: 'green', hexString: '#177245' }),
+            blue: new TipedValue(ColorTipe, { name: 'blue', hexString: '#2E9753' }),
+            purple: new TipedValue(ColorTipe, { name: 'purple', hexString: '#4B2882' }),
+        };
+    }
     static get methods() {
         return {
-            green: new TipeProperty('green', ColorTipe, NumberTipe),
-            blue: new TipeProperty('blue', ColorTipe, NumberTipe),
-            red: new TipeProperty('red', ColorTipe, NumberTipe),
+            name: new TipeProperty('name', ColorTipe, TextTipe),
+            hexString: new TipeProperty('hexString', ColorTipe, TextTipe),
             ballWithSize: new TipeMethod(
                 'ballWithSize', 
                 ColorTipe, 
                 Tipe.Function(NumberTipe, BallTipe, FloatBox, '1.5'),
                 function(self) { 
-                    return (nVal) => BallTipe.new({ size: nVal.value, color: { green: self.green, blue: self.blue, red: self.red } })
+                    return (nVal) => BallTipe.new({ size: nVal.value, color: {} })
                 }
             ),
         }
     }
-    static new(defaults={}) { return new TipedValue(ColorTipe, defaults); }
-    static asP5Color(c) { return color(c.red.value, c.green.value, c.blue.value); }
+    static new(variant='blue') { return ColorTipe.variants[variant]; }
+    static asP5Color(c) { return color(c.hexString.value); }
 
     static drawShadow() {
-        ColorTipe.draw(ColorTipe.new({red: 20, green: 20, blue: 200}), Layers.Shadow);
+        ColorTipe.draw(ColorTipe.new(), Layers.Shadow);
     }
 
     static draw(color, layer=Layers.Data) {
