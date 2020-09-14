@@ -1,10 +1,10 @@
 class ColorPicker {
     get value() { return this.text; }
     
-    static height = TipeMethod.basicHeight + 5;
-    static colorBoxHeight = ColorPicker.height - 10;
     static colorBoxWidth = 20;
-    static colorBoxMargin = 5;
+    static colorBoxMargin = 7;
+    static height = 20 + 2 * ColorPicker.colorBoxMargin;
+    static colorBoxHeight = ColorPicker.height - 2 * ColorPicker.colorBoxMargin;
 
     static variantNames = Object.keys(ColorTipe.variants);
     static boxAndMargin = ColorPicker.colorBoxWidth + ColorPicker.colorBoxMargin;
@@ -19,31 +19,36 @@ class ColorPicker {
         height: ColorPicker.colorBoxHeight
     }});
 
-    // _selected = false;
-    // get selected() { return this._selected; }
-    // set selected(value) {
-    //     if (!value) this.accept();
-    //     this._selected = value;
-    // }
+    constructor(multiMode=false) {
+        this.selected = 
+            multiMode ?
+                (name) => this.current[name] = !this.current[name]:
+                (name) => this.current = name;
 
-    selected = variantNames.reduce((o, key) => o[key] = false, {});
+        this.current = 
+            multiMode ?
+                ColorPicker.variantNames.reduce((o, key) => { o[key] = false; return o; }, {}):
+                null;
 
-    constructor() {
-        this.selected[variantNames[0]] = true;
+        this.isSelected =
+            multiMode ? 
+                (name) => this.current[name]:
+                (name) => name == this.current;
     }
 
     draw(layer=Layers.CodeFragment, interactable=true) {        
         Renderer.newRenderable(layer, 
             (regions) => {
                 fill(ColorTipe.color);
-                rect(0, 0, this.width, this.height);
+                rect(0, 0, ColorPicker.width, ColorPicker.height, 0, 10, 10, 0);
                 
                 for (const box of ColorPicker.colorBoxes) {
                     if (interactable && regions[box.name].clicked) {
-                        this.selected[box.name] = !this.selected[box.name];
+                        this.selected(box.name);
                     }
                     
-                    stroke(this.selected[box.name] ? color(255, 30, 30) : color(0));
+                    strokeWeight(4);
+                    stroke(this.isSelected(box.name) ? color(255, 30, 30) : color(0));
                     fill(ColorTipe.asP5Color(box.tipedColor));
                     rect(box.x, box.y, box.width, box.height);
                 }
