@@ -33,8 +33,8 @@ class InputBox {
 
         Renderer.newRenderable(layer, 
             (regions) => {
-                if (interactable && clickThisFrame) {
-                    this.selected = regions.body.hovering;
+                if (interactable) {
+                    this.selected = regions.body.clicked;
                 }
 
                 fill(this.selected ? color(100, 200, 200) : color(200));

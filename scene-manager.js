@@ -35,7 +35,7 @@ class SceneManager {
         //     fill(20, 20, 250);
         //     rect(55, 20, 10, 25);
         //     rect(70, 20, 10, 25);
-        //     if (regions.stopButton.hovering && clickThisFrame) this running = false;
+        //     if (regions.stopButton.clicked) this running = false;
         // }, Renderer.regionStub('stopButton', 20, 20, 25, 25));
 
         const focused = Renderer.renderAll().found;
