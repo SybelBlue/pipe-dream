@@ -82,6 +82,7 @@ class SceneManager {
 class TestRunner {
     speed = 1;
     currentItem = null;
+    output = [];
 
     constructor(pipeline, test) {
         this.pipeline = pipeline;
@@ -95,7 +96,7 @@ class TestRunner {
             // animate all remaining test items down?
             this.currentItem = {
                 value: tipedValue,
-                animator: new LerpAnimator(() => tipedValue.draw(), [0, 0], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
+                animator: new LerpAnimator(() => tipedValue.draw(), [0, -StackedMachine.tailHeight], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
             }
             console.log(this.currentItem);
         }
@@ -108,6 +109,12 @@ class TestRunner {
     }
 
     currentEnteredMachine(index) {
+        if (this.pipeline.length <= index) {
+            this.output.push(this.currentItem.value);
+            this.currentItem = null;
+            return;
+        }
+
         const machine = this.pipeline[index];
         const tipedValue = machine.accept(this.currentItem.value);
 
@@ -120,7 +127,7 @@ class TestRunner {
         const start = machine.height + this.currentItem.animator.stop[1];
         this.currentItem = {
             value: tipedValue,
-            animator: new LerpAnimator(() => tipedValue.draw(), [0, start], [0, start + Pipe.height], this.speed, () => this.currentEnteredMachine(index + 1)),
+            animator: new LerpAnimator(() => tipedValue.draw(), [0, start - StackedMachine.tailHeight], [0, start + Pipe.height], this.speed, () => this.currentEnteredMachine(index + 1)),
         }
     }
 }
