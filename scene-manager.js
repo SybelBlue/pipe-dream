@@ -105,7 +105,7 @@ class TestRunner {
         Renderer.translate(Editor.pipelineMidline, 0);
         this.currentItem.animator.draw();
         Renderer.pop(this);
-        Editor.drawPipeline(this.pipeline);
+        this.pipeline.draw();
     }
 
     currentEnteredMachine(index) {

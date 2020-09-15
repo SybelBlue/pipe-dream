@@ -9,20 +9,13 @@ class Editor {
 
     static get pipelineMidline() { return Editor.gutterSize + Machine.width / 2; }
 
-    get pipelineFinished() { return !this.pipeline.find(machine => !machine.finished); }
-
     _keyCount = 0;
 
-    get pipeTipeChecks() { return this.endingTipe.name === this.lastOutputTipe.name; }
+    get outputTipe() { return this.pipeline.outputTipe || this.startingTipe; }
 
-    get pipelineHeight() {
-        return this.pipeline.reduce((sum, pipe) => sum + pipe.height + Pipe.height, Pipe.height);
-    }
+    get pipeTipeChecks() { return this.endingTipe.name === this.outputTipe.name; }
 
-    get lastOutputTipe() {
-        const last = Array.last(this.pipeline);
-        return last ? last.outputTipe : this.startingTipe;
-    }
+    pipeline = new Pipeline();
 
     constructor(startingTipe, endingTipe, x, y, width, height) {
         this.startingTipe = startingTipe;
@@ -32,8 +25,6 @@ class Editor {
         this.width = width;
         this.height = height;
         this.minHeight = height;
-
-        this.pipeline = [];
     }
 
     draw() {
@@ -52,14 +43,14 @@ class Editor {
         // set new baseline
         Renderer.translate(0, Editor.topMargin);
 
-        Editor.drawPipeline(this.pipeline, this.startingTipe, this.pipeTipeChecks);
+        this.pipeline.draw(this.startingTipe, this.pipeTipeChecks);
 
         Renderer.newRenderable(Layers.Background, () => {
             // pipe inlet shadow
             fill(20);
             rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
 
-            const pHeight = this.pipelineHeight;
+            const pHeight = this.pipeline.height;
             const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - Editor.topMargin);
 
             // bottom bar
@@ -83,26 +74,6 @@ class Editor {
         Renderer.pop(this);
     }
 
-    static drawPipeline(pipeline, startingTipe=null, completed=true) {
-        Renderer.push(this);
-        const showOutputShadow = exists(startingTipe, false);
-        
-        Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(true, pipeline.length == 0).draw(showOutputShadow ? startingTipe : null);
-
-        Renderer.translate(-Editor.pipeIndent, Pipe.height);
-        for (let i = 0; i < pipeline.length; i++) {
-            const machine = pipeline[i];
-            machine.draw();
-
-            Renderer.translate(Editor.pipeIndent, machine.height);
-            new Pipe(false, i == pipeline.length - 1 && completed).draw(showOutputShadow ? machine.outputTipe : null);
-
-            Renderer.translate(-Editor.pipeIndent, Pipe.height);
-        }
-        Renderer.pop(this);
-    }
-
     removeMachine(key) {
         let i = this.pipeline.findIndex(machine => machine.key === key);
         if (i < 0) throw new Error('removing non existent machine');
@@ -112,7 +83,7 @@ class Editor {
     }
 
     pushMachine(machineConstructor, ...args) {
-        this.pipeline.push(new machineConstructor(this._keyCount++, this.lastOutputTipe, ...args));
+        this.pipeline.push(new machineConstructor(this._keyCount++, this.outputTipe, ...args));
     }
 
     validatePipeline() {
