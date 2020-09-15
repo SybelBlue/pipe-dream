@@ -90,22 +90,30 @@ class Renderer {
 
     static get xTranslation() { return Renderer.stackTop.x; }
 
+    static textBoundMemoized = {};
+
     static textWidth(text, font, size) {
-        push();
-        textFont(font);
-        textSize(size);
-        const width = textWidth(text);
-        pop();
-        return width;
+        const key = `w_${font}_${text.length}_${size}`;
+        if (!exists(this.textBoundMemoized[key])) {
+            push();
+            textFont(font);
+            textSize(size);
+            this.textBoundMemoized[key] = textWidth(text);
+            pop();
+        }
+        return this.textBoundMemoized[key];
     }
 
     static textHeight(font, size) {
-        push();
-        textFont(font);
-        textSize(size);
-        const height = textAscent();
-        pop();
-        return height;
+        const key = `h_${font}_${size}`;
+        if (!exists(this.textBoundMemoized[key])) {
+            push();
+            textFont(font);
+            textSize(size);
+            this.textBoundMemoized[key] = textAscent();
+            pop();
+        }
+        return this.textBoundMemoized[key];
     }
 
     static translate(x, y) {
