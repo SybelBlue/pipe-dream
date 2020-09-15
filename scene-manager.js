@@ -119,9 +119,14 @@ class TestRunner {
 
         // side bar with all tests and test results listed
 
+        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin).draw());
+
         Renderer.push(this);
-        Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(false, true, TestRunner.darkMargin).draw(); // replace with test preview
+        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin - TestRunner.darkMargin/8);
+        this.test.slice(0, 5).forEach(tipedValue => {
+            tipedValue.draw();
+            Renderer.translate(0, -TestRunner.darkMargin/4);
+        });
         Renderer.pop(this);
 
         Renderer.push(this);

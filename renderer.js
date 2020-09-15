@@ -21,6 +21,9 @@ class Renderer {
             this.x = previous ? previous.x : 0;
             this.y = previous ? previous.y : 0;
         }
+        clone() {
+            return new Renderer.Node(this.key, this.previous, this.source);
+        }
     }
 
     static Region = class {
@@ -28,12 +31,12 @@ class Renderer {
         clicked = false;
 
         constructor(layer, x, y, width, height, blocking) {
-            exists(this.layer = layer);
-            exists(this.x = x);
-            exists(this.y = y);
-            exists(this.width = width);
-            exists(this.height = height);
-            exists(this.blocking = blocking);
+            exists(this.layer = layer, true);
+            exists(this.x = x, true);
+            exists(this.y = y, true);
+            exists(this.width = width, true);
+            exists(this.height = height, true);
+            exists(this.blocking = blocking, true);
         }
 
         test(x, y) {
@@ -70,13 +73,18 @@ class Renderer {
     }
 
     static _keyCount = 1;
-    static stackTop = Renderer.Node.Head;
+    static stackTop = Renderer.Node.Head.clone();
     static toRender = [];
     static regions = [];
 
     static keyListeners = [];
 
-    static clearStack() { Renderer.stackTop = Renderer.Node.Head; }
+    static clearStack() { 
+        if (Renderer.stackTop.key !== Renderer.Node.Head.key) {
+            console.warn('cleared while non-empty render stack');
+            Renderer.stackTop = Renderer.Node.Head.clone();
+        }
+    }
 
     static get yTranslation() { return Renderer.stackTop.y; }
 

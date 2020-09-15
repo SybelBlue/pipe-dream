@@ -108,7 +108,7 @@ class Editor {
 
             value = machine.apply(value);
 
-            if (!exists(value, false)) {
+            if (!exists(value)) {
                 return null;
             }
         }

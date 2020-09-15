@@ -14,7 +14,7 @@ class Pipeline extends Array /* of Machines */ {
 
     draw(startingTipe=null, completed=true) {
         Renderer.push(this);
-        const showOutputShadow = exists(startingTipe, false);
+        const showOutputShadow = exists(startingTipe);
 
         Renderer.translate(Editor.pipeGutterSize, 0);
         new Pipe(true, this.length == 0).draw(showOutputShadow ? startingTipe : null);

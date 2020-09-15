@@ -170,7 +170,7 @@ class NumberTipe extends Tipe {
     }
 
     static draw(tipedNum, layer=Layers.Data) {
-        let num = tipedNum.value ? tipedNum.value : tipedNum;
+        let num = exists(tipedNum.value) ? tipedNum.value : tipedNum;
         if (typeof(num) === typeof(0) && num > 9999) {
             num = 'Big#';
         }
@@ -295,7 +295,7 @@ class BallTipe extends Tipe {
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }
     static new(defaults={ size: 15, color: 'blue' }) { 
-        defaults.size = exists(defaults.size, false) ? max(0.2, defaults.size) : 15;
+        defaults.size = exists(defaults.size) ? max(0.2, defaults.size) : 15;
         return new TipedValue(BallTipe, defaults);
     }
 
