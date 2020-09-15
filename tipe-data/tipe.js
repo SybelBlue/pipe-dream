@@ -108,7 +108,7 @@ class BooleanTipe extends Tipe {
     };
 
     static new(value=false) { 
-        if (value !== false && value !== true) throw new Error('bad value', value);
+        if (value !== false && value !== true) throw new Error('bad value: ' + value);
         return new TipedValue(BooleanTipe, { value: value });
     }
     
@@ -159,7 +159,7 @@ class NumberTipe extends Tipe {
         }
     }
     static new(value=0) {
-        if (typeof(value) !== typeof(0)) throw new Error('bad value', value);
+        if (typeof(value) !== typeof(0)) throw new Error('bad value: ' + value);
         return new TipedValue(NumberTipe, { value: value });
     }
     static shadowTextWidth = null;
