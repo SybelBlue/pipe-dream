@@ -33,7 +33,7 @@ class InputBox {
 
         Renderer.newRenderable(layer, 
             (regions) => {
-                if (interactable) {
+                if (interactable && clickThisFrame) {
                     this.selected = regions.body.clicked;
                 }
 

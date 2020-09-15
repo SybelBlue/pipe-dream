@@ -1,6 +1,7 @@
 class TipedValue {
     constructor(tipe, defaults={}) {
         this.tipe = tipe;
+        this.constructorArgs = defaults;
         if (tipe.basic) {
             this.value = defaults.value;
         }
@@ -11,4 +12,6 @@ class TipedValue {
     }
 
     draw() { this.tipe.draw(this); }
+
+    clone() { return new TipedValue(this.tipe, this.constructorArgs); }
 }

@@ -77,21 +77,33 @@ class SceneManager {
         this.editable = false;
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[0]);
     }
+
+    static testCompleted(output) {
+        console.log('test completed', output);
+    }
 }
 
 class TestRunner {
-    speed = 1;
+    speed = 3;
     currentItem = null;
     output = [];
+
+    done = false;
 
     constructor(pipeline, test) {
         this.pipeline = pipeline;
         this.pipeline.forEach(m => m.reset());
-        this.test = test;
+        this.test = test.map(v => v.clone());
     }
 
     draw() {
-        if (!exists(this.currentItem, false)) {
+        if (this.done) return;
+        if (!this.currentItem) {
+            if (!this.test.length || this.pipeline.closed) {
+                SceneManager.testCompleted(this.output);
+                this.done = true;
+                return;
+            }
             const tipedValue = this.test.shift();
             // animate all remaining test items down?
             this.currentItem = {

@@ -17,6 +17,7 @@ class Machine extends PipelineObject {
     get bodyHeight() { return Machine.bodyHeight; }
 
     textSize = 26;
+    get closedPipeline() { return false; }
 
     get outputTipe() { return BallTipe; }
 

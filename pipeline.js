@@ -1,6 +1,8 @@
 class Pipeline extends Array /* of Machines */ {
     get finished() { return !this.find(machine => !machine.finished); }
 
+    get closed() { return !!this.find(machine => machine.closedPipeline); }
+
     get height() {
         return this.reduce((sum, machine) => sum + machine.height + Pipe.height, Pipe.height);
     }

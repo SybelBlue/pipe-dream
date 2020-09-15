@@ -47,6 +47,8 @@ class TakeMachine extends Machine {
 
     get outputTipe() { return this.inTipe; }
 
+    get closedPipeline() { return this.remaining <= 0; }
+
     constructor(key, inTipe) {
         super(key, inTipe, color('#38369A'), 'take');
         this.inputBox = new IntegerBox({ defaultText: '5' });
