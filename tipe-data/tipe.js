@@ -297,7 +297,10 @@ class BallTipe extends Tipe {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }
-    static new(defaults={}) { return new TipedValue(BallTipe, defaults); }
+    static new(defaults={ size: 15, color: 'blue' }) { 
+        defaults.size = exists(defaults.size, false) ? max(0.2, defaults.size) : 15;
+        return new TipedValue(BallTipe, defaults);
+    }
 
     // expects top center
     static drawShadow() {

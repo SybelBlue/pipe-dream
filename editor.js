@@ -2,6 +2,7 @@ class Editor {
     static pipeIndent = 30;
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
+    static get darkMarginColor() { return color(66); }
 
     static topMargin = Editor.darkMargin;
     static gutterSize = Tray.maxWidth + 50;
@@ -36,7 +37,7 @@ class Editor {
             fill(Editor.backgroundColor);
             rect(0, 0, this.width, this.height);
 
-            fill(66);
+            fill(Editor.darkMarginColor);
             rect(0, 0, this.width, Editor.topMargin);
         });
 
@@ -55,7 +56,7 @@ class Editor {
 
             // bottom bar
             noStroke();
-            fill(66);
+            fill(Editor.darkMarginColor);
             rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
             
             // pipe outlet shadow

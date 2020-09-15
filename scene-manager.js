@@ -42,10 +42,6 @@ class SceneManager {
             }, Renderer.regionStub('runButton', start, 10, height, height));
         } else {
             // maybe draw pipeline only?
-            Renderer.newRenderable(Layers.Background, () => {
-                fill(Editor.backgroundColor);
-                rect(0, 0, canvas.width, canvas.height);
-            });
             this.runner.draw();
         }
 
@@ -75,15 +71,24 @@ class SceneManager {
 
     static runLevel() {
         this.editable = false;
-        this.runner = new TestRunner(this.editor.pipeline, this.level.tests[0]);
+        this.testIndex = 0;
+        this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     }
 
     static testCompleted(output) {
+        this.testIndex++;
+        if (this.level.tests.length <= this.testIndex) {
+            SceneManager.editable = true;
+            return;
+        }
+        this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
         console.log('test completed', output);
     }
 }
 
 class TestRunner {
+    static darkMargin = 300;
+
     speed = 3;
     currentItem = null;
     output = [];
@@ -113,10 +118,40 @@ class TestRunner {
         }
 
         Renderer.push(this);
+        Renderer.translate(Editor.pipeGutterSize, 0);
+        new Pipe(false, true, TestRunner.darkMargin).draw();
+        Renderer.pop(this);
+
+        Renderer.push(this);
+        Renderer.translate(0, TestRunner.darkMargin);
+        
+        Renderer.push(this);
         Renderer.translate(Editor.pipelineMidline, 0);
         this.currentItem.animator.draw();
         Renderer.pop(this);
+        
         this.pipeline.draw();
+        Renderer.pop(this);
+
+        const pHeight = this.pipeline.height;
+        const bottomMarginStart = pHeight + TestRunner.darkMargin
+        const bottomMarginHeight = windowHeight - bottomMarginStart;
+        Renderer.push(this);
+        Renderer.translate(Editor.pipeGutterSize, bottomMarginStart);
+        new Pipe(true, false, bottomMarginHeight).draw();
+        Renderer.pop(this);
+
+        Renderer.newRenderable(Layers.Background, () => {
+            // backdrop
+            fill(Editor.backgroundColor);
+            rect(0, 0, windowWidth, windowHeight);
+
+            // top dark margin
+            fill(Editor.darkMarginColor);
+            rect(0, 0, windowWidth, TestRunner.darkMargin);
+            // bottom dark margin
+            rect(0, bottomMarginStart, windowWidth, bottomMarginHeight);
+        });
     }
 
     currentEnteredMachine(index) {
