@@ -124,7 +124,7 @@ class UIMethod extends TipeMethod {
         super.draw(onClick);
         Renderer.push(this);
         Renderer.translate(Tipe.shapeIndent, 4);
-        this.inputBox.draw();
+        this.inputBox.draw(SceneManager.editable);
         Renderer.pop(this);
     }
 }

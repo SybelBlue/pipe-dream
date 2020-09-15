@@ -110,7 +110,6 @@ class TestRunner {
                 value: tipedValue,
                 animator: new LerpAnimator(() => tipedValue.draw(), [0, -StackedMachine.tailHeight], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
             }
-            console.log(this.currentItem);
         }
 
         Renderer.push(this);

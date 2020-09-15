@@ -27,11 +27,11 @@ class InputBox {
         InputBox.keyListeners.push(this);
     }
 
-    draw(layer=Layers.CodeFragment, interactable=true) {
+    draw(interactable=true) {
         const width = this.width;
         const height = this.height;
 
-        Renderer.newRenderable(layer, 
+        Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 if (interactable && clickThisFrame) {
                     this.selected = regions.body.clicked;

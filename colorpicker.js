@@ -1,5 +1,5 @@
 class ColorPicker {
-    get value() { return this.text; }
+    get value() { return this.current; }
     
     static colorBoxWidth = 20;
     static colorBoxMargin = 7;
@@ -9,6 +9,9 @@ class ColorPicker {
     static variantNames = Object.keys(ColorTipe.variants);
     static boxAndMargin = ColorPicker.colorBoxWidth + ColorPicker.colorBoxMargin;
     static width = ColorPicker.variantNames.length * ColorPicker.boxAndMargin + ColorPicker.colorBoxMargin;
+
+    width = ColorPicker.width;
+    height = ColorPicker.height;
 
     static colorBoxes = Object.keys(ColorTipe.variants).map((v, i) => { return {
         tipedColor: ColorTipe.variants[v],
@@ -36,8 +39,8 @@ class ColorPicker {
                 (name) => name == this.current;
     }
 
-    draw(layer=Layers.CodeFragment, interactable=true) {
-        Renderer.newRenderable(layer, 
+    draw(interactable=true) {
+        Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 fill(ColorTipe.color);
                 rect(0, 0, ColorPicker.width, ColorPicker.height, 0, 10, 10, 0);

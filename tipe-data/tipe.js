@@ -67,14 +67,14 @@ class Tipe {
         }
     }
 
-    static Function(inTipe, outTipe, inputBoxConstructor, startingValue) {
+    static Function(inTipe, outTipe, inputBoxConstructor, startingValue=null) {
         return class InnerTipe extends Tipe {
             static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
             static inTipe = inTipe;
             static outTipe = outTipe;
             static isFunctionTipe = true;
             static get methods() {
-                const box = new inputBoxConstructor({ defaultText: startingValue });
+                const box = new inputBoxConstructor(startingValue ? { defaultText: startingValue } : null);
                 return { 
                     getInput: new UIMethod(
                         'getInput', 
@@ -128,22 +128,32 @@ class NumberTipe extends Tipe {
     static variableName = 'num';
     static basic = true;
     static isNumberTipe = true;
-    static methods = {
-        absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, self => abs(self.value)),
-        plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, self => self.value + 1),
-        isPositive: new TipeMethod(
-            'isPositive', 
-            NumberTipe, 
-            BooleanTipe, 
-            self => self.value > 0),
-        greaterThan: new TipeMethod(
-            'greaterThan', 
-            NumberTipe, 
-            Tipe.Function(NumberTipe, BooleanTipe, FloatBox, '0'),
-            function(self) { 
-                return (nVal) => BooleanTipe.new(self.value > nVal.value)
-            }
-        )
+    static get methods() {
+        return {
+            absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, self => abs(self.value)),
+            plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, self => self.value + 1),
+            isPositive: new TipeMethod(
+                'isPositive', 
+                NumberTipe, 
+                BooleanTipe, 
+                self => self.value > 0),
+            greaterThan: new TipeMethod(
+                'greaterThan', 
+                NumberTipe, 
+                Tipe.Function(NumberTipe, BooleanTipe, FloatBox, '0'),
+                function(self) { 
+                    return (nVal) => BooleanTipe.new(self.value > nVal.value)
+                }
+            ),
+            ballWithColor: new TipeMethod(
+                'ballWithColor', 
+                NumberTipe, 
+                Tipe.Function(ColorTipe, BallTipe, ColorPicker),
+                function(self) { 
+                    return (colorName) => BallTipe.new({ size: self.value, color: ColorTipe.variants[colorName] })
+                }
+            ),
+        }
     }
     static new(value=0) { return new TipedValue(NumberTipe, { value: value }); }
     static shadowTextWidth = null;
