@@ -166,10 +166,7 @@ class NumberTipe extends Tipe {
     static shadowText = '#';
 
     static drawShadow() {
-        Renderer.push(this);
-        Renderer.translate(0, -textAscent()*0.5);
-        NumberTipe.draw(this.shadowText, Layers.Shadow);
-        Renderer.pop(this);
+        Renderer.temporary(this, 0, -textAscent()/2, () => NumberTipe.draw(this.shadowText, Layers.Shadow));
     }
 
     static draw(tipedNum, layer=Layers.Data) {

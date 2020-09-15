@@ -56,11 +56,8 @@ class TakeMachine extends Machine {
 
     draw() {
         super.draw();
-
-        Renderer.push(this);
-        Renderer.translate(StackedMachine.bodyIndent, TakeMachine.inputBoxStart);
-        this.inputBox.draw(SceneManager.editable);
-        Renderer.pop(this);
+        Renderer.temporary(this, StackedMachine.bodyIndent, TakeMachine.inputBoxStart, 
+            () => this.inputBox.draw(SceneManager.editable));
     }
 
     process(values) { return values.slice(0, this.inputBox.value); }

@@ -16,15 +16,9 @@ class Pipe {
 
     draw(shadowTipe=null) {
         if (shadowTipe) {
-            Renderer.push(this);
-            Renderer.translate(Pipe.mainWidth/2, 0);
-            shadowTipe.drawShadow();
-            // Renderer.translate(Pipe.mainWidth/2, Pipe.height);
-            // Renderer.newRenderable(Layers.Pipe, () => {
-            //     const lineLength = Renderer.textWidth(shadowTipe.name) + 50;
-            // })
-            Renderer.pop(this);
+            Renderer.temporary(this, Pipe.mainWidth/2, 0, () => shadowTipe.drawShadow());
         }
+
         Renderer.push(this);
         Renderer.newRenderable(Layers.Pipe, () => {
             if (this.highlighting) {

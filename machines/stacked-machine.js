@@ -38,19 +38,11 @@ class StackedMachine extends Machine {
         });
         
         // draw fragment stack
-        Renderer.push(this);
-
-        Renderer.translate(Machine.bodyIndent, Machine.bodyHeight);
-        this.drawFragmentStack();
-
-        Renderer.pop(this);
+        Renderer.temporary(this, Machine.bodyIndent, Machine.bodyHeight, () => this.drawFragmentStack());
     }
 
     drawFragmentStack() {
-        Renderer.push(this);
-        Renderer.translate(Tipe.shapeMidline, 0);
-        this.inTipe.drawShape(this.color);
-        Renderer.pop(this);
+        Renderer.temporary(this, Tipe.shapeMidline, 0, () => this.inTipe.drawShape(this.color));
 
         Renderer.push(this);
         let currentTipe = this.inTipe;

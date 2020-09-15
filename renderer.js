@@ -124,6 +124,13 @@ class Renderer {
         Renderer.stackTop = Renderer.stackTop.previous;
     }
 
+    static temporary(source, xTranslation, yTranslation, callback) {
+        Renderer.push(source);
+        Renderer.translate(xTranslation, yTranslation);
+        callback();
+        Renderer.pop(source);
+    }
+
     static regionStub(name, x, y, width, height, blocking=true) {
         return {
             name: name,

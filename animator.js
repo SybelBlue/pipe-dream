@@ -24,10 +24,7 @@ class Animator {
     draw() {
         if (this.finished) return;
 
-        Renderer.push(this);
-        Renderer.translate(this.nextValue[0], this.nextValue[1]);
-        this.innerDraw();
-        Renderer.pop(this);
+        Renderer.temporary(this, this.nextValue[0], this.nextValue[1], () => this.innerDraw());
 
         this.checkCompleted();
         if (!this.finished) {

@@ -117,18 +117,17 @@ class TestRunner {
             }
         }
 
+        // side bar with all tests and test results listed
+
         Renderer.push(this);
         Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(false, true, TestRunner.darkMargin).draw();
+        new Pipe(false, true, TestRunner.darkMargin).draw(); // replace with test preview
         Renderer.pop(this);
 
         Renderer.push(this);
         Renderer.translate(0, TestRunner.darkMargin);
         
-        Renderer.push(this);
-        Renderer.translate(Editor.pipelineMidline, 0);
-        this.currentItem.animator.draw();
-        Renderer.pop(this);
+        Renderer.temporary(this, Editor.pipelineMidline, 0, () => this.currentItem.animator.draw());
         
         this.pipeline.draw();
         Renderer.pop(this);
@@ -136,10 +135,8 @@ class TestRunner {
         const pHeight = this.pipeline.height;
         const bottomMarginStart = pHeight + TestRunner.darkMargin
         const bottomMarginHeight = windowHeight - bottomMarginStart;
-        Renderer.push(this);
-        Renderer.translate(Editor.pipeGutterSize, bottomMarginStart);
-        new Pipe(true, false, bottomMarginHeight).draw();
-        Renderer.pop(this);
+        Renderer.temporary(this, Editor.pipeGutterSize, bottomMarginStart, 
+            () => new Pipe(true, false, bottomMarginHeight).draw());
 
         Renderer.newRenderable(Layers.Background, () => {
             // backdrop

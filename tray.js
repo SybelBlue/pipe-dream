@@ -7,13 +7,13 @@ class Tray {
     mode = null;
 
     draw() {
-        Renderer.push(this);
         Renderer.newRenderable(Layers.TrayBackground, function() {
             stroke(80);
             fill(Tray.background);
             rect(0, 0, Tray.maxWidth, editor.height, 0, 20, 20, 0);
-        })
+        });
 
+        Renderer.push(this);
         Renderer.translate(Tray.indent, 20);
         for (const option of this.drawable) {
             option.draw(() => this.optionClicked(option));

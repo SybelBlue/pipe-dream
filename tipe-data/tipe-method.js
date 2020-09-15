@@ -54,10 +54,7 @@ class TipeMethod {
             Renderer.regionStub('fragment', 0, 0, this.width, this.height)
         );
 
-        Renderer.push(this);
-        Renderer.translate(Tipe.shapeMidline, this.height);
-        this.outTipe.drawShape(this.outTipe.color);
-        Renderer.pop(this);
+        Renderer.temporary(this, Tipe.shapeMidline, this.height, () => this.outTipe.drawShape(this.outTipe.color));
     }
 
     // expects upper left corner is baseline
@@ -122,9 +119,6 @@ class UIMethod extends TipeMethod {
 
     draw(onClick) {
         super.draw(onClick);
-        Renderer.push(this);
-        Renderer.translate(Tipe.shapeIndent, 4);
-        this.inputBox.draw(SceneManager.editable);
-        Renderer.pop(this);
+        Renderer.temporary(this, Tipe.shapeIndent, 4, () => this.inputBox.draw(SceneManager.editable));
     }
 }
