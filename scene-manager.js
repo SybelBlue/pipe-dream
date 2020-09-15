@@ -116,6 +116,20 @@ class TestRunner {
         // top pipe
         Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin, this.done).draw());
 
+        Renderer.newRenderable(Layers.Pipe, () => {
+            const inletY = TestRunner.darkMargin - 10;
+            const inletX = Editor.pipeGutterSize + Pipe.edgeWidth;
+            fill(20);
+            if (this.pipeline.closed) {
+                // closed pipe inlet shadow
+                rect(inletX, inletY, Pipe.innerWidth, 10);
+            } else {
+                // open inlet shadow
+                rect(inletX, inletY, Pipe.innerWidth * 0.1, 10);
+                rect(inletX + Pipe.innerWidth * (1.0 - 0.1), inletY, Pipe.innerWidth * 0.1, 10);
+            }
+        });
+
         // pipeline
         Renderer.temporary(this, 0, TestRunner.darkMargin, () => this.pipeline.draw());
 
@@ -196,7 +210,13 @@ class TestRunner {
         const start = machine.height + this.currentItem.animator.stop[1];
         this.currentItem = {
             value: tipedValue,
-            animator: new LerpAnimator(() => tipedValue.draw(), [0, start - StackedMachine.tailHeight], [0, start + Pipe.height], this.speed, () => this.currentEnteredMachine(index + 1)),
+            animator: new LerpAnimator(
+                () => tipedValue.draw(), 
+                [0, start - StackedMachine.tailHeight], 
+                [0, start + Pipe.height], 
+                this.speed, 
+                () => this.currentEnteredMachine(index + 1)
+            ),
         }
     }
 }
