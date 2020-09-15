@@ -50,7 +50,7 @@ class Editor {
         // set new baseline
         Renderer.translate(0, Editor.topMargin);
 
-        this.renderPipeline();
+        Editor.drawPipeline(this.pipeline, this.startingTipe, this.pipeTipeChecks);
 
         Renderer.newRenderable(Layers.Background, () => {
             // pipe inlet shadow
@@ -81,20 +81,20 @@ class Editor {
         Renderer.pop(this);
     }
 
-    renderPipeline() {
+    static drawPipeline(pipeline, startingTipe, completed) {
         Renderer.push(this);
         
         Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(true, this.pipeline.length == 0).draw(this.startingTipe);
+        new Pipe(true, pipeline.length == 0).draw(startingTipe);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
-        for (let i = 0; i < this.pipeline.length; i++) {
-            const machine = this.pipeline[i];
+        for (let i = 0; i < pipeline.length; i++) {
+            const machine = pipeline[i];
 
             machine.draw();
             Renderer.translate(Editor.pipeIndent, machine.height);
             
-            new Pipe(false, i == this.pipeline.length - 1 && this.pipeTipeChecks).draw(machine.outputTipe)
+            new Pipe(false, i == pipeline.length - 1 && completed).draw(machine.outputTipe)
             Renderer.translate(-Editor.pipeIndent, Pipe.height);
         }
         Renderer.pop(this);

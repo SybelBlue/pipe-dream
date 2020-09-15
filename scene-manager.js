@@ -4,6 +4,7 @@ class SceneManager {
     static level = null;
     static editor = null;
     static tray = null;
+    static runner = null;
 
     static startLevel(level) {
         this.level = level;
@@ -81,5 +82,35 @@ class SceneManager {
         // close tray
         // render all tests on top margin
         // start test process
+    }
+}
+
+class TestRunner {
+    speed = 0.4;
+    currentItem = null;
+
+    constructor(width, height, pipeline, test) {
+        this.width = width;
+        this.height = height;
+        this.pipeline = pipeline;
+        this.test = test;
+    }
+
+    draw() {
+        if (!this.currentItem) {
+            let tipedValue = test.shift();
+            // animate all remaining test items down?
+            let currentItem = {
+                value: tipedValue,
+                animator: new LerpAnimator(tipedValue.draw, [Editor.gutterSize, 0], [Editor.gutterSize, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
+            }
+        }
+
+        this.currentItem.animator.draw();
+        
+    }
+
+    currentEnteredMachine(index) {
+
     }
 }
