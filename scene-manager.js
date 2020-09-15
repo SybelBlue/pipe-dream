@@ -24,24 +24,10 @@ class SceneManager {
 
             // draw play button
             const margin = 10;
-            const tHeight = Renderer.textHeight('Courier New', 24);
-            const height = tHeight + 2 * margin;
             const width = Renderer.textWidth('Run', 'Courier New', 24) + 2 * margin;
             const start = canvas.width - width - margin;
-            Renderer.newRenderable(Layers.UI, (regions) => {
-                fill(10);
-                stroke(regions.runButton.hovering ? 200 : 0);
-                rect(start, margin, width, height, 5);
-
-                noStroke();
-                fill(20, 200, 20);
-                textFont('Courier New');
-                textSize(24);
-                text('Run', start + margin, 2 * margin + tHeight * 0.8);
-                if (regions.runButton.clicked) {
-                    this.runLevel();
-                }
-            }, Renderer.regionStub('runButton', start, 10, height, height));
+            Renderer.temporary(this, start, margin, 
+                () => Renderer.newUIButton('Run', color(80, 250, 80), () => this.runLevel()));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {

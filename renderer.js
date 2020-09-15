@@ -160,10 +160,10 @@ class Renderer {
         Renderer.toRender.splice(i, 0, Renderer.Renderable.from(layer, drawCallback, regionStubs));
     }
 
-    static newButton(text, textColor, onClick, margin=10, fontSize=24) {
+    static newUIButton(txt, textColor, onClick, margin=10, fontSize=24) {
         const tHeight = Renderer.textHeight('Courier New', fontSize);
         const height = tHeight + 2 * margin;
-        const width = Renderer.textWidth(text, 'Courier New', fontSize) + 2 * margin;
+        const width = Renderer.textWidth(txt, 'Courier New', fontSize) + 2 * margin;
         Renderer.newRenderable(Layers.UI, (regions) => {
             fill(10);
             stroke(regions.button.hovering ? 200 : 0);
@@ -173,7 +173,7 @@ class Renderer {
             fill(textColor);
             textFont('Courier New');
             textSize(fontSize);
-            text(text, margin, margin + tHeight * 0.8);
+            text(txt, margin, margin + tHeight * 0.8);
             if (regions.button.clicked) onClick();
         }, Renderer.regionStub('button', 0, 0, width, height));
     }
