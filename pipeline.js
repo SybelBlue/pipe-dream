@@ -31,4 +31,25 @@ class Pipeline extends Array /* of Machines */ {
         }
         Renderer.pop(this);
     }
+
+    test(tipedValue) {
+        let value = tipedValue;
+        for (const machine of this.pipeline) {
+            if (!machine.finished) {
+                throw new Error('pipeline not finished');
+            }
+
+            value = machine.apply(value);
+
+            if (!exists(value)) {
+                return null;
+            }
+        }
+
+        return value;
+    }
+
+    process(tipedValues) {
+        return this.reduce((prev, machine) => machine.process(prev), tipedValues);
+    }
 }

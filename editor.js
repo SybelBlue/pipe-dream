@@ -98,21 +98,4 @@ class Editor {
 
         this.pipeline = this.pipeline.slice(0, i);
     }
-
-    acceptValue(tipedValue) {
-        let value = tipedValue;
-        for (const machine of this.pipeline) {
-            if (!machine.finished) {
-                throw new Error('pipeline not finished');
-            }
-
-            value = machine.apply(value);
-
-            if (!exists(value)) {
-                return null;
-            }
-        }
-
-        return value;
-    }
 }
