@@ -6,21 +6,29 @@ class ColorPicker {
     static height = 20 + 2 * ColorPicker.colorBoxMargin;
     static colorBoxHeight = ColorPicker.height - 2 * ColorPicker.colorBoxMargin;
 
-    static variantNames = Object.keys(ColorTipe.variants);
+    static get variantNames() { return Object.keys(ColorTipe.variants); }
     static boxAndMargin = ColorPicker.colorBoxWidth + ColorPicker.colorBoxMargin;
-    static width = ColorPicker.variantNames.length * ColorPicker.boxAndMargin + ColorPicker.colorBoxMargin;
+    static get width() { return ColorPicker.variantNames.length * ColorPicker.boxAndMargin + ColorPicker.colorBoxMargin; }
 
+    // necessary instance fields for UIMethod to interpret as InputBox properly
     width = ColorPicker.width;
     height = ColorPicker.height;
 
-    static colorBoxes = Object.keys(ColorTipe.variants).map((v, i) => { return {
-        tipedColor: ColorTipe.variants[v],
-        name: v, 
-        x: ColorPicker.colorBoxMargin + i * ColorPicker.boxAndMargin,
-        y: ColorPicker.colorBoxMargin,
-        width: ColorPicker.colorBoxWidth,
-        height: ColorPicker.colorBoxHeight
-    }});
+    // memoized so that dependencies don't form a loop
+    static _colorBoxes = null;
+    static get colorBoxes() { 
+        if (!ColorPicker._colorBoxes) {
+            ColorPicker._colorBoxes = Object.keys(ColorTipe.variants).map((v, i) => { return {
+                tipedColor: ColorTipe.variants[v],
+                name: v, 
+                x: ColorPicker.colorBoxMargin + i * ColorPicker.boxAndMargin,
+                y: ColorPicker.colorBoxMargin,
+                width: ColorPicker.colorBoxWidth,
+                height: ColorPicker.colorBoxHeight
+            }});
+        }
+        return ColorPicker._colorBoxes;
+    }
 
     constructor(multiMode=false) {
         this.selected = 

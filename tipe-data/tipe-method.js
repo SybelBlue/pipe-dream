@@ -115,7 +115,7 @@ class UIMethod extends TipeMethod {
     }
 
     constructor(name, inTipe, outTipe, inputBox, compute) {
-        super(name, inTipe, outTipe, compute);
+        super(name, inTipe, outTipe, compute, true);
         this.inputBox = inputBox;
         this.showName = false;
     }

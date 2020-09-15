@@ -67,14 +67,14 @@ class Tipe {
         }
     }
 
-    static Function(inTipe, outTipe, inputBoxConstructor, startingValue=null) {
+    static Function(inTipe, outTipe, inputBoxConstructor, args=null) {
         return class InnerTipe extends Tipe {
             static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
             static inTipe = inTipe;
             static outTipe = outTipe;
             static isFunctionTipe = true;
             static get methods() {
-                const box = new inputBoxConstructor(startingValue ? { defaultText: startingValue } : null);
+                const box = new inputBoxConstructor(args);
                 return { 
                     getInput: new UIMethod(
                         'getInput', 
@@ -107,7 +107,10 @@ class BooleanTipe extends Tipe {
         negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, self => !self.value),
     };
 
-    static new(value=false) { return new TipedValue(BooleanTipe, { value: value }); }
+    static new(value=false) { 
+        if (value !== false && value !== true) throw new Error('bad value');
+        return new TipedValue(BooleanTipe, { value: value });
+    }
     
     static drawShadow() {
         TextTipe.draw('True/False', Layers.Shadow);
@@ -140,7 +143,7 @@ class NumberTipe extends Tipe {
             greaterThan: new TipeMethod(
                 'greaterThan', 
                 NumberTipe, 
-                Tipe.Function(NumberTipe, BooleanTipe, FloatBox, '0'),
+                Tipe.Function(NumberTipe, BooleanTipe, FloatBox, { defaultText: '0' }),
                 function(self) { 
                     return (nVal) => BooleanTipe.new(self.value > nVal.value)
                 }
@@ -225,7 +228,7 @@ class ColorTipe extends Tipe {
             orange: new TipedValue(ColorTipe, { name: 'orange', hexString: '#C96112' }),
             yellow: new TipedValue(ColorTipe, { name: 'yellow', hexString: '#C4A705' }),
             green: new TipedValue(ColorTipe, { name: 'green', hexString: '#177245' }),
-            blue: new TipedValue(ColorTipe, { name: 'blue', hexString: '#2E9753' }),
+            blue: new TipedValue(ColorTipe, { name: 'blue', hexString: '#0E2753' }),
             purple: new TipedValue(ColorTipe, { name: 'purple', hexString: '#4B2882' }),
         };
     }
@@ -236,9 +239,17 @@ class ColorTipe extends Tipe {
             ballWithSize: new TipeMethod(
                 'ballWithSize', 
                 ColorTipe, 
-                Tipe.Function(NumberTipe, BallTipe, FloatBox, '1.5'),
+                Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
                 function(self) { 
                     return (nVal) => BallTipe.new({ size: nVal.value, color: {} })
+                }
+            ),
+            isOneOf: new TipeMethod(
+                'isOneOf', 
+                ColorTipe, 
+                Tipe.Function(ColorTipe, BooleanTipe, ColorPicker, true),
+                function(self) { 
+                    return (selectedColors) => BooleanTipe.new(trace({s: selectedColors, n: self.name, o: selectedColors[self.name.value]}, selectedColors[self.name.value]))
                 }
             ),
         }

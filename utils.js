@@ -27,3 +27,8 @@ function assert(bool, msg, _throw=true) {
     }
     return bool;
 }
+
+function trace(msg, obj) {
+    console.log(msg, obj);
+    return obj;
+}
