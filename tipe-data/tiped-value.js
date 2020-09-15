@@ -14,4 +14,12 @@ class TipedValue {
     draw() { this.tipe.draw(this); }
 
     clone() { return new TipedValue(this.tipe, this.constructorArgs); }
+
+    equals(other) {
+        if (!exists(other.tipe) || !exists(other.constructorArgs)) return false;
+        if (other.tipe.name !== this.tipe.name) return false;
+        const keys = Object.keys(this.constructorArgs);
+        if (keys.length !== Object.keys(other.constructorArgs).length) return false;
+        return keys.every(k => this.constructorArgs[k] == other.constructorArgs[k]);
+    }
 }
