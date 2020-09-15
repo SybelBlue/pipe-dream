@@ -104,6 +104,35 @@ class TestRunner {
         this.test = test.map(v => v.clone());
     }
 
+    static drawTestPreview(test, closed=true, done=true, yOffset=0) {
+        // top pipe
+        Renderer.temporary(this, 0, 0, () => new Pipe(false, true, TestRunner.darkMargin, done).draw());
+
+        // pipe inlet shadows
+        Renderer.newRenderable(Layers.Pipe, () => {
+            const inletY = TestRunner.darkMargin - 10;
+            const inletX = Pipe.edgeWidth;
+            fill(20);
+            if (closed) {
+                // closed pipe inlet shadow
+                rect(inletX, inletY, Pipe.innerWidth, 10);
+            } else {
+                // open inlet shadow
+                rect(inletX, inletY, Pipe.innerWidth * 0.1, 10);
+                rect(inletX + Pipe.innerWidth * (1.0 - 0.1), inletY, Pipe.innerWidth * 0.1, 10);
+            }
+        });
+        
+        // render waiting values
+        Renderer.push(this);
+        Renderer.translate(Editor.pipelineMidline - Editor.pipeGutterSize, TestRunner.darkMargin * 0.8 - yOffset);
+        test.slice(0, 5).forEach(tipedValue => {
+            tipedValue.draw();
+            Renderer.translate(0, -TestRunner.darkMargin/4);
+        });
+        Renderer.pop(this);
+    }
+
     draw() {
         if (this.signaled) return;
 
@@ -113,22 +142,10 @@ class TestRunner {
         // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, bottomMarginStart, 
             () => new Pipe(true, false, bottomMarginHeight).draw());
-        // top pipe
-        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin, this.done).draw());
-
-        Renderer.newRenderable(Layers.Pipe, () => {
-            const inletY = TestRunner.darkMargin - 10;
-            const inletX = Editor.pipeGutterSize + Pipe.edgeWidth;
-            fill(20);
-            if (this.pipeline.closed) {
-                // closed pipe inlet shadow
-                rect(inletX, inletY, Pipe.innerWidth, 10);
-            } else {
-                // open inlet shadow
-                rect(inletX, inletY, Pipe.innerWidth * 0.1, 10);
-                rect(inletX + Pipe.innerWidth * (1.0 - 0.1), inletY, Pipe.innerWidth * 0.1, 10);
-            }
-        });
+        
+        Renderer.temporary(this, Editor.pipeGutterSize, 0,
+            () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.offset));
+        this.offset = max(this.offset - this.speed * 0.8, 0);
 
         // pipeline
         Renderer.temporary(this, 0, TestRunner.darkMargin, () => this.pipeline.draw());
@@ -145,17 +162,6 @@ class TestRunner {
             // bottom dark margin
             rect(0, bottomMarginStart, windowWidth, bottomMarginHeight);
         });
-
-        // render waiting values
-        Renderer.push(this);
-        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin * 0.8 - this.offset);
-        this.offset = max(this.offset - this.speed * 0.8, 0);
-
-        this.test.slice(0, 5).forEach(tipedValue => {
-            tipedValue.draw();
-            Renderer.translate(0, -TestRunner.darkMargin/4);
-        });
-        Renderer.pop(this);
 
         // side bar with all tests and test results listed
 
