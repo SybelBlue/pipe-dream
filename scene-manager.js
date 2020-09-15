@@ -127,7 +127,9 @@ class SceneManager {
         if (exists(this.testIndex) && i > this.testIndex) {
             return color('#B2B2B2');
         }
-        // if incorrect...
+        if (this.passedTests[i] === false) {
+            return color('#C3423F');
+        }
         return color('#81E979');
     }
 
@@ -135,6 +137,8 @@ class SceneManager {
         this.editable = false;
         this.testIndex = 0;
         this.exittingValues = {};
+        this.currentSolutions = this.level.tests.map(t => this.editor.pipeline.process(t));
+        this.passedTests = this.currentSolutions.map((sol, i) => this.level.solutions[i].every((s, j) => s.equals(sol[j])));
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     }
 
