@@ -40,9 +40,9 @@ class FilterMachine extends StackedMachine {
 
 class TakeMachine extends Machine {
     static inputBoxStart = Machine.bodyHeight;
-    
+
     finished = true;
-    
+
     get bodyHeight() { return TakeMachine.inputBoxStart + this.inputBox.height + 10; }
 
     get outputTipe() { return this.inTipe; }

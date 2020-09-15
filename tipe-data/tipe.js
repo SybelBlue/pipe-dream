@@ -87,7 +87,7 @@ class Tipe {
             };
             static basic = true;
             static new(func) { return new TipedValue(InnerTipe, { value: func })}
-            
+
             static drawShadow() {
                 TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
             }
@@ -111,7 +111,7 @@ class BooleanTipe extends Tipe {
         if (value !== false && value !== true) throw new Error('bad value: ' + value);
         return new TipedValue(BooleanTipe, { value: value });
     }
-    
+
     static drawShadow() {
         TextTipe.draw('True/False', Layers.Shadow);
     }
@@ -308,7 +308,7 @@ class BallTipe extends Tipe {
             arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
         });
     }
-    
+
     static draw(ball, layer=Layers.Data) {
         Renderer.newRenderable(layer, () => {
             stroke(66);

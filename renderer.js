@@ -115,7 +115,7 @@ class Renderer {
 
         // return function () { Renderer.pop(key); } // make pop take key?
     }
-    
+
     static pop(source) {
         if (source !== Renderer.stackTop.source || Renderer.stackTop.key == 0) {
             throw new Error('Unexpected Pop from ' + source);
@@ -141,7 +141,7 @@ class Renderer {
             blocking: blocking
         };
     }
-    
+
     static newRenderable(layer, drawCallback, ...regionStubs) {
         let i = 0;
         while (i < Renderer.toRender.length && Renderer.toRender[i].layer <= layer) {

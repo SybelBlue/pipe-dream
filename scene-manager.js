@@ -15,7 +15,7 @@ class SceneManager {
 
     static draw() {
         if (!this.editor) return;
-        
+
         if (this.editable) {
             this.tray.draw();
             this.editor.draw();
@@ -62,7 +62,7 @@ class SceneManager {
         // }, Renderer.regionStub('stopButton', 20, 20, 25, 25));
 
         const focused = Renderer.renderAll().found;
-    
+
         if (!focused && clickThisFrame) {
             SceneManager.tray.loadMachineOptions();
         }
@@ -126,9 +126,9 @@ class TestRunner {
 
         Renderer.push(this);
         Renderer.translate(0, TestRunner.darkMargin);
-        
+
         Renderer.temporary(this, Editor.pipelineMidline, 0, () => this.currentItem.animator.draw());
-        
+
         this.pipeline.draw();
         Renderer.pop(this);
 

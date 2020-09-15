@@ -6,7 +6,7 @@ class Pipeline extends Array /* of Machines */ {
     get height() {
         return this.reduce((sum, machine) => sum + machine.height + Pipe.height, Pipe.height);
     }
-    
+
     get outputTipe() {
         const last = Array.last(this);
         return last ? last.outputTipe : null;
@@ -15,7 +15,7 @@ class Pipeline extends Array /* of Machines */ {
     draw(startingTipe=null, completed=true) {
         Renderer.push(this);
         const showOutputShadow = exists(startingTipe, false);
-        
+
         Renderer.translate(Editor.pipeGutterSize, 0);
         new Pipe(true, this.length == 0).draw(showOutputShadow ? startingTipe : null);
 

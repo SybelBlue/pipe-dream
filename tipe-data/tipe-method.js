@@ -23,7 +23,7 @@ class TipeMethod {
         object[this.name].outTipe = this.outTipe;
         object[this.name].inTipe = this.inTipe;
     }
-    
+
     run(tipedValue) {
         if (tipedValue.tipe.name !== this.inTipe.name) {
             throw new Error('mismatched in tipes!', tipedValue, this);

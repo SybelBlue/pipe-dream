@@ -31,7 +31,7 @@ class Editor {
     draw() {
         Renderer.push(this);
         Renderer.translate(this.x, this.y);
-        
+
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
             fill(Editor.backgroundColor);
@@ -58,7 +58,7 @@ class Editor {
             noStroke();
             fill(Editor.darkMarginColor);
             rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
-            
+
             // pipe outlet shadow
             fill(20);
             rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);

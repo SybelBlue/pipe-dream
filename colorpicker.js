@@ -1,6 +1,6 @@
 class ColorPicker {
     get value() { return this.current; }
-    
+
     static colorBoxWidth = 20;
     static colorBoxMargin = 7;
     static height = 20 + 2 * ColorPicker.colorBoxMargin;
@@ -52,12 +52,12 @@ class ColorPicker {
             (regions) => {
                 fill(ColorTipe.color);
                 rect(0, 0, ColorPicker.width, ColorPicker.height, 0, 10, 10, 0);
-                
+
                 for (const box of ColorPicker.colorBoxes) {
                     if (interactable && regions[box.name].clicked) {
                         this.selected(box.name);
                     }
-                    
+
                     strokeWeight(4);
                     stroke(this.isSelected(box.name) ? color(255, 30, 30) : color(0));
                     fill(ColorTipe.asP5Color(box.tipedColor));

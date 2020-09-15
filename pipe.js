@@ -32,7 +32,7 @@ class Pipe {
             fill(Pipe.innerColor);
             rect(0, 0, Pipe.mainWidth, this.height);
         });
-        
+
 
         const topOfBottomLip = this.height - Pipe.lipHeight;
 

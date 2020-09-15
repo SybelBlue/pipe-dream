@@ -21,7 +21,7 @@ class StackedMachine extends Machine {
     draw() {
         // draw body
         super.draw();
-        
+
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
 
@@ -36,7 +36,7 @@ class StackedMachine extends Machine {
             // draw tail
             rect(0, this.height - StackedMachine.tailHeight, Machine.width, StackedMachine.tailHeight, 0, 10, 10, 10);
         });
-        
+
         // draw fragment stack
         Renderer.temporary(this, Machine.bodyIndent, Machine.bodyHeight, () => this.drawFragmentStack());
     }
@@ -52,7 +52,7 @@ class StackedMachine extends Machine {
                 SceneManager.tray.loadOptionsFor(method.outTipe, this, index);
                 this.fragmentClicked(method, index);
             }
-            
+
             if (!SceneManager.editable) {
                 method.draw(onClick);
             } else {
