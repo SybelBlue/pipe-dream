@@ -108,7 +108,7 @@ class BooleanTipe extends Tipe {
     };
 
     static new(value=false) { 
-        if (value !== false && value !== true) throw new Error('bad value');
+        if (value !== false && value !== true) throw new Error('bad value', value);
         return new TipedValue(BooleanTipe, { value: value });
     }
     
@@ -145,7 +145,7 @@ class NumberTipe extends Tipe {
                 NumberTipe, 
                 Tipe.Function(NumberTipe, BooleanTipe, FloatBox, { defaultText: '0' }),
                 function(self) { 
-                    return (nVal) => BooleanTipe.new(self.value > nVal.value)
+                    return (nVal) => BooleanTipe.new(self.value > nVal)
                 }
             ),
             ballWithColor: new TipeMethod(
@@ -158,7 +158,10 @@ class NumberTipe extends Tipe {
             ),
         }
     }
-    static new(value=0) { return new TipedValue(NumberTipe, { value: value }); }
+    static new(value=0) {
+        if (typeof(value) !== typeof(0)) throw new Error('bad value', value);
+        return new TipedValue(NumberTipe, { value: value });
+    }
     static shadowTextWidth = null;
     static shadowText = '#';
 
@@ -195,7 +198,10 @@ class TextTipe extends Tipe {
         firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
         firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
     };
-    static new(value='') { return new TipedValue(TextTipe, { value: value }); }
+    static new(value='') { 
+        if (!(value instanceof String)) throw new Error('bad value', value);
+        return new TipedValue(TextTipe, { value: value });
+    }
     static shadowTextWidth = null;
     static shadowText = 'text';
 
@@ -254,7 +260,10 @@ class ColorTipe extends Tipe {
             ),
         }
     }
-    static new(variant='blue') { return ColorTipe.variants[variant]; }
+    static new(variant='blue') {
+        if (!(value instanceof String)) throw new Error('bad value', value);
+        return ColorTipe.variants[variant];
+    }
     static asP5Color(c) { return color(c.hexString.value); }
 
     static drawShadow() {
