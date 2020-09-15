@@ -90,11 +90,11 @@ class Editor {
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
         for (let i = 0; i < pipeline.length; i++) {
             const machine = pipeline[i];
-
             machine.draw();
+
             Renderer.translate(Editor.pipeIndent, machine.height);
-            
-            new Pipe(false, i == pipeline.length - 1 && completed).draw(machine.outputTipe)
+            new Pipe(false, i == pipeline.length - 1 && completed).draw(machine.outputTipe);
+
             Renderer.translate(-Editor.pipeIndent, Pipe.height);
         }
         Renderer.pop(this);
