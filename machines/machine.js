@@ -30,14 +30,14 @@ class Machine extends PipelineObject {
         this.inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
-        this.dummy = inTipe.name === Tipe.name;
+        this.dummy = key < 0;
     }
 
     draw() {
         Renderer.newRenderable(Layers.Machine, 
             (regions) => {
                 if (SceneManager.editable && regions.body.clicked) {
-                    if (regions.deleteButton.hovering) {
+                    if (regions.deleteButton.hovering && !this.dummy) {
                         editor.removeMachine(this.key);
                         SceneManager.tray.loadMachineOptions();
                     } else {
