@@ -109,6 +109,8 @@ class Renderer {
     }
 
     static translate(x, y) {
+        if (typeof(x) !== typeof(0) || Number.isNaN(x)) throw new Error('Renderer.translate was expecting a numeric first argument');
+        if (typeof(y) !== typeof(0) || Number.isNaN(y)) throw new Error('Renderer.translate was expecting a numeric second argument');
         Renderer.stackTop.x += x;
         Renderer.stackTop.y += y;
     }
