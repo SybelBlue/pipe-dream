@@ -199,7 +199,7 @@ class TextTipe extends Tipe {
         firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
     };
     static new(value='') { 
-        if (!(value instanceof String)) throw new Error('bad value', value);
+        if (typeof(value) !== typeof('')) throw new Error('bad value: ' + value);
         return new TipedValue(TextTipe, { value: value });
     }
     static shadowTextWidth = null;
@@ -247,7 +247,7 @@ class ColorTipe extends Tipe {
                 ColorTipe, 
                 Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
                 function(self) { 
-                    return (nVal) => BallTipe.new({ size: nVal.value, color: {} })
+                    return (nVal) => BallTipe.new({ size: nVal, color: self })
                 }
             ),
             isOneOf: new TipeMethod(
@@ -261,7 +261,7 @@ class ColorTipe extends Tipe {
         }
     }
     static new(variant='blue') {
-        if (!(value instanceof String)) throw new Error('bad value', value);
+        if (typeof(variant) !== typeof('')) throw new Error('bad variant: ' + variant);
         return ColorTipe.variants[variant];
     }
     static asP5Color(c) { return color(c.hexString.value); }

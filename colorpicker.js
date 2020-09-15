@@ -39,7 +39,7 @@ class ColorPicker {
         this.current = 
             multiMode ?
                 ColorPicker.variantNames.reduce((o, key) => { o[key] = false; return o; }, {}):
-                null;
+                ColorPicker.variantNames[0];
 
         this.isSelected =
             multiMode ? 
