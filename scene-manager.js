@@ -94,6 +94,9 @@ class TestRunner {
     output = [];
 
     done = false;
+    signaled = false;
+    offset = 0;
+    finishedFrame = null;
 
     constructor(pipeline, test) {
         this.pipeline = pipeline;
@@ -102,47 +105,21 @@ class TestRunner {
     }
 
     draw() {
-        if (this.done) return;
-        if (!this.currentItem) {
-            if (!this.test.length || this.pipeline.closed) {
-                SceneManager.testCompleted(this.output);
-                this.done = true;
-                return;
-            }
-            const tipedValue = this.test.shift();
-            // animate all remaining test items down?
-            this.currentItem = {
-                value: tipedValue,
-                animator: new LerpAnimator(() => tipedValue.draw(), [0, -StackedMachine.tailHeight], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
-            }
-        }
-
-        // side bar with all tests and test results listed
-
-        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin).draw());
-
-        Renderer.push(this);
-        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin - TestRunner.darkMargin/8);
-        this.test.slice(0, 5).forEach(tipedValue => {
-            tipedValue.draw();
-            Renderer.translate(0, -TestRunner.darkMargin/4);
-        });
-        Renderer.pop(this);
-
-        Renderer.push(this);
-        Renderer.translate(0, TestRunner.darkMargin);
-
-        Renderer.temporary(this, Editor.pipelineMidline, 0, () => this.currentItem.animator.draw());
-
-        this.pipeline.draw();
-        Renderer.pop(this);
+        if (this.signaled) return;
 
         const pHeight = this.pipeline.height;
         const bottomMarginStart = pHeight + TestRunner.darkMargin
         const bottomMarginHeight = windowHeight - bottomMarginStart;
+        // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, bottomMarginStart, 
             () => new Pipe(true, false, bottomMarginHeight).draw());
+        // top pipe
+        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin).draw());
 
+        // pipeline
+        Renderer.temporary(this, 0, TestRunner.darkMargin, () => this.pipeline.draw());
+
+        // background
         Renderer.newRenderable(Layers.Background, () => {
             // backdrop
             fill(Editor.backgroundColor);
@@ -154,6 +131,45 @@ class TestRunner {
             // bottom dark margin
             rect(0, bottomMarginStart, windowWidth, bottomMarginHeight);
         });
+
+        // render waiting values
+        Renderer.push(this);
+        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin - TestRunner.darkMargin/8 - this.offset);
+        this.offset = max(this.offset - 1, 0);
+
+        this.test.slice(0, 5).forEach(tipedValue => {
+            tipedValue.draw();
+            Renderer.translate(0, -TestRunner.darkMargin/4);
+        });
+        Renderer.pop(this);
+
+        // side bar with all tests and test results listed
+
+        if (this.done) {
+            if (this.finishedFrame + 100 < frameCount) {
+                SceneManager.testCompleted(this.output);
+                this.signaled = true;
+            }
+            return;
+        }
+
+        if (!exists(this.currentItem)) {
+            if (!this.test.length || this.pipeline.closed) {
+                this.done = true;
+                this.finishedFrame = frameCount;
+                return;
+            }
+            const tipedValue = this.test.shift();
+            this.offset += TestRunner.darkMargin/4;
+
+            this.currentItem = {
+                value: tipedValue,
+                animator: new LerpAnimator(() => tipedValue.draw(), [0, -StackedMachine.tailHeight], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
+            }
+        }
+
+        // render current value
+        Renderer.temporary(this, Editor.pipelineMidline, TestRunner.darkMargin, () => this.currentItem.animator.draw());
     }
 
     currentEnteredMachine(index) {
