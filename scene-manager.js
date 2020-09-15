@@ -5,6 +5,7 @@ class SceneManager {
     static editor = null;
     static tray = null;
     static runner = null;
+    static testIndex = 0;
 
     static startLevel(level) {
         this.level = level;
@@ -41,8 +42,28 @@ class SceneManager {
                 }
             }, Renderer.regionStub('runButton', start, 10, height, height));
         } else {
-            // maybe draw pipeline only?
             this.runner.draw();
+
+            Renderer.push(this);
+            const pipeGap = Machine.width / 2;
+            const slotWidth = Machine.width + pipeGap;
+            let indexStart;
+            if (this.testIndex === 0) {
+                indexStart = 0;
+                Renderer.translate(Editor.gutterSize, 0);
+            } else {
+                indexStart = this.testIndex - 1;
+                Renderer.translate(Editor.gutterSize - slotWidth, 0);
+            }
+            
+            for (var i = indexStart; i < min(indexStart + 4, this.level.tests.length); i++) {
+                const test = this.level.tests[i];
+                if (i !== this.testIndex) {
+                    TestRunner.drawTestPreview(test); // make clickable
+                }
+                Renderer.translate(slotWidth, 0);
+            };
+            Renderer.pop(this);
         }
 
         // render running ui
