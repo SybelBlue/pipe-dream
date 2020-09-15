@@ -46,10 +46,7 @@ class SceneManager {
                 fill(Editor.backgroundColor);
                 rect(0, 0, canvas.width, canvas.height);
             });
-            Renderer.push(this);
-            Renderer.translate(200, 200);
-            this.editor.renderPipeline();
-            Renderer.pop(this);
+            this.runner.draw();
         }
 
         // render running ui
@@ -78,39 +75,52 @@ class SceneManager {
 
     static runLevel() {
         this.editable = false;
-        // move editor
-        // close tray
-        // render all tests on top margin
-        // start test process
+        this.runner = new TestRunner(this.editor.pipeline, this.level.tests[0]);
     }
 }
 
 class TestRunner {
-    speed = 0.4;
+    speed = 1;
     currentItem = null;
 
-    constructor(width, height, pipeline, test) {
-        this.width = width;
-        this.height = height;
+    constructor(pipeline, test) {
         this.pipeline = pipeline;
+        this.pipeline.forEach(m => m.reset());
         this.test = test;
     }
 
     draw() {
-        if (!this.currentItem) {
-            let tipedValue = test.shift();
+        if (!exists(this.currentItem, false)) {
+            const tipedValue = this.test.shift();
             // animate all remaining test items down?
-            let currentItem = {
+            this.currentItem = {
                 value: tipedValue,
-                animator: new LerpAnimator(tipedValue.draw, [Editor.gutterSize, 0], [Editor.gutterSize, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
+                animator: new LerpAnimator(() => tipedValue.draw(), [0, 0], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
             }
+            console.log(this.currentItem);
         }
 
+        Renderer.push(this);
+        Renderer.translate(Editor.pipelineMidline, 0);
         this.currentItem.animator.draw();
-        
+        Renderer.pop(this);
+        Editor.drawPipeline(this.pipeline);
     }
 
     currentEnteredMachine(index) {
+        const machine = this.pipeline[index];
+        const tipedValue = machine.accept(this.currentItem.value);
 
+        if (!tipedValue) {
+            console.log('rejected');
+            this.currentItem = null;
+            return;
+        }
+
+        const start = machine.height + this.currentItem.animator.stop[1];
+        this.currentItem = {
+            value: tipedValue,
+            animator: new LerpAnimator(() => tipedValue.draw(), [0, start], [0, start + Pipe.height], this.speed, () => this.currentEnteredMachine(index + 1)),
+        }
     }
 }

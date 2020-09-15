@@ -90,4 +90,8 @@ class Machine extends PipelineObject {
     apply(tipedValue) { return tipedValue; }
 
     process(values) { return values; }
+
+    reset() {}
+
+    accept(tipedValue) { return this.apply(tipedValue); }
 }

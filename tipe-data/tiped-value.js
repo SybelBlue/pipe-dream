@@ -9,4 +9,6 @@ class TipedValue {
             method.graftOnto(this, defaults);
         }
     }
+
+    draw() { this.tipe.draw(this); }
 }

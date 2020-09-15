@@ -62,4 +62,14 @@ class TakeMachine extends Machine {
     }
 
     process(values) { return values.slice(0, this.inputBox.value); }
+
+    reset() { this.remaining = this.inputBox.value; }
+
+    accept(tipedValue) { 
+        if (this.remaining > 0) {
+            this.remaining--;
+            return tipedValue;
+        }
+        return null;
+    }
 }

@@ -9,7 +9,7 @@ class Tipe {
     static get color() { return color('#3cdbd3') };
     static new() { throw new Error('TopTipe cannot be instantiated') }
     // provide middle top
-    static draw(tipe) { console.log('draw unimplemented for ' + this.name); }
+    static draw(tipedValue) { console.log('draw unimplemented for ' + this.name); }
     // provide middle top
     static drawShadow() { console.log('drawShadow unimplemented for ' + this.name); }
     // provide middle top
@@ -113,8 +113,8 @@ class BooleanTipe extends Tipe {
         TextTipe.draw('True/False', Layers.Shadow);
     }
 
-    static draw(bool) {
-        TextTipe.draw(bool ? 'True' : 'False');
+    static draw(tipedBool) {
+        TextTipe.draw(tipedBool.value ? 'True' : 'False');
     }
 
     static shapeOutline(yOffset) {
@@ -156,7 +156,8 @@ class NumberTipe extends Tipe {
         Renderer.pop(this);
     }
 
-    static draw(num, layer=Layers.Data) {
+    static draw(tipedNum, layer=Layers.Data) {
+        let num = tipedNum.value ? tipedNum.value : tipedNum;
         if (typeof(num) === typeof(0) && num > 9999) {
             num = 'Big#';
         }

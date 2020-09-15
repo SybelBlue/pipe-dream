@@ -7,6 +7,8 @@ class Editor {
     static gutterSize = Tray.maxWidth + 50;
     static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
 
+    static get pipelineMidline() { return Editor.gutterSize + Machine.width / 2; }
+
     get pipelineFinished() { return !this.pipeline.find(machine => !machine.finished); }
 
     _keyCount = 0;
@@ -81,11 +83,12 @@ class Editor {
         Renderer.pop(this);
     }
 
-    static drawPipeline(pipeline, startingTipe, completed) {
+    static drawPipeline(pipeline, startingTipe=null, completed=true) {
         Renderer.push(this);
+        const showOutputShadow = exists(startingTipe, false);
         
         Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(true, pipeline.length == 0).draw(startingTipe);
+        new Pipe(true, pipeline.length == 0).draw(showOutputShadow ? startingTipe : null);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
         for (let i = 0; i < pipeline.length; i++) {
@@ -93,7 +96,7 @@ class Editor {
             machine.draw();
 
             Renderer.translate(Editor.pipeIndent, machine.height);
-            new Pipe(false, i == pipeline.length - 1 && completed).draw(machine.outputTipe);
+            new Pipe(false, i == pipeline.length - 1 && completed).draw(showOutputShadow ? machine.outputTipe : null);
 
             Renderer.translate(-Editor.pipeIndent, Pipe.height);
         }

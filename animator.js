@@ -51,5 +51,9 @@ class LerpAnimator extends Animator {
             curr => abs(curr[0] - stop[0]) <= 0.01 && abs(curr[1] - stop[1]) <= 0.01,
             callback
         );
+
+        this.start = start;
+        this.stop = stop;
+        this.speed = speed;
     }
 }
