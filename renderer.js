@@ -9,7 +9,7 @@ const Layers = {
     FragmentShape: 14,
     UI: 16,
     Debug: 99,
-}
+};
 
 class Renderer {
     static Node = class {

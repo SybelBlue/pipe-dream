@@ -1,5 +1,7 @@
 class Level {
     tests = [];
+    solutions = [];
+
     constructor(startingTipe, endingTipe, prompt, solutionFn) {
         this.startingTipe = startingTipe;
         this.endingTipe = endingTipe;
@@ -9,14 +11,13 @@ class Level {
 
     withTest(...startingTipeArgs) {
         this.tests.push(startingTipeArgs.map(this.startingTipe.new));
+        this.solutions.push(this.solutionFn(startingTipeArgs).map(this.endingTipe.new));
         return this;
     }
-
-    // streamTests vs box tests
 }
 
 const levelOne = 
-    new Level(NumberTipe, NumberTipe, 'only positive values', test => test.filter(x => x.value > 0))
+    new Level(NumberTipe, NumberTipe, 'only positive values', test => test.filter(x => x > 0))
         .withTest(1, 2, 3, 4)
         .withTest(2, 4, -5, 3)
         .withTest()
