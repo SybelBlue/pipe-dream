@@ -70,14 +70,13 @@ class Renderer {
     }
 
     static _keyCount = 1;
-    static stackTop = null;
+    static stackTop = Renderer.Node.Head;
     static toRender = [];
     static regions = [];
 
     static keyListeners = [];
 
     static clearStack() { Renderer.stackTop = Renderer.Node.Head; }
-    static initialize = Renderer.clearStack;
 
     static get yTranslation() { return Renderer.stackTop.y; }
 

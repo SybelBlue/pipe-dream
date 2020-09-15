@@ -10,8 +10,6 @@ let clickThisFrame = false;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     editor = SceneManager.startLevel(levelOne);
-    // editor.pushMachine(MapMachine);
-    Renderer.initialize();
 }
 
 function draw() {
