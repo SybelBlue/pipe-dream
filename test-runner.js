@@ -14,6 +14,9 @@ class TestRunner {
         this.pipeline = pipeline;
         this.pipeline.forEach(m => m.reset());
         this.test = test.map(v => v.clone());
+
+        this.bottomMarginStart = this.pipeline.height + TestRunner.darkMargin
+        this.bottomMarginHeight = windowHeight - this.bottomMarginStart;
     }
 
     static drawTestPreview(test, closed=true, done=true, yOffset=0) {
@@ -47,13 +50,9 @@ class TestRunner {
 
     draw() {
         if (this.signaled) return;
-
-        const pHeight = this.pipeline.height;
-        const bottomMarginStart = pHeight + TestRunner.darkMargin
-        const bottomMarginHeight = windowHeight - bottomMarginStart;
         // bottom pipe
-        Renderer.temporary(this, Editor.pipeGutterSize, bottomMarginStart, 
-            () => new Pipe(true, false, bottomMarginHeight).draw());
+        Renderer.temporary(this, Editor.pipeGutterSize, this.bottomMarginStart, 
+            () => new Pipe(true, false, this.bottomMarginHeight).draw());
         
         Renderer.temporary(this, Editor.pipeGutterSize, 0,
             () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.offset));
@@ -72,7 +71,7 @@ class TestRunner {
             fill(Editor.darkMarginColor);
             rect(0, 0, windowWidth, TestRunner.darkMargin);
             // bottom dark margin
-            rect(0, bottomMarginStart, windowWidth, bottomMarginHeight);
+            rect(0, this.bottomMarginStart, windowWidth, this.bottomMarginHeight);
         });
 
         // side bar with all tests and test results listed
@@ -112,6 +111,7 @@ class TestRunner {
     currentEnteredMachine(index) {
         if (this.pipeline.length <= index) {
             this.output.push(this.currentItem.value);
+            SceneManager.valueExitting(this.currentItem.value);
             this.currentItem = null;
             return;
         }

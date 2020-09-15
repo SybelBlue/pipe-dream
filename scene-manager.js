@@ -43,6 +43,9 @@ class SceneManager {
             }, Renderer.regionStub('runButton', start, 10, height, height));
         } else {
             this.runner.draw();
+            for (const key in this.exittingValues) {
+                this.exittingValues[key].draw();
+            }
 
             Renderer.push(this);
             const pipeGap = Machine.width / 2;
@@ -93,6 +96,7 @@ class SceneManager {
     static runLevel() {
         this.editable = false;
         this.testIndex = 0;
+        this.exittingValues = {};
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     }
 
@@ -104,5 +108,17 @@ class SceneManager {
         }
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
         console.log('test completed', output);
+    }
+
+    static valueExitting(tipedValue) {
+        const key = frameCount;
+        this.exittingValues[key] = 
+            new LerpAnimator(
+                () => tipedValue.draw(),
+                [Editor.pipelineMidline, this.runner.bottomMarginStart],
+                [Editor.pipelineMidline, windowHeight],
+                this.runner.speed,
+                () => delete this.exittingValues[key]
+            );
     }
 }
