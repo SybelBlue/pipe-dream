@@ -114,7 +114,7 @@ class TestRunner {
         Renderer.temporary(this, Editor.pipeGutterSize, bottomMarginStart, 
             () => new Pipe(true, false, bottomMarginHeight).draw());
         // top pipe
-        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin).draw());
+        Renderer.temporary(this, Editor.pipeGutterSize, 0, () => new Pipe(false, true, TestRunner.darkMargin, this.done).draw());
 
         // pipeline
         Renderer.temporary(this, 0, TestRunner.darkMargin, () => this.pipeline.draw());
@@ -134,8 +134,8 @@ class TestRunner {
 
         // render waiting values
         Renderer.push(this);
-        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin - TestRunner.darkMargin/8 - this.offset);
-        this.offset = max(this.offset - 1, 0);
+        Renderer.translate(Editor.pipelineMidline, TestRunner.darkMargin * 0.8 - this.offset);
+        this.offset = max(this.offset - this.speed * 0.8, 0);
 
         this.test.slice(0, 5).forEach(tipedValue => {
             tipedValue.draw();
@@ -164,7 +164,12 @@ class TestRunner {
 
             this.currentItem = {
                 value: tipedValue,
-                animator: new LerpAnimator(() => tipedValue.draw(), [0, -StackedMachine.tailHeight], [0, Pipe.height], this.speed, () => this.currentEnteredMachine(0)),
+                animator: new LerpAnimator(
+                    () => tipedValue.draw(), 
+                    [0, -TestRunner.darkMargin * 0.2],
+                    [0, Pipe.height],
+                    this.speed,
+                    () => this.currentEnteredMachine(0)),
             }
         }
 

@@ -6,12 +6,13 @@ class Pipe {
     static height = 100;
 
     static get edgeColor() { return color(240); }
-    static get innerColor() { return color(240 * .2 + 66 * (1.0 - .2)); }
+    get innerColor() { return this.darken ? color(50) : color(100); }
 
-    constructor(drawTop, drawBottom, height=Pipe.height) {
+    constructor(drawTop, drawBottom, height=Pipe.height, darken=false) {
         this.drawTop = drawTop;
         this.drawBottom = drawBottom;
         this.height = height;
+        this.darken = darken;
     }
 
     draw(shadowTipe=null) {
@@ -21,15 +22,8 @@ class Pipe {
 
         Renderer.push(this);
         Renderer.newRenderable(Layers.Pipe, () => {
-            if (this.highlighting) {
-                const c = mouseIsPressed ? color(200, 20, 200) : color(20, 200, 200);
-                stroke(c);
-            } else {
-                noStroke();
-            }
-
-            // interior color
-            fill(Pipe.innerColor);
+            noStroke();
+            fill(this.innerColor);
             rect(0, 0, Pipe.mainWidth, this.height);
         });
 
