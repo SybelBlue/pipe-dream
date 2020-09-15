@@ -184,6 +184,7 @@ class Renderer {
             text(txt, margin, margin + tHeight * 0.8);
             if (regions.button.clicked) onClick();
         }, Renderer.regionStub('button', 0, 0, width, height));
+        return { width: width, height: height };
     }
 
     static registerRegion(region) {

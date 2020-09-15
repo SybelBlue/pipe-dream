@@ -49,7 +49,6 @@ class TestRunner {
     }
 
     draw() {
-        if (this.signaled) return;
         // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, this.bottomMarginStart, 
             () => new Pipe(true, false, this.bottomMarginHeight).draw());
@@ -74,7 +73,7 @@ class TestRunner {
             rect(0, this.bottomMarginStart, windowWidth, this.bottomMarginHeight);
         });
 
-        // side bar with all tests and test results listed
+        if (this.signaled) return;
 
         if (this.done) {
             if (this.finishedFrame + 100 < frameCount) {

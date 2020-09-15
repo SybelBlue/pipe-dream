@@ -27,7 +27,7 @@ class SceneManager {
             const width = Renderer.textWidth('Run', 'Courier New', 24) + 2 * margin;
             const start = canvas.width - width - margin;
             Renderer.temporary(this, start, margin, 
-                () => Renderer.newUIButton('Run', color(80, 250, 80), () => this.runLevel()));
+                () => Renderer.newUIButton('Run', color(80, 250, 80), () => this.runLevel(), margin));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {
@@ -70,18 +70,21 @@ class SceneManager {
 
     static drawTray() {
         const trayWidth = 200;
+        const textHeight = Renderer.textHeight('Courier New', 24);
+        const margin = 10;
+        const start = canvas.width - Renderer.textWidth('Stop', 'Courier New', 24) - 3 * margin;
+        Renderer.temporary(this, start, margin, 
+            () => Renderer.newUIButton('Stop', color(250, 80, 80), () => this.editable = true, margin));
+
         Renderer.push(this);
-        Renderer.translate(windowWidth - trayWidth, 0);
+        Renderer.translate(windowWidth - trayWidth, 2 * margin + textHeight + 2 * margin);
 
         Renderer.newRenderable(Layers.UI, () => {
             fill(Tray.background);
-            rect(0, 0, trayWidth + 1, windowHeight, 10, 0, 0, 10);
+            rect(0, 0, trayWidth + 1, windowHeight - Renderer.xTranslation, 10, 0, 0, 10);
         });
 
-        Renderer.push(this);
         Renderer.translate(10, 10);
-        const textHeight = Renderer.textHeight('Courier New', 24);
-        const margin = 10;
         const height = textHeight + 2 * margin;
         this.level.tests.forEach((test, i) => {
             Renderer.newRenderable(Layers.UI,
@@ -102,7 +105,6 @@ class SceneManager {
             );
             Renderer.translate(0, height + 20)
         });
-        Renderer.pop(this);
         Renderer.pop(this);
     }
 
@@ -140,10 +142,7 @@ class SceneManager {
     }
 
     static beginTest() {
-        if (this.level.tests.length <= this.testIndex) {
-            SceneManager.editable = true;
-            return;
-        }
+        if (this.level.tests.length <= this.testIndex) return;
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     }
 
