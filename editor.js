@@ -3,9 +3,10 @@ class Editor {
     static darkMargin = 30;
     static get backgroundColor() { return color(100); }
 
-    topMargin = Editor.darkMargin;
-    get gutterSize() { return Tray.maxWidth + 50; }
-    get pipeGutterSize() { return this.gutterSize + Editor.pipeIndent; }
+    static topMargin = Editor.darkMargin;
+    static gutterSize = Tray.maxWidth + 50;
+    static pipeGutterSize = Editor.gutterSize + Editor.pipeIndent;
+
     get pipelineFinished() { return !this.pipeline.find(machine => !machine.finished); }
 
     _keyCount = 0;
@@ -43,21 +44,21 @@ class Editor {
             rect(0, 0, this.width, this.height);
 
             fill(66);
-            rect(0, 0, this.width, this.topMargin);
+            rect(0, 0, this.width, Editor.topMargin);
         });
 
         // set new baseline
-        Renderer.translate(0, this.topMargin);
+        Renderer.translate(0, Editor.topMargin);
 
         this.renderPipeline();
 
         Renderer.newRenderable(Layers.Background, () => {
             // pipe inlet shadow
             fill(20);
-            rect(this.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
-            
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
+
             const pHeight = this.pipelineHeight;
-            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - this.topMargin);
+            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - Editor.topMargin);
 
             // bottom bar
             noStroke();
@@ -66,10 +67,10 @@ class Editor {
             
             // pipe outlet shadow
             fill(20);
-            rect(this.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
+            rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
 
             // flag for new height if necessary
-            const newMinHeight = bottomBarHeight + Editor.darkMargin + this.topMargin;
+            const newMinHeight = bottomBarHeight + Editor.darkMargin + Editor.topMargin;
             if (newMinHeight > this.minHeight) {
                 this.minHeight = newMinHeight;
                 if (this.minHeight > height) {
@@ -83,7 +84,7 @@ class Editor {
     renderPipeline() {
         Renderer.push(this);
         
-        Renderer.translate(this.pipeGutterSize, 0);
+        Renderer.translate(Editor.pipeGutterSize, 0);
         new Pipe(true, this.pipeline.length == 0).draw(this.startingTipe);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
