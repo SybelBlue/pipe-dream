@@ -91,7 +91,6 @@ class Machine {
         }
     }
 
-    // mainly for debug purposes
     apply(tipedValue) { return tipedValue; }
 
     process(values) { return values; }

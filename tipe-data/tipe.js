@@ -33,9 +33,10 @@ class Tipe {
         );
     }
 
+    // equivalent to a haskell List
     static Stream(tipe) {
         return class InnerTipe extends Tipe {
-            static name = `Stream(${tipe.name})`
+            static name = `Stream(${tipe.name})`;
             static innerTipe = tipe;
             static basic = true;
             static isStreamTipe = true;
@@ -44,7 +45,25 @@ class Tipe {
         }
     }
 
-    static Box(tipe, size) {
+    // equivalent to haskell Maybe tipe
+    static Boxed(tipe) {
+        return class InnerTipe extends Tipe {
+            static name = `Box(${tipe.name})`;
+            static innerTipe = tipe;
+            static basic = true;
+            static isStreamTipe = true;
+            static streamable = true;
+            static methods = {
+                isEmpty: new TipeMethod('isEmpty', InnerTipe, BooleanTipe, self => Boolean(self.value)),
+                // unwrapOr: needs constructors
+                // unwrap: needs errors
+            };
+            static new(value) { return new TipedValue(InnerTipe, { value: value }); }
+        }
+    }
+
+    // equivalent to a statically sized Rust array
+    static Array(tipe, size) {
         return class InnerTipe extends Tipe {
             static name = `[${size}x${tipe.name}]`
             static innerTipe = tipe;
@@ -63,6 +82,7 @@ class Tipe {
             static drawShadow() {
                 TextTipe.draw(InnerTipe.name, Layers.Shadow);
             }
+
             static draw() {
                 TextTipe.draw(InnerTipe.name);
             }
