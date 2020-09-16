@@ -78,6 +78,13 @@ class StackedMachine extends Machine {
         editor.validatePipeline();
     }
 
+    onClick() {
+        super.onClick();
+        if (!this.dummy) {
+            SceneManager.tray.loadOptionsFor(this.inTipe, this, -1);
+        }
+    }
+
     pushFragment(fragment, sourceIndex) { 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
         SceneManager.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);

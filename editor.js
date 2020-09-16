@@ -84,6 +84,7 @@ class Editor {
     }
 
     pushMachine(machineConstructor, ...args) {
+        if (this.pipeline.terminalMachine) return;
         this.pipeline.push(new machineConstructor(this._keyCount++, this.outputTipe, ...args));
     }
 

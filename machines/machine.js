@@ -86,8 +86,6 @@ class Machine {
     onClick() {
         if (this.dummy) {
             editor.pushMachine(this.constructor);
-        } else {
-            SceneManager.tray.loadOptionsFor(this.inTipe, this, -1);
         }
     }
 
