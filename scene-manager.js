@@ -21,6 +21,7 @@ class SceneManager {
         if (this.editable) {
             this.tray.draw();
             this.editor.draw();
+            // this.drawPromptTray(); // help me
 
             // draw play button
             const margin = 10;
@@ -34,7 +35,7 @@ class SceneManager {
                 this.exittingValues[key].draw();
             }
             this.drawTestPreviews();
-            this.drawTray();
+            this.drawTestTray();
         }
 
         const focused = Renderer.renderAll().found;
@@ -68,7 +69,7 @@ class SceneManager {
         Renderer.pop(this);
     }
 
-    static drawTray() {
+    static drawTestTray() {
         const trayWidth = 200;
         const textHeight = Renderer.textHeight('Courier New', 24);
         const margin = 10;
@@ -86,7 +87,7 @@ class SceneManager {
 
         Renderer.translate(10, 10);
         const height = textHeight + 2 * margin;
-        this.level.tests.forEach((test, i) => {
+        for (let i = 0; i < this.level.tests.length; i++) {
             Renderer.newRenderable(Layers.UI,
                 (regions) => {
                     fill(this.colorForTest(i));
@@ -104,6 +105,32 @@ class SceneManager {
                 Renderer.regionStub('test', 0, 0, trayWidth - 20, height)
             );
             Renderer.translate(0, height + 20)
+        };
+        Renderer.pop(this);
+    }
+
+    static drawPromptTray() {
+        const trayWidth = 200;
+        const textHeight = Renderer.textHeight('Courier New', 24);
+        const margin = 10;
+
+        Renderer.push(this);
+        Renderer.translate(windowWidth - trayWidth, 2 * margin + textHeight + 2 * margin);
+
+        Renderer.newRenderable(Layers.UI, () => {
+            fill(Tray.background);
+            rect(0, 0, trayWidth + 1, windowHeight - Renderer.xTranslation, 10, 0, 0, 10);
+        });
+        
+        Renderer.translate(margin, margin);
+        Renderer.newRenderable(Layers.UI, () => {
+            fill(color('#E4DFDA'));
+            rect(0, 0, trayWidth - 2 * margin, windowHeight - Renderer.xTranslation - 2 * margin, 10);
+
+            textFont('Courier New');
+            textSize(24);
+            fill(0)
+            text(this.level.prompt, 2, 2, trayWidth - 2 * margin - 4, windowHeight - Renderer.xTranslation - 2 * margin - 4);
         });
         Renderer.pop(this);
     }
