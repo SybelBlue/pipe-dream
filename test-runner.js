@@ -119,7 +119,6 @@ class TestRunner {
         const tipedValue = machine.accept(this.currentItem.value);
 
         if (!tipedValue) {
-            console.log('rejected');
             this.currentItem = null;
             return;
         }

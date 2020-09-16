@@ -252,7 +252,7 @@ class ColorTipe extends Tipe {
                 ColorTipe, 
                 Tipe.Function(ColorTipe, BooleanTipe, ColorPicker, true),
                 function(self) { 
-                    return (selectedColors) => BooleanTipe.new(trace({s: selectedColors, n: self.name, o: selectedColors[self.name.value]}, selectedColors[self.name.value]))
+                    return (selectedColors) => BooleanTipe.new(selectedColors[self.name.value])
                 }
             ),
         }
@@ -295,7 +295,7 @@ class BallTipe extends Tipe {
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }
     static new(defaults={ size: 15, color: 'blue' }) { 
-        defaults.size = exists(defaults.size) ? max(0.2, defaults.size) : 15;
+        defaults.size = exists(defaults.size) ? (0.2 > defaults.size ? 0.2 : defaults.size) : 15;
         return new TipedValue(BallTipe, defaults);
     }
 
