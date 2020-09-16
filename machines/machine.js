@@ -1,6 +1,12 @@
 class Machine extends PipelineObject {
     static get machines() { 
-        return [new MapMachine(-1, Tipe), new FilterMachine(-1, Tipe), new TakeMachine(-1, Tipe), new DropMachine(-1, Tipe)];
+        return [
+            new MapMachine(-1, Tipe), 
+            new FilterMachine(-1, Tipe), 
+            new TakeMachine(-1, Tipe), 
+            new FirstMachine(-1, Tipe), 
+            new DropMachine(-1, Tipe)
+        ];
     }
 
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;

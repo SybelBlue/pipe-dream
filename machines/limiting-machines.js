@@ -11,7 +11,7 @@ class TakeMachine extends Machine {
     get closedPipeline() { return this.remaining <= 0; }
 
     constructor(key, inTipe) {
-        super(key, inTipe, color('#38369A'), 'take');
+        super(key, inTipe, color('#48A9A6'), 'take');
         this.inputBox = new IntegerBox({ defaultText: '3' });
     }
 
@@ -31,6 +31,30 @@ class TakeMachine extends Machine {
             return tipedValue;
         }
         return null;
+    }
+}
+
+class FirstMachine extends Machine {
+    finished = true;
+
+    get outputTipe() { return this.inTipe; }
+
+    closedPipeline = false;
+
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#D4B483'), 'first');
+    }
+
+    process(values) { return values.slice(0, 1); }
+
+    reset() { this.closedPipeline = false; }
+
+    accept(tipedValue) { 
+        if (this.closedPipeline) {
+            return null;
+        }
+        this.closedPipeline = true;
+        return tipedValue;
     }
 }
 

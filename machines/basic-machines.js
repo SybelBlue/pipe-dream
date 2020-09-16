@@ -13,7 +13,7 @@ class FilterMachine extends StackedMachine {
         return (last ? last.outTipe : this.inTipe).name === BooleanTipe.name;
     }
 
-    textSize = 22;
+    textSize = 24;
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#7dce82'), 'filter');
