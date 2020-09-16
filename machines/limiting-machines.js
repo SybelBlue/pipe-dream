@@ -42,7 +42,7 @@ class FirstMachine extends Machine {
     closedPipeline = false;
 
     constructor(key, inTipe) {
-        super(key, inTipe, color('#D4B483'), 'first');
+        super(key, inTipe, color('#3D5A80'), 'first');
     }
 
     process(values) { return values.slice(0, 1); }
@@ -70,7 +70,7 @@ class DropMachine extends Machine {
     get outputTipe() { return this.inTipe; }
 
     constructor(key, inTipe) {
-        super(key, inTipe, color('#48A9A6'), 'drop');
+        super(key, inTipe, color('#CE7DA5'), 'drop');
         this.inputBox = new IntegerBox({ defaultText: '3' });
     }
 
