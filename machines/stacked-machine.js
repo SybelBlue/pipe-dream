@@ -66,7 +66,7 @@ class StackedMachine extends Machine {
         Renderer.pop(this);
     }
 
-    fragmentClicked() { console.log('click within stacked machine'); }
+    fragmentClicked() { }
 
     deleteFragment(index) {
         this.methodStack = this.methodStack.slice(0, index);

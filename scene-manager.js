@@ -162,7 +162,6 @@ class SceneManager {
     static testCompleted(output) {
         this.testIndex++;
         this.beginTest();
-        console.log('test completed', output);
     }
 
     static runTest(index) {
