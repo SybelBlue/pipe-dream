@@ -1,20 +1,8 @@
 class TerminalMachine extends Machine {
     isTerminal = true;
     greedy = true;
-
     finished = true;
-
     closedPipeline = false;
-
-    constructor(key, inTipe, color, text) {
-        super(key, inTipe, color, text);
-    }
-
-    draw() {
-        super.draw();
-    }
-
-    process(values) { return values[0]; }
 }
 
 class FirstMachine extends TerminalMachine {
