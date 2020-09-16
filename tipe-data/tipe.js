@@ -1,4 +1,6 @@
 class Tipe {
+    static get maxDrawWidth() { return Pipe.innerWidth - 2; }
+
     static shapeIndent = 16;
     static get shapeMidline() { return Tipe.shapeIndent / 2; }
     static get shapeHalfWidth() { return Tipe.shapeMidline * 0.8; }
@@ -294,8 +296,8 @@ class BallTipe extends Tipe {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
     }
-    static new(defaults={ size: 15, color: 'blue' }) { 
-        defaults.size = exists(defaults.size) ? (0.2 > defaults.size ? 0.2 : defaults.size) : 15;
+    static new(defaults={ size: 50, color: 'blue' }) { 
+        defaults.size = exists(defaults.size) ? (1 > defaults.size ? 1 : defaults.size) : 50;
         return new TipedValue(BallTipe, defaults);
     }
 
@@ -313,7 +315,7 @@ class BallTipe extends Tipe {
         Renderer.newRenderable(layer, () => {
             stroke(66);
             fill(ColorTipe.asP5Color(ball.color));
-            circle(0, ball.size.value, ball.size.value * 2);
+            circle(0, ball.size.value * Tipe.maxDrawWidth / 200, ball.size.value * Tipe.maxDrawWidth / 100);
         });
     }
 }

@@ -43,7 +43,7 @@ class TestRunner {
         Renderer.translate(Editor.pipelineMidline - Editor.pipeGutterSize, TestRunner.darkMargin * 0.8 - yOffset);
         test.slice(0, 5).forEach(tipedValue => {
             tipedValue.draw();
-            Renderer.translate(0, -TestRunner.darkMargin/4);
+            Renderer.translate(0, -Tipe.maxDrawWidth);
         });
         Renderer.pop(this);
     }
@@ -90,7 +90,7 @@ class TestRunner {
                 return;
             }
             const tipedValue = this.test.shift();
-            this.offset += TestRunner.darkMargin/4;
+            this.offset += Tipe.maxDrawWidth;
 
             this.currentItem = {
                 value: tipedValue,

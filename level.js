@@ -31,9 +31,10 @@ const levelOne =
         .withTest(-1, -2, -3, 4);
 
 const levelTwo = 
-    new Level(BallTipe, NumberTipe, 'size of blue balls', test => test.filter(x => x.color.name == 'blue').map(x => x.size))
+    new Level(BallTipe, NumberTipe, 'sizes of only blue balls', test => test.filter(x => x.color == 'blue').map(x => x.size))
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('green', n)))
+        .withTest()
         .withTest(
             Level.makeBall('blue', 10),
             Level.makeBall('red', 20),

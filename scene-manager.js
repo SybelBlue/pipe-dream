@@ -126,7 +126,9 @@ class SceneManager {
         this.testIndex = 0;
         this.exittingValues = {};
         this.currentSolutions = this.level.tests.map(t => this.editor.pipeline.process(t));
-        this.passedTests = this.currentSolutions.map((sol, i) => this.level.solutions[i].every((s, j) => s.equals(sol[j])));
+        this.passedTests = this.currentSolutions.map((sol, i) => {
+            return this.level.solutions[i].length === sol.length && this.level.solutions[i].every((s, j) => s.equals(sol[j]));
+        });
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     }
 
