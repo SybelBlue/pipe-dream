@@ -43,6 +43,7 @@ class TakeMachine extends Machine {
 
     finished = true;
 
+    get height() { return this.bodyHeight; }
     get bodyHeight() { return TakeMachine.inputBoxStart + this.inputBox.height + 10; }
 
     get outputTipe() { return this.inTipe; }
@@ -51,7 +52,7 @@ class TakeMachine extends Machine {
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#38369A'), 'take');
-        this.inputBox = new IntegerBox({ defaultText: '5' });
+        this.inputBox = new IntegerBox({ defaultText: '3' });
     }
 
     draw() {
@@ -70,5 +71,40 @@ class TakeMachine extends Machine {
             return tipedValue;
         }
         return null;
+    }
+}
+
+class DropMachine extends Machine {
+    static inputBoxStart = Machine.bodyHeight;
+
+    finished = true;
+
+    get height() { return this.bodyHeight; }
+
+    get bodyHeight() { return DropMachine.inputBoxStart + this.inputBox.height + 10; }
+
+    get outputTipe() { return this.inTipe; }
+
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#48A9A6'), 'drop');
+        this.inputBox = new IntegerBox({ defaultText: '3' });
+    }
+
+    draw() {
+        super.draw();
+        Renderer.temporary(this, StackedMachine.bodyIndent, TakeMachine.inputBoxStart, 
+            () => this.inputBox.draw(SceneManager.editable));
+    }
+
+    process(values) { return values.slice(this.inputBox.value); }
+
+    reset() { this.remaining = this.inputBox.value; }
+
+    accept(tipedValue) { 
+        if (this.remaining > 0) {
+            this.remaining--;
+            return null;
+        }
+        return tipedValue;
     }
 }
