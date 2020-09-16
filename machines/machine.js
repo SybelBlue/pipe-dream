@@ -1,4 +1,4 @@
-class Machine extends PipelineObject {
+class Machine {
     static get machines() { 
         return [
             new MapMachine(-1, Tipe), 
@@ -30,8 +30,6 @@ class Machine extends PipelineObject {
     textSize = 26;
 
     constructor(key, inTipe, bodyColor, text) {
-        super();
-
         this.key = key;
         this.inTipe = inTipe;
         this.color = bodyColor;
