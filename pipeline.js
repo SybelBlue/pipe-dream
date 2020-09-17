@@ -3,12 +3,9 @@ class Pipeline extends Array /* of Machines */ {
 
     get closed() { return !!this.find(machine => machine.closedPipeline); }
 
-    get height() {
-        return this.reduce(
-            (sum, machine) => sum + machine.height + Pipe.height, 
-            this.terminalMachine ? 0 : Pipe.height
-        );
-    }
+    get mainHeight() { return this.reduce((sum, machine) => sum + machine.height + Pipe.height, 0); }
+
+    get height() { return this.mainHeight + (this.terminalMachine ? 0 : Pipe.height); }
 
     get outputTipe() {
         const last = Array.last(this);

@@ -52,16 +52,20 @@ class Editor {
             rect(Editor.pipeGutterSize + Pipe.edgeWidth, -10, Pipe.innerWidth, 10)
 
             const pHeight = this.pipeline.height;
-            const bottomBarHeight = this.pipeTipeChecks ? pHeight : max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - Editor.topMargin);
+            const bottomBarHeight = this.pipeTipeChecks ? 
+                pHeight - (this.pipeline.terminalMachine ? this.pipeline.terminalMachine.height : 0) : 
+                max(pHeight + Pipe.height + 20, this.height - Editor.darkMargin - Editor.topMargin);
 
             // bottom bar
             noStroke();
             fill(Editor.darkMarginColor);
             rect(0, bottomBarHeight, this.width, this.height - bottomBarHeight);
 
-            // pipe outlet shadow
-            fill(20);
-            rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
+            if (!this.pipeline.terminalMachine) {
+                // pipe outlet shadow
+                fill(20);
+                rect(Editor.pipeGutterSize + Pipe.edgeWidth, bottomBarHeight, Pipe.innerWidth, 10);
+            }
 
             // flag for new height if necessary
             const newMinHeight = bottomBarHeight + Editor.darkMargin + Editor.topMargin;
