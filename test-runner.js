@@ -15,7 +15,7 @@ class TestRunner {
         this.pipeline.forEach(m => m.reset());
         this.test = test.map(v => v.clone());
 
-        this.bottomMarginStart = this.pipeline.height + TestRunner.darkMargin
+        this.bottomMarginStart = this.pipeline.height + TestRunner.darkMargin;
         this.bottomMarginHeight = windowHeight - this.bottomMarginStart;
     }
 
@@ -117,6 +117,12 @@ class TestRunner {
 
         const machine = this.pipeline[index];
         const tipedValue = machine.accept(this.currentItem.value);
+
+        if (machine.isTerminal) {
+            SceneManager.valueExitting(this.currentItem.value);
+            this.currentItem = null;
+            return;
+        }
 
         if (!tipedValue) {
             this.currentItem = null;
