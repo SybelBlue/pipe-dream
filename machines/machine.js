@@ -5,7 +5,8 @@ class Machine {
             new FilterMachine(-1, Tipe), 
             new TakeMachine(-1, Tipe), 
             new FirstMachine(-1, Tipe), 
-            new DropMachine(-1, Tipe)
+            new DropMachine(-1, Tipe),
+            new CountMachine(-1, Tipe),
         ];
     }
 
@@ -27,7 +28,11 @@ class Machine {
 
     get outputTipe() { return BallTipe; }
 
+    get properOutputTipe() { return Tipe.Stream(this.outputTipe); }
+
     textSize = 26;
+
+    exclaimFrames = 0;
 
     constructor(key, inTipe, bodyColor, text) {
         this.key = key;
@@ -57,8 +62,27 @@ class Machine {
                 textFont('Courier New');
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
+                
+                if (!this.finished && !this.dummy) {
+                    stroke(200, 5, 5);
+                    const y = 20 + Renderer.textHeight('Courier New', this.textSize) * 0.8;
+                    line(10, y, Renderer.textWidth(this.text, 'Courier New', this.textSize) + 10, y);
+                }
+
+                if (this.exclaimFrames > 0) {
+                    this.exclaimFrames--;
+                    noStroke();
+                    fill(255);
+                    rect(-30, 5, 25, this.bodyHeight - 10, 5);
+                    triangle(
+                        -5, this.bodyHeight * 0.4,
+                        -5, this.bodyHeight * 0.6,
+                        -1, this.bodyHeight * 0.5
+                    );
+                }
 
                 if (SceneManager.editable && !this.dummy && regions.body.hovering) {
+                    noStroke();
                     textSize(16)
                     text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 'Courier New', 26), 30);
 
@@ -96,4 +120,8 @@ class Machine {
     reset() {}
 
     accept(tipedValue) { return this.apply(tipedValue); }
+
+    exclaim() {
+        this.exclaimFrames += 90;
+    }
 }

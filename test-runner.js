@@ -85,6 +85,11 @@ class TestRunner {
 
         if (!exists(this.currentItem)) {
             if (!this.test.length || this.pipeline.closed) {
+                if (this.pipeline.terminalMachine && this.pipeline.terminalMachine.isGreedy) {
+                    const finalValue = this.pipeline.terminalMachine.value;
+                    this.output.push(finalValue);
+                    SceneManager.valueExitting(finalValue);
+                }
                 this.done = true;
                 this.finishedFrame = frameCount;
                 return;
@@ -118,13 +123,13 @@ class TestRunner {
         const machine = this.pipeline[index];
         const tipedValue = machine.accept(this.currentItem.value);
 
-        if (machine.isTerminal) {
-            SceneManager.valueExitting(this.currentItem.value);
+        if (!tipedValue) {
             this.currentItem = null;
             return;
         }
 
-        if (!tipedValue) {
+        if (machine.isTerminal) {
+            SceneManager.valueExitting(this.currentItem.value);
             this.currentItem = null;
             return;
         }

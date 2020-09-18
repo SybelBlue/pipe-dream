@@ -1,6 +1,6 @@
 class TerminalMachine extends Machine {
+    get properOutputTipe() { return this.outputTipe; }
     isTerminal = true;
-    greedy = true;
     finished = true;
     closedPipeline = false;
 }
@@ -24,3 +24,29 @@ class FirstMachine extends TerminalMachine {
         return tipedValue;
     }
 }
+
+class GreedyMachine extends TerminalMachine {
+    isGreedy = true;
+    get value() { this.outputTipe.new() }
+}
+
+class CountMachine extends GreedyMachine {
+    outputTipe = NumberTipe;
+
+    get value() { return NumberTipe.new(this.count); }
+
+    count = 0;
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#C14953'), 'count');
+    }
+
+    process(values) { return NumberTipe.new(values.length); }
+
+    reset() { this.count = 0; }
+
+    accept(tipedValue) { this.count++; return null; }
+}
+
+// sortBy machine requires stacked greedy
+
+// reduce machine requires double stacked greedy
