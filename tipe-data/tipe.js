@@ -39,62 +39,62 @@ class Tipe {
 
     // equivalent to a haskell List
     static Stream(tipe) {
-        return class InnerTipe extends Tipe {
+        return class StreamTipe extends Tipe {
             static name = `Stream(${tipe.name})`;
             static innerTipe = tipe;
             static basic = true;
             static isStream = true;
             static streamable = true;
-            static new(...values) { return new TipedValue(InnerTipe, { value: values }); }
+            static new(...values) { return new TipedValue(StreamTipe, { value: values }); }
         }
     }
 
     // equivalent to haskell Maybe tipe
     static Boxed(tipe) {
-        return class InnerTipe extends Tipe {
+        return class BoxedTipe extends Tipe {
             static name = `Box(${tipe.name})`;
             static innerTipe = tipe;
             static basic = true;
             static isStreamTipe = true;
             static streamable = true;
             static methods = {
-                isEmpty: new TipeMethod('isEmpty', InnerTipe, BooleanTipe, self => Boolean(self.value)),
+                isEmpty: new TipeMethod('isEmpty', BoxedTipe, BooleanTipe, self => Boolean(self.value)),
                 // unwrapOr: needs constructors
                 // unwrap: needs errors
             };
-            static new(value) { return new TipedValue(InnerTipe, { value: value }); }
+            static new(value) { return new TipedValue(BoxedTipe, { value: value }); }
         }
     }
 
     // equivalent to a statically sized Rust array
     static Array(tipe, size) {
-        return class InnerTipe extends Tipe {
+        return class ArrayTipe extends Tipe {
             static name = `[${size}x${tipe.name}]`
             static innerTipe = tipe;
             static basic = true;
             static size = size;
             static methods = {
-                size: new TipeMethod('size', InnerTipe, NumberTipe, () => size)
+                size: new TipeMethod('size', ArrayTipe, NumberTipe, () => size)
             };
             static isBoxTipe = true;
             static streamable = true;
             static new(...values) {
                 let inner = values.slice(0, size).map(v => tipe.new(v));
-                return new TipedValue(InnerTipe, { value: inner });
+                return new TipedValue(ArrayTipe, { value: inner });
             }
 
             static drawShadow() {
-                TextTipe.draw(InnerTipe.name, Layers.Shadow);
+                TextTipe.draw(ArrayTipe.name, Layers.Shadow);
             }
 
             static draw() {
-                TextTipe.draw(InnerTipe.name);
+                TextTipe.draw(ArrayTipe.name);
             }
         }
     }
 
     static Function(inTipe, outTipe, inputBoxConstructor, args=null) {
-        return class InnerTipe extends Tipe {
+        return class FunctionTipe extends Tipe {
             static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
             static inTipe = inTipe;
             static outTipe = outTipe;
@@ -104,7 +104,7 @@ class Tipe {
                 return { 
                     getInput: new UIMethod(
                         'getInput', 
-                        InnerTipe, 
+                        FunctionTipe, 
                         outTipe, 
                         box, 
                         self => self.value(box.value)
@@ -112,7 +112,7 @@ class Tipe {
                 }
             };
             static basic = true;
-            static new(func) { return new TipedValue(InnerTipe, { value: func })}
+            static new(func) { return new TipedValue(FunctionTipe, { value: func })}
 
             static drawShadow() {
                 TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
@@ -179,7 +179,7 @@ class NumberTipe extends Tipe {
                 NumberTipe, 
                 Tipe.Function(ColorTipe, BallTipe, ColorPicker),
                 function(self) { 
-                    return (colorName) => BallTipe.new({ size: self.value, color: ColorTipe.variants[colorName] })
+                    return (colorName) => BallTipe.new({ size: self.value, color: colorName })
                 }
             ),
         }
@@ -319,6 +319,22 @@ class BallTipe extends Tipe {
     static methods = {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
+        // withColor: new TipeMethod(
+        //     'withColor', 
+        //     BallTipe, 
+        //     Tipe.Function(ColorTipe, BallTipe, ColorPicker),
+        //     function(self) { 
+        //         return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
+        //     }
+        // ),
+        withSize: new TipeMethod(
+            'withSize', 
+            BallTipe, 
+            Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
+            function(self) { 
+                return (nVal) => BallTipe.new({ size: nVal, color: self.color.name.value })
+            }
+        ),
     }
     static new(defaults={ size: 50, color: 'blue' }) { 
         defaults.size = exists(defaults.size) ? (1 > defaults.size ? 1 : defaults.size) : 50;
