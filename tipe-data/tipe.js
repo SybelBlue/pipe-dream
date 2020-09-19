@@ -319,14 +319,14 @@ class BallTipe extends Tipe {
     static methods = {
         size: new TipeProperty('size', BallTipe, NumberTipe),
         color: new TipeProperty('color', BallTipe, ColorTipe),
-        // withColor: new TipeMethod(
-        //     'withColor', 
-        //     BallTipe, 
-        //     Tipe.Function(ColorTipe, BallTipe, ColorPicker),
-        //     function(self) { 
-        //         return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
-        //     }
-        // ),
+        withColor: new TipeMethod(
+            'withColor', 
+            BallTipe, 
+            Tipe.Function(ColorTipe, BallTipe, ColorPicker),
+            function(self) { 
+                return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
+            }
+        ),
         withSize: new TipeMethod(
             'withSize', 
             BallTipe, 
