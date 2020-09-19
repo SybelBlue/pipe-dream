@@ -10,7 +10,7 @@ class FilterMachine extends StackedMachine {
     get outputTipe() { return this.inTipe; }
     get finished() { 
         const last = Array.last(this.methodStack);
-        return (last ? last.outTipe : this.inTipe).name === BooleanTipe.name;
+        return (last ? last.outTipe : this.inTipe).equals(BooleanTipe);
     }
 
     textSize = 24;

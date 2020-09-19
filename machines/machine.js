@@ -23,7 +23,6 @@ class Machine {
     get height() { return Machine.bodyHeight; }
     get bodyHeight() { return Machine.bodyHeight; }
 
-    textSize = 26;
     get closedPipeline() { return false; }
 
     get outputTipe() { return BallTipe; }
@@ -31,12 +30,21 @@ class Machine {
     get properOutputTipe() { return Tipe.Stream(this.outputTipe); }
 
     textSize = 26;
-
+    resilient = true;
     exclaimFrames = 0;
+
+    get inTipe() { return this._inTipe; }
+    set inTipe(value) {
+        if (this.resilient) {
+            this._inTipe = value;
+        } else {
+            throw new Error('Tried to change inTipe on non-resilient machine');
+        }
+    }
 
     constructor(key, inTipe, bodyColor, text) {
         this.key = key;
-        this.inTipe = inTipe;
+        this._inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
         this.dummy = key < 0;

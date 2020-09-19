@@ -14,7 +14,7 @@ class Editor {
 
     get outputTipe() { return this.pipeline.outputTipe || this.startingTipe; }
 
-    get pipeTipeChecks() { return this.endingTipe.name === this.outputTipe.name; }
+    get pipeTipeChecks() { return this.endingTipe.equals(this.outputTipe); }
 
     pipeline = new Pipeline();
 
@@ -93,14 +93,18 @@ class Editor {
     }
 
     validatePipeline() {
-        let i = 0;
-        let currentTipe = this.startingTipe.name;
-
-        while (i < this.pipeline.length && currentTipe === this.pipeline[i].inTipe.name) {
-            currentTipe = this.pipeline[i].outputTipe.name;
-            i++;
+        let currentTipe = this.startingTipe;
+        for (let i = 0; i < this.pipeline.length; i++) {
+            const machine = this.pipeline[i];
+            if (!currentTipe.equals(machine.inTipe)) {
+                if (machine.resilient) {
+                    machine.inTipe = currentTipe;
+                } else {
+                    this.pipeline = this.pipeline.slice(0, i);
+                    return;
+                }
+            }
+            currentTipe = machine.outputTipe;
         }
-
-        this.pipeline = this.pipeline.slice(0, i);
     }
 }
