@@ -12,17 +12,14 @@ class Pipe {
         if (shadowTipe) {
             Renderer.temporary(this, Pipe.mainWidth/2, 0, () => shadowTipe.drawShadow());
         }
-
-        Renderer.newRenderable(Layers.Pipe, () => {
-            noStroke();
-            fill(innerColor);
-            rect(0, 0, Pipe.mainWidth, height);
-        });
-
-
         const topOfBottomLip = height - Pipe.lipHeight;
 
         Renderer.newRenderable(Layers.Pipe, () => {
+            // background
+            noStroke();
+            fill(innerColor);
+            rect(0, 0, Pipe.mainWidth, height);
+            
             fill(Pipe.edgeColor);
 
             // left half
