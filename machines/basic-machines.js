@@ -5,8 +5,6 @@ class MapMachine extends StackedMachine {
 }
 
 class FilterMachine extends StackedMachine {
-    textSize = 22;
-
     get outputTipe() { return this.inTipe; }
     get finished() { 
         const last = Array.last(this.methodStack);
