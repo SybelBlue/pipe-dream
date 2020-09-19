@@ -33,6 +33,10 @@ class Tipe {
         );
     }
 
+    static equals(other) {
+        return exists(other) && other.name === this.name;
+    }
+
     // equivalent to a haskell List
     static Stream(tipe) {
         return class InnerTipe extends Tipe {
