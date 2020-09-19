@@ -79,6 +79,11 @@ class Machine {
                         -5, this.bodyHeight * 0.6,
                         -1, this.bodyHeight * 0.5
                     );
+
+                    fill(0)
+                    textSize(40);
+                    textFont('Courier New');
+                    text('!', -30, 25 + 15);
                 }
 
                 if (SceneManager.editable && !this.dummy && regions.body.hovering) {
