@@ -67,14 +67,13 @@ class Machine {
 
                 stroke(0);
                 textSize(this.textSize);
-                textFont('Courier New');
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
                 
                 if (!this.finished && !this.dummy) {
                     stroke(200, 5, 5);
-                    const y = 20 + Renderer.textHeight('Courier New', this.textSize) * 0.8;
-                    line(10, y, Renderer.textWidth(this.text, 'Courier New', this.textSize) + 10, y);
+                    const y = 20 + Renderer.textHeight(this.textSize) * 0.8;
+                    line(10, y, Renderer.textWidth(this.text, this.textSize) + 10, y);
                 }
 
                 if (this.exclaimFrames > 0) {
@@ -90,14 +89,13 @@ class Machine {
 
                     fill(0)
                     textSize(40);
-                    textFont('Courier New');
                     text('!', -30, 25 + 15);
                 }
 
                 if (SceneManager.editable && !this.dummy && regions.body.hovering) {
                     noStroke();
                     textSize(16)
-                    text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 'Courier New', 26), 30);
+                    text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
 
                     stroke(255, 20, 20);
                     strokeWeight(5);

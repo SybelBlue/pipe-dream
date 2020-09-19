@@ -204,10 +204,10 @@ class NumberTipe extends Tipe {
             textSize(45);
             textFont('Georgia');
             if (!NumberTipe.shadowTextWidth) {
-                NumberTipe.shadowTextWidth = textWidth(NumberTipe.shadowText);
+                NumberTipe.shadowTextWidth = Renderer.textWidth(NumberTipe.shadowText, 45, 'Georgia');
             }
             fill(30, 30, 30)
-            text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -textWidth(num)/2, textAscent() * 0.7);
+            text('' + num, num == NumberTipe.shadowText ? -NumberTipe.shadowTextWidth/2 : -Renderer.textWidth('' + num, 45, 'Georgia')/2, textAscent() * 0.7);
         });
     }
 }
@@ -238,7 +238,6 @@ class TextTipe extends Tipe {
         }
         Renderer.newRenderable(layer, () => {
             textSize(20);
-            textFont('Courier New');
             if (!TextTipe.shadowTextWidth) {
                 TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
             }

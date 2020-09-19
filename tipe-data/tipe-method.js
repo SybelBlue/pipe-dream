@@ -1,5 +1,5 @@
 class TipeMethod {
-    static font = 'Courier New';
+    static font = Renderer.defaultFont;
     static fontSize = 20;
     static basicHeight = 25;
 
@@ -7,7 +7,7 @@ class TipeMethod {
 
     get height() { return TipeMethod.basicHeight; }
     get width() {
-        return Renderer.textWidth(this.name, TipeProperty.font, TipeProperty.fontSize) + 10 + Tipe.shapeIndent;
+        return Renderer.textWidth(this.name, TipeProperty.fontSize, TipeProperty.font) + 10 + Tipe.shapeIndent;
     }
 
     constructor(name, inTipe, outTipe, compute, prewrapped=false) {

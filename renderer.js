@@ -72,6 +72,8 @@ class Renderer {
         }
     }
 
+    static defaultFont = 'Courier New';
+
     static _keyCount = 1;
     static stackTop = Renderer.Node.Head.clone();
     static toRender = [];
@@ -92,7 +94,7 @@ class Renderer {
 
     static textBoundMemoized = {};
 
-    static textWidth(text, font, size) {
+    static textWidth(text, size, font=this.defaultFont) {
         const key = `w_${font}_${text.length}_${size}`;
         if (!exists(this.textBoundMemoized[key])) {
             push();
@@ -104,7 +106,7 @@ class Renderer {
         return this.textBoundMemoized[key];
     }
 
-    static textHeight(font, size) {
+    static textHeight(size, font=this.defaultFont) {
         const key = `h_${font}_${size}`;
         if (!exists(this.textBoundMemoized[key])) {
             push();
@@ -169,9 +171,9 @@ class Renderer {
     }
 
     static newUIButton(txt, textColor, onClick, margin=10, fontSize=24) {
-        const tHeight = Renderer.textHeight('Courier New', fontSize);
+        const tHeight = Renderer.textHeight(fontSize);
         const height = tHeight + 2 * margin;
-        const width = Renderer.textWidth(txt, 'Courier New', fontSize) + 2 * margin;
+        const width = Renderer.textWidth(txt, fontSize) + 2 * margin;
         Renderer.newRenderable(Layers.UI, (regions) => {
             fill(10);
             stroke(regions.button.hovering ? 200 : 0);
@@ -179,7 +181,6 @@ class Renderer {
 
             noStroke();
             fill(textColor);
-            textFont('Courier New');
             textSize(fontSize);
             text(txt, margin, margin + tHeight * 0.8);
             if (regions.button.clicked) onClick();
@@ -212,12 +213,15 @@ class Renderer {
     static renderAll() {
         const hit = Renderer.recomputeRegions();
 
+        push();
+        textFont(this.defaultFont);
         for (const renderable of Renderer.toRender) {
             push();
             translate(renderable.translation[0], renderable.translation[1]);
             renderable.draw(renderable.regions);
             pop();
         }
+        pop();
         Renderer.toRender = [];
         Renderer.regions = [];
 

@@ -2,10 +2,8 @@ class InputBox {
     static keyListeners = [];
 
     get value() { return this.text; }
-    get height() { 
-        return Renderer.textHeight(this.font, this.fontSize) + 10;
-    }
-    get width() { return max(20, Renderer.textWidth(this.text, this.font, this.fontSize) + 10); }
+    get height() { return Renderer.textHeight(this.fontSize, this.font) + 10; }
+    get width() { return max(20, Renderer.textWidth(this.text, this.fontSize, this.font) + 10); }
 
     _selected = false;
     get selected() { return this._selected; }
@@ -21,7 +19,7 @@ class InputBox {
         this.text = this.defaultText;
         this.last = this.defaultText;
 
-        this.font = config.font || 'Courier New';
+        this.font = config.font || Renderer.defaultFont;
         this.fontSize = config.fontSize || 16;
 
         InputBox.keyListeners.push(this);

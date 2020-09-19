@@ -24,7 +24,7 @@ class SceneManager {
 
             // draw run button
             const margin = 10;
-            const width = Renderer.textWidth('Run', 'Courier New', 24) + 2 * margin;
+            const width = Renderer.textWidth('Run', 24) + 2 * margin;
             const start = canvas.width - width - margin;
             Renderer.temporary(this, start, margin, 
                 () => Renderer.newUIButton('Run', color(80, 250, 80), () => this.runLevel(), margin));
@@ -70,9 +70,9 @@ class SceneManager {
 
     static drawTestTray() {
         const trayWidth = 200;
-        const textHeight = Renderer.textHeight('Courier New', 24);
+        const textHeight = Renderer.textHeight(24);
         const margin = 10;
-        const start = canvas.width - Renderer.textWidth('Stop', 'Courier New', 24) - 3 * margin;
+        const start = canvas.width - Renderer.textWidth('Stop', 24) - 3 * margin;
         Renderer.temporary(this, start, margin, 
             () => Renderer.newUIButton('Stop', color(250, 80, 80), () => this.editable = true, margin));
 
@@ -93,7 +93,6 @@ class SceneManager {
                     rect(0, 0, trayWidth - margin, height, 10);
 
                     fill(regions.test.hovering ? 255 : 0);
-                    textFont('Courier New');
                     textSize(24);
                     text('Test ' + i, margin, margin + textHeight * 0.8);
 
