@@ -2,7 +2,7 @@ class ColorPicker {
     get value() { return this.current; }
 
     static colorBoxWidth = 20;
-    static colorBoxMargin = 7;
+    static colorBoxMargin = 5;
     static height = 20 + 2 * ColorPicker.colorBoxMargin;
     static colorBoxHeight = ColorPicker.height - 2 * ColorPicker.colorBoxMargin;
 
@@ -50,8 +50,9 @@ class ColorPicker {
     draw(interactable=true) {
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
+                noStroke();
                 fill(ColorTipe.color);
-                rect(0, 0, ColorPicker.width, ColorPicker.height, 0, 10, 10, 0);
+                rect(0, 0, ColorPicker.width, ColorPicker.height);
 
                 for (const box of ColorPicker.colorBoxes) {
                     if (interactable && regions[box.name].clicked) {
