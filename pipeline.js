@@ -22,7 +22,7 @@ class Pipeline extends Array /* of Machines */ {
         const showOutputShadow = exists(startingTipe);
 
         Renderer.translate(Editor.pipeGutterSize, 0);
-        new Pipe(true, this.length == 0).draw(showOutputShadow ? startingTipe : null);
+        Pipe.draw(true, this.length == 0, showOutputShadow ? startingTipe : null);
 
         Renderer.translate(-Editor.pipeIndent, Pipe.height);
         for (let i = 0; i < this.length; i++) {
@@ -33,8 +33,7 @@ class Pipeline extends Array /* of Machines */ {
             
             if (!machine.isTerminal) { 
                 Renderer.temporary(this, Editor.pipeIndent, 0, 
-                    () => new Pipe(false, i == this.length - 1 && completed)
-                            .draw(showOutputShadow ? machine.outputTipe : null));
+                    () => Pipe.draw(false, i == this.length - 1 && completed, showOutputShadow ? machine.outputTipe : null));
             }
 
             Renderer.translate(0, Pipe.height);

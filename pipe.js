@@ -6,29 +6,21 @@ class Pipe {
     static height = 100;
 
     static get edgeColor() { return color(240); }
-    get innerColor() { return this.darken ? color(50) : color(100); }
 
-    constructor(drawTop, drawBottom, height=Pipe.height, darken=false) {
-        this.drawTop = drawTop;
-        this.drawBottom = drawBottom;
-        this.height = height;
-        this.darken = darken;
-    }
-
-    draw(shadowTipe=null) {
+    static draw(drawTop, drawBottom, shadowTipe=null, height=Pipe.height, darken=false) {
+        const innerColor = darken ? color(50) : color(100);
         if (shadowTipe) {
             Renderer.temporary(this, Pipe.mainWidth/2, 0, () => shadowTipe.drawShadow());
         }
 
-        Renderer.push(this);
         Renderer.newRenderable(Layers.Pipe, () => {
             noStroke();
-            fill(this.innerColor);
-            rect(0, 0, Pipe.mainWidth, this.height);
+            fill(innerColor);
+            rect(0, 0, Pipe.mainWidth, height);
         });
 
 
-        const topOfBottomLip = this.height - Pipe.lipHeight;
+        const topOfBottomLip = height - Pipe.lipHeight;
 
         Renderer.newRenderable(Layers.Pipe, () => {
             fill(Pipe.edgeColor);
@@ -36,17 +28,17 @@ class Pipe {
             // left half
             beginShape();
             vertex(Pipe.edgeWidth, 0);
-            vertex(Pipe.edgeWidth, this.height);
+            vertex(Pipe.edgeWidth, height);
             // bottom lip
-            if (this.drawBottom) {
-                vertex(-Pipe.edgeWidth, this.height);
+            if (drawBottom) {
+                vertex(-Pipe.edgeWidth, height);
                 vertex(-Pipe.edgeWidth, topOfBottomLip);
                 vertex(0, topOfBottomLip);
             } else {
-                vertex(0, this.height);
+                vertex(0, height);
             }
             // upper lip
-            if (this.drawTop) {
+            if (drawTop) {
                 vertex(0, Pipe.lipHeight);
                 vertex(-Pipe.edgeWidth, Pipe.lipHeight);
                 vertex(-Pipe.edgeWidth, 0);
@@ -56,23 +48,24 @@ class Pipe {
             endShape(CLOSE);
         });
 
+        Renderer.push(this);
         // right half
         // recenter on upper right corner (w/o lip)
         Renderer.translate(Pipe.mainWidth, 0);
         Renderer.newRenderable(Layers.Pipe, () => {
             beginShape();
             vertex(-Pipe.edgeWidth, 0);
-            vertex(-Pipe.edgeWidth, this.height);
+            vertex(-Pipe.edgeWidth, height);
             // bottom lip
-            if (this.drawBottom) {
-                vertex(Pipe.edgeWidth, this.height);
+            if (drawBottom) {
+                vertex(Pipe.edgeWidth, height);
                 vertex(Pipe.edgeWidth, topOfBottomLip);
                 vertex(0, topOfBottomLip);
             } else {
-                vertex(0, this.height);
+                vertex(0, height);
             }
             // upper lip
-            if (this.drawTop) {
+            if (drawTop) {
                 vertex(0, Pipe.lipHeight);
                 vertex(Pipe.edgeWidth, Pipe.lipHeight);
                 vertex(Pipe.edgeWidth, 0);

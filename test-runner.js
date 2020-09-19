@@ -21,7 +21,7 @@ class TestRunner {
 
     static drawTestPreview(test, closed=true, done=true, yOffset=0) {
         // top pipe
-        Renderer.temporary(this, 0, 0, () => new Pipe(false, true, TestRunner.darkMargin, done).draw());
+        Renderer.temporary(this, 0, 0, () => Pipe.draw(false, true, null, TestRunner.darkMargin, done));
 
         // pipe inlet shadows
         Renderer.newRenderable(Layers.Pipe, () => {
@@ -51,7 +51,7 @@ class TestRunner {
     draw() {
         // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, this.bottomMarginStart, 
-            () => new Pipe(true, false, this.bottomMarginHeight).draw());
+            () => Pipe.draw(true, false, null, this.bottomMarginHeight));
         
         Renderer.temporary(this, Editor.pipeGutterSize, 0,
             () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.offset));
