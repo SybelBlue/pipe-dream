@@ -51,7 +51,10 @@ class TestRunner {
     draw() {
         // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, this.bottomMarginStart, 
-            () => Pipe.draw(true, false, null, this.bottomMarginHeight));
+            !Array.last(this.pipeline) || Array.last(this.pipeline).properOutputTipe.isStream ?
+                () => Pipe.draw(true, false, null, this.bottomMarginHeight) :
+                () => Conveyor.draw(null, this.bottomMarginHeight)
+        );
         
         Renderer.temporary(this, Editor.pipeGutterSize, 0,
             () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.offset));

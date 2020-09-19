@@ -39,7 +39,7 @@ class Tipe {
             static name = `Stream(${tipe.name})`;
             static innerTipe = tipe;
             static basic = true;
-            static isStreamTipe = true;
+            static isStream = true;
             static streamable = true;
             static new(...values) { return new TipedValue(InnerTipe, { value: values }); }
         }

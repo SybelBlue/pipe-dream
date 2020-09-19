@@ -31,10 +31,12 @@ class Pipeline extends Array /* of Machines */ {
 
             Renderer.translate(0, machine.height);
             
-            if (!machine.isTerminal) { 
-                Renderer.temporary(this, Editor.pipeIndent, 0, 
-                    () => Pipe.draw(false, i == this.length - 1 && completed, showOutputShadow ? machine.outputTipe : null));
-            }
+            const shadowTipe = showOutputShadow ? machine.outputTipe : null;
+            Renderer.temporary(this, Editor.pipeIndent, 0, 
+                machine.properOutputTipe.isStream ?
+                    () => Pipe.draw(false, i == this.length - 1 && completed, shadowTipe) :
+                    () => Conveyor.draw(shadowTipe)
+            );
 
             Renderer.translate(0, Pipe.height);
         }

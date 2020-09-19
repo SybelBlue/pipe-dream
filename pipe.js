@@ -22,6 +22,7 @@ class Pipe {
             
             fill(Pipe.edgeColor);
 
+            stroke(0);
             // left half
             beginShape();
             vertex(Pipe.edgeWidth, 0);
@@ -73,5 +74,33 @@ class Pipe {
         });
 
         Renderer.pop(this);
+    }
+}
+
+class Conveyor extends Pipe {
+    static seamGap = 20;
+    static framesPerMovement = 1;
+
+    static draw(shadowTipe=null, height=Conveyor.height) {
+        if (shadowTipe) {
+            Renderer.temporary(this, Conveyor.mainWidth/2, 0, () => shadowTipe.drawShadow());
+        }
+
+        Renderer.newRenderable(Layers.Pipe, () => {
+            // background
+            noStroke();
+            fill(75);
+            rect(0, 0, Conveyor.mainWidth, height);
+            
+            const offset = floor(frameCount / this.framesPerMovement) % this.seamGap;
+
+            const fullSeams = floor(height / this.seamGap);
+            const numOfSeams = fullSeams + (offset < height % this.seamGap ? 1 : 0);
+            for (let i = 0; i < numOfSeams; i++) {
+                fill(25);
+                const start = i * this.seamGap + offset;
+                rect(0, start, Conveyor.mainWidth, min(2, height - start));
+            }
+        });
     }
 }
