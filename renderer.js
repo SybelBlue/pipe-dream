@@ -94,6 +94,7 @@ class Renderer {
 
     static textBoundMemoized = {};
 
+    // assumes monospaced font!
     static textWidth(text, size, font=this.defaultFont) {
         const key = `w_${font}_${text.length}_${size}`;
         if (!exists(this.textBoundMemoized[key])) {
