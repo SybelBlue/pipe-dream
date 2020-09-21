@@ -40,7 +40,7 @@ class Tray {
     }
 
     loadMachineOptions() {
-        this.drawable = Machine.machines;
+        this.drawable = SceneManager.level.machines;
         this.mode = { type: 'machine' };
     }
 

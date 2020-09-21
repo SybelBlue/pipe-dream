@@ -2,7 +2,7 @@ class Level {
     tests = [];
     solutions = [];
 
-    get machineTypes() {
+    get machines() {
         return this._machineSupplier();
     }
 
@@ -39,6 +39,29 @@ class Level {
 }
 
 const levels = [
+    new Level(BallTipe, NumberTipe, test => test.map(x => x.size).slice(0, 3))
+        .withPrompt('sandbox')
+        .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
+        .withTest(
+            Level.makeBall('blue', 10),
+            Level.makeBall('red', 20),
+            Level.makeBall('blue', 50),
+            Level.makeBall('yellow', 70),
+            Level.makeBall('purple', 30),
+            Level.makeBall('orange', 20),
+            Level.makeBall('blue', 40),
+            Level.makeBall('red', 50),
+        )
+        .withTest(
+            Level.makeBall('yellow', 30),
+            Level.makeBall('green', 10),
+            Level.makeBall('blue', 50),
+            Level.makeBall('yellow', 70),
+            Level.makeBall('purple', 20),
+            Level.makeBall('orange', 40),
+            Level.makeBall('orange', 40),
+            Level.makeBall('red', 50),
+        ),
     new Level(BallTipe, NumberTipe, test => test.map(x => x.size))
         .withMachines(() => [new MapMachine(-1, Tipe)])
         .withPrompt('Use the map machine to turn each ball into its size!')
