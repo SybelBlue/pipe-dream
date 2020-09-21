@@ -38,30 +38,6 @@ class Level {
     }
 }
 
-const levelOne = 
-    new Level(NumberTipe, NumberTipe, test => test.filter(x => x > 0), 'only positive values')
-        .withTest(1, 2, 3, 4)
-        .withTest(2, 4, -5, 3)
-        .withTest()
-        .withTest(-1, -2, -3, 4);
-
-const levelTwo = 
-    new Level(BallTipe, NumberTipe, test => test.filter(x => x.color === 'blue').map(x => x.size), 'sizes of only blue balls')
-        .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
-        .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('green', n)))
-        .withTest()
-        .withTest(
-            Level.makeBall('blue', 10),
-            Level.makeBall('red', 20),
-            Level.makeBall('blue', 5),
-            Level.makeBall('yellow', 15),
-            Level.makeBall('purple', 30),
-            Level.makeBall('orange', 20),
-            Level.makeBall('blue', 40),
-            Level.makeBall('red', 5),
-        );
-
-
 const levels = [
     new Level(BallTipe, NumberTipe, test => test.map(x => x.size))
         .withMachines(() => [new MapMachine(-1, Tipe)])

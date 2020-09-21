@@ -9,7 +9,7 @@ let clickThisFrame = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    editor = SceneManager.startLevel(levelTwo);
+    editor = SceneManager.startLevel(levels[4]);
 }
 
 function draw() {
