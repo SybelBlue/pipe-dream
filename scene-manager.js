@@ -84,7 +84,7 @@ class SceneManager {
         Renderer.translate(windowWidth - trayWidth, 2 * margin + textHeight + 2 * margin);
 
         Renderer.newRenderable(Layers.UI, () => {
-            fill(Tray.background);
+            fill(Tray.backgroundColor);
             rect(0, 0, trayWidth + 1, windowHeight - Renderer.xTranslation, 10, 0, 0, 10);
         });
 

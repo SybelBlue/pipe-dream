@@ -26,8 +26,8 @@ class StackedMachine extends Machine {
             noStroke();
 
             // clean interior
-            fill(Editor.backgroundColor);
-            rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
+            fill(this.dummy ? Tray.backgroundColor : Editor.backgroundColor);
+            rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
             // draw arm
             fill(this.color);

@@ -1,7 +1,7 @@
 class Tray {
     static maxWidth = 230;
     static indent = 10;
-    static get background() { return color(20, 20, 25); }
+    static get backgroundColor() { return color(20, 20, 25); }
 
     drawable = [];
     mode = null;
@@ -9,7 +9,7 @@ class Tray {
     draw() {
         Renderer.newRenderable(Layers.TrayBackground, function() {
             stroke(80);
-            fill(Tray.background);
+            fill(Tray.backgroundColor);
             rect(0, 0, Tray.maxWidth, editor.height, 0, 20, 20, 0);
         });
 
