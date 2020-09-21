@@ -35,3 +35,14 @@ function trace(msg, obj) {
 
 function _min(a, b) { return a < b ? a : b; }
 function _max(a, b) { return a > b ? a : b; }
+
+// oui oui, grace a https://stackoverflow.com/questions/5999118/how-can-i-add-or-update-a-query-string-parameter
+function updateQueryStringParameter(key, value) {
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(key, value);
+    window.location.search = searchParams.toString();
+}
+
+// reloads site!
+function updateLevelNumber(value) { updateQueryStringParameter('l', value); }
+function updatePromptDisplay(value) { updateQueryStringParameter('p', value); }

@@ -5,8 +5,8 @@ let clickThisFrame = false;
 const config = (function() {
     const urlParams = new URLSearchParams(window.location.search);
     const c  = {
-        level: urlParams.get('l') || urlParams.get('level') || 0,
-        prompt: urlParams.get('p') || urlParams.get('prompt') || false,
+        level: urlParams.get('l') || 0,
+        prompt: urlParams.get('p') || false,
     };
     c.level = _min(_max(0, Number.parseInt(c.level)), levels.length - 1);
     c.prompt = !!c.prompt;
@@ -19,7 +19,7 @@ const config = (function() {
 // 0B4F6C
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);    
+    createCanvas(windowWidth, windowHeight);
 
     editor = SceneManager.startLevel(levels[config.level], config.prompt);
 }
