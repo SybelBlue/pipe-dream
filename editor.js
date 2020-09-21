@@ -18,11 +18,9 @@ class Editor {
 
     pipeline = new Pipeline();
 
-    constructor(startingTipe, endingTipe, x, y, width, height) {
+    constructor(startingTipe, endingTipe, width, height) {
         this.startingTipe = startingTipe;
         this.endingTipe = endingTipe;
-        this.x = x;
-        this.y = y;
         this.width = width;
         this.height = height;
         this.minHeight = height;
@@ -30,8 +28,6 @@ class Editor {
 
     draw() {
         Renderer.push(this);
-        Renderer.translate(this.x, this.y);
-
         Renderer.newRenderable(Layers.Background, () => {
             noStroke();
             fill(Editor.backgroundColor);

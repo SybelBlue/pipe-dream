@@ -14,8 +14,8 @@ function setup() {
 
 function draw() {
     if (requestRescaleCanvas) {
-        resizeCanvas(editor.x + editor.width, editor.y + editor.minHeight);
-        editor.height = editor.minHeight;
+        resizeCanvas(editor.width, SceneManager.minHeight);
+        editor.height = SceneManager.minHeight;
     }
 
     SceneManager.draw();
@@ -26,7 +26,7 @@ function draw() {
 function windowResized() { 
     resizeCanvas(windowWidth, windowHeight);
     editor.width = windowWidth;
-    editor.height = max(editor.minHeight, windowHeight);
+    editor.height = max(SceneManager.minHeight, windowHeight);
 }
 
 function mouseClicked() { clickThisFrame = true; }

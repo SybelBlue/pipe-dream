@@ -8,11 +8,15 @@ class SceneManager {
 
     static testIndex = 0;
 
+    static get minHeight() {
+        return this.runner ? this.runner.height : this.editor.minHeight;
+    }
+
     static startLevel(level) {
         this.level = level;
         this.tray = new Tray();
         this.tray.loadMachineOptions();
-        return (this.editor = new Editor(level.startingTipe, level.endingTipe, 0, 0, windowWidth, windowHeight));
+        return (this.editor = new Editor(level.startingTipe, level.endingTipe, windowWidth, windowHeight));
     }
 
     static draw() {
@@ -152,7 +156,7 @@ class SceneManager {
             new LerpAnimator(
                 () => tipedValue.draw(),
                 [Editor.pipelineMidline, this.runner.bottomMarginStart],
-                [Editor.pipelineMidline, windowHeight],
+                [Editor.pipelineMidline, canvas.height],
                 this.runner.speed,
                 () => delete this.exittingValues[key]
             );

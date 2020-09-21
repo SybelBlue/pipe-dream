@@ -1,5 +1,5 @@
 class TestRunner {
-    static darkMargin = 300;
+    static darkMargin = 250;
 
     speed = 3;
     currentItem = null;
@@ -15,8 +15,12 @@ class TestRunner {
         this.pipeline.forEach(m => m.reset());
         this.test = test.map(v => v.clone());
 
-        this.bottomMarginStart = this.pipeline.height + TestRunner.darkMargin;
-        this.bottomMarginHeight = windowHeight - this.bottomMarginStart;
+        this.bottomMarginStart = TestRunner.darkMargin + this.pipeline.height;
+        this.bottomMarginHeight = max(windowHeight - this.bottomMarginStart, TestRunner.darkMargin * 0.8);
+
+        // flag for new height if necessary
+        this.height = this.bottomMarginStart + this.bottomMarginHeight;
+        requestRescaleCanvas = (this.height > windowHeight);
     }
 
     static drawTestPreview(test, closed=true, done=true, yOffset=0) {
@@ -67,7 +71,7 @@ class TestRunner {
         Renderer.newRenderable(Layers.Background, () => {
             // backdrop
             fill(Editor.backgroundColor);
-            rect(0, 0, windowWidth, windowHeight);
+            rect(0, 0, windowWidth, this.height);
 
             // top dark margin
             fill(Editor.darkMarginColor);
