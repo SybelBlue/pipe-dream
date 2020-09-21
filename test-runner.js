@@ -142,7 +142,7 @@ class TestRunner {
         }
 
         const start = machine.height + this.currentItem.animator.stop[1];
-        this.currentItem = {
+        const onComplete = () => this.currentItem = {
             value: tipedValue,
             animator: new LerpAnimator(
                 () => tipedValue.draw(), 
@@ -151,6 +151,15 @@ class TestRunner {
                 this.speed, 
                 () => this.currentEnteredMachine(index + 1)
             ),
+        };
+
+        this.currentItem = {
+            value: tipedValue,
+            animator: new PauseAnimator(
+                () => {},
+                20,
+                onComplete
+            )
         }
     }
 }
