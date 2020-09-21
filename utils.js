@@ -32,3 +32,6 @@ function trace(msg, obj) {
     console.log(msg, obj);
     return obj;
 }
+
+function _min(a, b) { return a < b ? a : b; }
+function _max(a, b) { return a > b ? a : b; }

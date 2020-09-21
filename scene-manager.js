@@ -12,7 +12,7 @@ class SceneManager {
         return this.runner ? this.runner.height : this.editor.minHeight;
     }
 
-    static startLevel(level) {
+    static startLevel(level, prompt=false) {
         this.level = level;
         this.tray = new Tray();
         this.tray.loadMachineOptions();
