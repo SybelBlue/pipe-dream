@@ -54,3 +54,16 @@ class LerpAnimator extends Animator {
         this.speed = speed;
     }
 }
+
+class PauseAnimator extends Animator {
+    constructor(drawFunction, frames, callback) {
+        super(
+            drawFunction,
+            [0, 0],
+            () => { this.frames--; return [0, 0]},
+            () => this.frames <= 0,
+            callback
+        )
+        this.frames = frames;
+    }
+}
