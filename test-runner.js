@@ -1,5 +1,5 @@
 class TestRunner {
-    static darkMargin = 250;
+    static darkMargin = 300;
 
     speed = 3;
     currentItem = null;
@@ -44,7 +44,7 @@ class TestRunner {
         
         // render waiting values
         Renderer.push(this);
-        Renderer.translate(Editor.pipelineMidline - Editor.pipeGutterSize, TestRunner.darkMargin * 0.8 - yOffset);
+        Renderer.translate(Editor.pipelineMidline - Editor.pipeGutterSize, TestRunner.darkMargin - Tipe.maxDrawWidth - yOffset);
         test.slice(0, 5).forEach(tipedValue => {
             tipedValue.draw();
             Renderer.translate(0, -Tipe.maxDrawWidth);
@@ -108,7 +108,7 @@ class TestRunner {
                 value: tipedValue,
                 animator: new LerpAnimator(
                     () => tipedValue.draw(), 
-                    [0, -TestRunner.darkMargin * 0.2],
+                    [0, -Tipe.maxDrawWidth],
                     [0, Pipe.height],
                     this.speed,
                     () => this.currentEnteredMachine(0)),
