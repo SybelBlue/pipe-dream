@@ -72,6 +72,7 @@ class Renderer {
         }
     }
 
+    // must be monospaced!
     static defaultFont = 'Courier New';
 
     static _keyCount = 1;
@@ -117,6 +118,41 @@ class Renderer {
             pop();
         }
         return this.textBoundMemoized[key];
+    }
+
+    // assumes monospaced font!
+    static textToLines(rawText, textSize, maxWidth, font=this.defaultFont) {
+        const charsInLine = floor(maxWidth / Renderer.textWidth(' ', textSize, font));
+        if (charsInLine === 0) return null;
+
+        const output = [];
+        let current = '';
+        rawText.split('\n').map(line => line.split(/\s/)).forEach(line => {
+            let i = 0;
+            while (i < line.length) {
+                const word = line[i];
+                if (word.length > charsInLine) {
+                    if (current.length > 0) output.push(current);
+
+                    output.push(word.substring(0, charsInLine - 1) + '-');
+                    line[i] = word.substring(charsInLine - 1);
+                    continue;
+                }
+
+                if (current.length + word.length > charsInLine) {
+                    output.push(current);
+                    current = '';
+                    continue;
+                }
+
+                current += (current.length > 0 ? ' ' : '') + word;
+                i++;
+            }
+            output.push(current);
+            current = '';
+        });
+
+        return output;
     }
 
     static translate(x, y) {
