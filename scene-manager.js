@@ -1,26 +1,26 @@
-class SceneManager {
-    static editable = true;
+const SceneManager = {
+    editable: true,
 
-    static level = null;
-    static editor = null;
-    static tray = null;
-    static runner = null;
+    level: null,
+    editor: null,
+    tray: null,
+    runner: null,
 
-    static testIndex = 0;
+    testIndex: 0,
 
-    static get minHeight() {
+    get minHeight() {
         return this.runner ? this.runner.height : this.editor.minHeight;
-    }
+    },
 
-    static startLevel(level, prompt=false) {
+    startLevel(level, prompt=false) {
         this.level = level;
         this.prompt = prompt;
         this.tray = new Tray();
         this.tray.loadMachineOptions();
         return (this.editor = new Editor(level.startingTipe, level.endingTipe, windowWidth, windowHeight));
-    }
+    },
 
-    static draw() {
+    draw() {
         if (!this.editor) return;
 
         if (this.editable) {
@@ -50,9 +50,9 @@ class SceneManager {
             SceneManager.tray.loadMachineOptions();
         }
         Renderer.clearStack();
-    }
+    },
 
-    static drawPrompt() {
+    drawPrompt() {
         const lines = Renderer.textToLines(this.level.prompt, 36, windowWidth - 30);
         if (!exists(lines)) return;
         Renderer.newRenderable(Layers.UI, () => {
@@ -73,9 +73,9 @@ class SceneManager {
 
         // draw machine explanations
         const start = lines.length * (Renderer.textHeight(36) + 5) - 5 + 20;
-    }
+    },
 
-    static drawTestPreviews() {
+    drawTestPreviews() {
         Renderer.push(this);
         const pipeGap = Machine.width / 2;
         const slotWidth = Machine.width + pipeGap;
@@ -96,9 +96,9 @@ class SceneManager {
             Renderer.translate(slotWidth, 0);
         };
         Renderer.pop(this);
-    }
+    },
 
-    static drawTestTray() {
+    drawTestTray() {
         const trayWidth = 200;
         const textHeight = Renderer.textHeight(24);
         const margin = 10;
@@ -135,9 +135,9 @@ class SceneManager {
             Renderer.translate(0, height + 20)
         };
         Renderer.pop(this);
-    }
+    },
 
-    static colorForTest(i) {
+    colorForTest(i) {
         if (i === this.testIndex) {
             return color('#6699CC');
         }
@@ -148,9 +148,9 @@ class SceneManager {
             return color('#C3423F');
         }
         return color('#81E979');
-    }
+    },
 
-    static runLevel() {
+    runLevel() {
         this.editable = false;
         this.testIndex = 0;
         this.exittingValues = {};
@@ -159,24 +159,24 @@ class SceneManager {
             return this.level.solutions[i].length === sol.length && this.level.solutions[i].every((s, j) => s.equals(sol[j]));
         });
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
-    }
+    },
 
-    static testCompleted(output) {
+    testCompleted(output) {
         this.testIndex++;
         this.beginTest();
-    }
+    },
 
-    static runTest(index) {
+    runTest(index) {
         this.testIndex = index;
         this.beginTest();
-    }
+    },
 
-    static beginTest() {
+    beginTest() {
         if (this.level.tests.length <= this.testIndex) return;
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
-    }
+    },
 
-    static valueExitting(tipedValue) {
+    valueExitting(tipedValue) {
         const key = frameCount;
         this.exittingValues[key] = 
             new LerpAnimator(
