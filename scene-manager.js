@@ -69,7 +69,7 @@ class SceneManager {
         });
 
         Renderer.temporary(this, windowWidth - 95, windowHeight - 45,
-            () => Renderer.newUIButton('Okay!', color(20, 240, 20), () => this.prompt = false));
+            () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.prompt = false));
 
         // draw machine explanations
         const start = lines.length * (Renderer.textHeight(36) + 5) - 5 + 20;
