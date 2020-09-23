@@ -123,16 +123,18 @@ class Renderer {
     // assumes monospaced font!
     static textToLines(rawText, textSize, maxWidth, font=this.defaultFont) {
         const charsInLine = floor(maxWidth / Renderer.textWidth(' ', textSize, font));
-        if (charsInLine === 0) return null;
+        if (charsInLine <= 1) return null;
 
-        const output = [];
-        let current = '';
-        rawText.split('\n').map(line => line.split(/\s/)).forEach(line => {
+        return rawText.split('\n').map(line => line.split(/\s/)).reduce((output, line) => {
+            let current = '';
             let i = 0;
             while (i < line.length) {
                 const word = line[i];
                 if (word.length > charsInLine) {
-                    if (current.length > 0) output.push(current);
+                    if (current.length > 0) {
+                        output.push(current);
+                        current = '';
+                    }
 
                     output.push(word.substring(0, charsInLine - 1) + '-');
                     line[i] = word.substring(charsInLine - 1);
@@ -149,10 +151,8 @@ class Renderer {
                 i++;
             }
             output.push(current);
-            current = '';
-        });
-
-        return output;
+            return output;
+        }, []);
     }
 
     static translate(x, y) {
