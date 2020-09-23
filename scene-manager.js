@@ -14,6 +14,7 @@ class SceneManager {
 
     static startLevel(level, prompt=false) {
         this.level = level;
+        this.prompt = prompt;
         this.tray = new Tray();
         this.tray.loadMachineOptions();
         return (this.editor = new Editor(level.startingTipe, level.endingTipe, windowWidth, windowHeight));
@@ -41,12 +42,20 @@ class SceneManager {
             this.drawTestTray();
         }
 
+        if (this.prompt) this.drawPrompt();
+
         const focused = Renderer.renderAll().found;
 
         if (!focused && clickThisFrame) {
             SceneManager.tray.loadMachineOptions();
         }
         Renderer.clearStack();
+    }
+
+    static drawPrompt() {
+        Renderer.newRenderable(Layers.UI, () => {
+            
+        });
     }
 
     static drawTestPreviews() {
