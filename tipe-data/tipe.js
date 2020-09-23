@@ -1,5 +1,5 @@
 class Tipe {
-    static get maxDrawWidth() { return Pipe.innerWidth - 2; }
+    static get maxDrawWidth() { return Pipe.innerWidth - 10; }
 
     static shapeIndent = 16;
     static get shapeMidline() { return Tipe.shapeIndent / 2; }

@@ -1,7 +1,7 @@
 class TestRunner {
     static darkMargin = 300;
 
-    speed = 3;
+    speed = 4;
     currentItem = null;
     output = [];
 
