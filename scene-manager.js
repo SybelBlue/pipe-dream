@@ -53,9 +53,22 @@ class SceneManager {
     }
 
     static drawPrompt() {
+        const lines = Renderer.textToLines(this.level.prompt, 36, windowWidth - 30);
+        if (!exists(lines)) return;
         Renderer.newRenderable(Layers.UI, () => {
-            
+            stroke(0);
+            fill(220);
+            rect(15, 15, windowWidth - 30, windowHeight - 30, 15);
+
+            fill(0);
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                textSize(36);
+                text(line, 25, (i + 1) * (Renderer.textHeight(36) + 5) + 25 - 5);
+            }
         });
+
+        // draw machine explanations
     }
 
     static drawTestPreviews() {
