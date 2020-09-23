@@ -1,9 +1,23 @@
 class InputBox {
     static keyListeners = [];
+    static boxMaxLength = 150;
+    static margin = 5;
 
+    get boxMaxChars() { return floor((InputBox.boxMaxLength - 2 * InputBox.margin) / Renderer.textWidth(' ', this.fontSize, this.font)); }
     get value() { return this.text; }
-    get height() { return Renderer.textHeight(this.fontSize, this.font) + 10; }
-    get width() { return max(20, Renderer.textWidth(this.text, this.fontSize, this.font) + 10); }
+    get height() { return Renderer.textHeight(this.fontSize, this.font) + 2 * InputBox.margin; }
+    get width() { 
+        return max(
+            20, 
+            Renderer.textWidth(
+                this.selected ? this.text : this.text.substring(0, this.boxMaxChars),
+                this.fontSize,
+                this.font
+            ) + 2 * InputBox.margin
+        );
+    }
+
+    enforceCharLimit = false;
 
     _selected = false;
     get selected() { return this._selected; }
@@ -38,18 +52,23 @@ class InputBox {
                 fill(this.selected ? color(100, 200, 200) : color(200));
                 rect(0, 0, width, height);
 
+                let displayText = this.text.substring(0);
+                if (!this.selected && displayText.length > this.boxMaxChars) {
+                    displayText = displayText.substring(0, this.boxMaxChars - 1) + '…';
+                }
+
                 stroke(10);
                 fill(this.used ? 0 : 50);
                 textSize(this.fontSize);
                 textFont(this.font);
-                text(this.text, 5, 5 + height / 2);
+                text(displayText, InputBox.margin, InputBox.margin + height / 2);
             },
             Renderer.regionStub('body', 0, 0, width, height)
         )
     }
 
     keyDown(key) {
-        if (!this.selected) return;
+        if (!this.selected || (this.enforceCharLimit && this.text.length >= this.boxMaxChars)) return;
         this.text = !this.used ? key : this.text + key;
         this.used = true;
     }
@@ -80,7 +99,9 @@ class InputBox {
     validate() { return true; }
 }
 
-class FloatBox extends InputBox{
+class FloatBox extends InputBox {
+    enforceCharLimit = true;
+
     get value() { return Number.parseFloat(this.last); }
     validate() {
         this.text = this.text.trim();
@@ -93,7 +114,9 @@ class FloatBox extends InputBox{
     }
 }
 
-class IntegerBox extends InputBox{
+class IntegerBox extends InputBox {
+    enforceCharLimit = true;
+
     get value() { return Number.parseInt(this.last); }
     validate() {
         this.text = this.text.trim();
