@@ -28,6 +28,9 @@ class TakeMachine extends Machine {
     accept(tipedValue) { 
         if (this.remaining > 0) {
             this.remaining--;
+            if (this.remaining == 0) {
+                this.exclaim();
+            }
             return tipedValue;
         }
         return null;

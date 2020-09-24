@@ -80,11 +80,11 @@ class Machine {
                     this.exclaimFrames--;
                     noStroke();
                     fill(255);
-                    rect(-30, 5, 25, this.bodyHeight - 10, 5);
+                    rect(-30, 5, 25, Machine.bodyHeight - 10, 5);
                     triangle(
-                        -5, this.bodyHeight * 0.4,
-                        -5, this.bodyHeight * 0.6,
-                        -1, this.bodyHeight * 0.5
+                        -5, Machine.bodyHeight * 0.4,
+                        -5, Machine.bodyHeight * 0.6,
+                        -1, Machine.bodyHeight * 0.5
                     );
 
                     fill(0)
