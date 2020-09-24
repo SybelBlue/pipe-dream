@@ -39,8 +39,8 @@ class Level {
 }
 
 const levels = [
-    new Level(BallTipe, NumberTipe, test => test.map(x => x.size).slice(0, 3))
-        .withPrompt('sandbox')
+    new Level(BallTipe, NumberTipe, test => test.map(x => x.size).slice(1, 3))
+        .withPrompt('sandbox (return the second and third sizes)')
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
         .withTest(
             Level.makeBall('blue', 10),
