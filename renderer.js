@@ -122,7 +122,8 @@ class Renderer {
 
     // assumes monospaced font!
     static textToLines(rawText, textSize, maxWidth, font=this.defaultFont) {
-        const charsInLine = floor(maxWidth / Renderer.textWidth(' ', textSize, font));
+        const charWidth = Renderer.textWidth(' ', textSize, font);
+        const charsInLine = floor(maxWidth / charWidth);
         if (charsInLine <= 1) return null;
 
         return rawText.split('\n').map(line => line.split(/\s/)).reduce((output, line) => {
@@ -141,7 +142,8 @@ class Renderer {
                     continue;
                 }
 
-                if (current.length + word.length > charsInLine) {
+                // +1 for the space. If first word (no space) and greater, then first if would catch.
+                if (current.length + 1 + word.length > charsInLine) {
                     output.push(current);
                     current = '';
                     continue;

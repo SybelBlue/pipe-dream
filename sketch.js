@@ -5,8 +5,8 @@ let clickThisFrame = false;
 const config = (function() {
     const urlParams = new URLSearchParams(window.location.search);
     const c  = {
-        level: urlParams.get('l') || 0,
-        prompt: urlParams.get('p') || false,
+        level: urlParams.get('l') || 1,
+        prompt: !urlParams.get('p') || true,
     };
     c.level = _min(_max(0, Number.parseInt(c.level)), levels.length - 1);
     c.prompt = !!c.prompt;

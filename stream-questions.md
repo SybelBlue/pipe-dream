@@ -45,4 +45,4 @@ class Ball {
 
 3. Of the things you vaguelly recall, what stands out as the most confusing?
 
-4. If I asked you to explain a stream to someone in Comp 123, do you think you could? How about Optional\<T>, or some of the operations on streams?
+4. If I asked you to explain a stream to someone in Comp 123, do you think you could?
