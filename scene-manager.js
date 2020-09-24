@@ -1,5 +1,6 @@
 const SceneManager = {
     editable: true,
+    canContinue: false,
 
     level: null,
     editor: null,
@@ -134,6 +135,10 @@ const SceneManager = {
             );
             Renderer.translate(0, height + 20)
         };
+
+        if (this.canContinue) {
+            Renderer.newUIButton('Next Level', color(80, 250, 80), () => updateLevelNumber((this.level.number + 1) % levels.length));
+        }
         Renderer.pop(this);
     },
 
@@ -152,6 +157,7 @@ const SceneManager = {
 
     runLevel() {
         this.editable = false;
+        this.canContinue = false;
         this.testIndex = 0;
         this.exittingValues = {};
         this.currentSolutions = this.level.tests.map(t => this.editor.pipeline.process(t));
@@ -172,7 +178,10 @@ const SceneManager = {
     },
 
     beginTest() {
-        if (this.level.tests.length <= this.testIndex) return;
+        if (this.level.tests.length <= this.testIndex) {
+            this.canContinue = this.passedTests.reduce((p, v) => p && v);
+            return;
+        }
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
     },
 

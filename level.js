@@ -172,7 +172,7 @@ const levels = [
             Level.makeBall('green', 40),
             Level.makeBall('orange', 30),
             Level.makeBall('purple', 40), // 1
-            Level.makeBall('yellow', 20), // 1
+            Level.makeBall('yellow', 20), // 1, << error if 1 off
             Level.makeBall('red', 40),
             Level.makeBall('blue', 50),
             Level.makeBall('purple', 80), // 1 closed, 2 closed
@@ -192,6 +192,7 @@ const levels = [
             Level.makeBall('yellow', 40), // 1 closed
             Level.makeBall('purple', 30),
             Level.makeBall('green', 50),
+            Level.makeBall('purple', 70) // << error if no 1
         )
         // second take is closed, not first
         .withTest(
@@ -202,9 +203,9 @@ const levels = [
             Level.makeBall('purple', 40), // 1
             Level.makeBall('yellow', 60), // 1, 2
             Level.makeBall('purple', 80), // 1, 2 closed
-            Level.makeBall('yellow', 20), 
-            Level.makeBall('orange', 40),
+            Level.makeBall('yellow', 60), // << error if no 2
+            Level.makeBall('orange', 70),
             Level.makeBall('yellow', 40),
-            Level.makeBall('purple', 30),
-        ),
-]
+            Level.makeBall('purple', 30)
+        )
+].map((l, i) => { l.number = i; return l } );
