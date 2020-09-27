@@ -78,18 +78,14 @@ class Tipe {
             };
             static isBoxTipe = true;
             static streamable = true;
+
             static new(...values) {
-                let inner = values.slice(0, size).map(v => tipe.new(v));
-                return new TipedValue(ArrayTipe, { value: inner });
+                return new TipedValue(ArrayTipe, { value: values.slice(0, size).map(v => tipe.new(v)) });
             }
 
-            static drawShadow() {
-                TextTipe.draw(ArrayTipe.name, Layers.Shadow);
-            }
+            static drawShadow() { TextTipe.draw(ArrayTipe.name, Layers.Shadow); }
 
-            static draw() {
-                TextTipe.draw(ArrayTipe.name);
-            }
+            static draw() { TextTipe.draw(ArrayTipe.name); }
         }
     }
 
@@ -112,7 +108,8 @@ class Tipe {
                 }
             };
             static basic = true;
-            static new(func) { return new TipedValue(FunctionTipe, { value: func })}
+
+            static new(func) { return new TipedValue(FunctionTipe, { value: func }); }
 
             static drawShadow() {
                 TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
@@ -138,13 +135,9 @@ class BooleanTipe extends Tipe {
         return new TipedValue(BooleanTipe, { value: value });
     }
 
-    static drawShadow() {
-        TextTipe.draw('True/False', Layers.Shadow);
-    }
+    static drawShadow() { TextTipe.draw('True/False', Layers.Shadow); }
 
-    static draw(tipedBool) {
-        TextTipe.draw(tipedBool.value ? 'True' : 'False');
-    }
+    static draw(tipedBool) { TextTipe.draw(tipedBool.value ? 'True' : 'False'); }
 
     static shapeOutline(yOffset) {
         const halfWidth = Tipe.shapeHalfWidth * 0.8 + yOffset/2;
@@ -188,6 +181,7 @@ class NumberTipe extends Tipe {
         if (typeof(value) !== typeof(0)) throw new Error('bad value: ' + value);
         return new TipedValue(NumberTipe, { value: value });
     }
+
     static shadowTextWidth = null;
     static shadowText = '#';
 
@@ -216,6 +210,7 @@ class TextTipe extends Tipe {
     static name = 'Text';
     static variableName = 'text';
     static basic = true;
+
     static methods = {
         length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
         firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
@@ -225,6 +220,7 @@ class TextTipe extends Tipe {
         if (typeof(value) !== typeof('')) throw new Error('bad value: ' + value);
         return new TipedValue(TextTipe, { value: value });
     }
+
     static shadowTextWidth = null;
     static shadowText = 'text';
 
