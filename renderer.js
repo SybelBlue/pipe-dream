@@ -24,7 +24,7 @@ const Renderer = {
     textBoundMemoized: {},
 
     // defined after Renderer.Node is defined at the end of the class
-    // stackTop: Renderer.Node.Head.clone(),
+    // stackTop: Renderer.Node.Head,
 
     get yTranslation() { return Renderer.stackTop.y; },
 
@@ -95,7 +95,7 @@ const Renderer = {
     clearStack() { 
         if (!exists(Renderer.stackTop) || Renderer.stackTop.key !== Renderer.Node.Head.key) {
             console.warn('cleared while non-empty render stack');
-            Renderer.stackTop = Renderer.Node.Head.clone();
+            Renderer.stackTop = Renderer.Node.Head;
         }
     },
 
@@ -112,8 +112,6 @@ const Renderer = {
         const key = Renderer._keyCount++;
 
         Renderer.stackTop = new Renderer.Node(key, Renderer.stackTop, source);
-
-        // return function () { Renderer.pop(key); } // make pop take key?
     },
 
     pop(source) {
@@ -223,24 +221,21 @@ Renderer.Node = class {
         this.x = previous ? previous.x : 0;
         this.y = previous ? previous.y : 0;
     }
-    clone() {
-        return new Renderer.Node(this.key, this.previous, this.source);
-    }
 }
 
-Renderer.stackTop = Renderer.Node.Head.clone();
+Renderer.stackTop = Renderer.Node.Head;
 
 Renderer.Region = class {
     hovering = false;
     clicked = false;
 
     constructor(layer, x, y, width, height, blocking) {
-        exists(this.layer = layer, true);
-        exists(this.x = x, true);
-        exists(this.y = y, true);
-        exists(this.width = width, true);
-        exists(this.height = height, true);
-        exists(this.blocking = blocking, true);
+        this.layer = layer;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.blocking = blocking;
     }
 
     test(x, y) {
