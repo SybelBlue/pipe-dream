@@ -2,8 +2,8 @@ class Tipe {
     static get maxDrawWidth() { return Pipe.innerWidth - 10; }
 
     static shapeIndent = 16;
-    static get shapeMidline() { return Tipe.shapeIndent / 2; }
-    static get shapeHalfWidth() { return Tipe.shapeMidline * 0.8; }
+    static shapeMidline = Tipe.shapeIndent / 2;
+    static shapeHalfWidth = Tipe.shapeMidline * 0.8;
     static shapeHeight = 8;
 
     static name = 'top';
@@ -229,12 +229,12 @@ class TextTipe extends Tipe {
     static shadowText = 'text';
 
     static drawShadow() {
-        TextTipe.draw(this.shadowText, Layers.Shadow);
+        TextTipe.draw(TextTipe.shadowText, Layers.Shadow);
     }
 
     static draw(str, layer=Layers.Data) {
         if (str.length > 10) {
-            str = str.substring(0, 7) + '...';
+            str = str.substring(0, 9) + '…';
         }
         Renderer.newRenderable(layer, () => {
             textSize(20);
