@@ -26,7 +26,8 @@ class TipeMethod {
 
     run(tipedValue) {
         if (tipedValue.tipe.name !== this.inTipe.name) {
-            throw new Error('mismatched in tipes!', tipedValue, this);
+            console.warn(tipedValue, this);
+            throw new Error('mismatched in tipes!');
         }
         const out = this.compute(tipedValue);
         if (out.tipe.name !== this.outTipe.name) {

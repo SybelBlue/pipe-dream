@@ -1,13 +1,15 @@
-const TipeLit = {
+const Tipe = {
     get maxDrawWidth() { return Pipe.innerWidth - 10; },
 
     shapeIndent: 16,
-    shapeMidline: Tipe.shapeIndent / 2,
-    shapeHalfWidth: Tipe.shapeMidline * 0.8,
+    get shapeMidline() { return this.shapeIndent / 2; },
+    get shapeHalfWidth() { return this.shapeMidline * 0.8; },
     shapeHeight: 8,
 
     name: 'top',
-    methods: {},
+    get methods() {
+        return {};
+    },
     get color() { return color('#3cdbd3') },
     new() { throw new Error('TopTipe cannot be instantiated') },
     // provide middle top
@@ -35,99 +37,113 @@ const TipeLit = {
 
     equals(other) {
         return exists(other) && other.name === this.name;
-    },
-
-    // equivalent to a haskell List
-    // static Stream(tipe) {
-    //     return class StreamTipe extends Tipe {
-    //         static name = `Stream(${tipe.name})`;
-    //         static innerTipe = tipe;
-    //         static basic = true;
-    //         static isStream = true;
-    //         static streamable = true;
-    //         static new(...values) { return new TipedValue(StreamTipe, { value: values }); }
-    //     }
-    // }
-
-    // // equivalent to haskell Maybe tipe
-    // static Boxed(tipe) {
-    //     return class BoxedTipe extends Tipe {
-    //         static name = `Box(${tipe.name})`;
-    //         static innerTipe = tipe;
-    //         static basic = true;
-    //         static isStreamTipe = true;
-    //         static streamable = true;
-    //         static methods = {
-    //             isEmpty: new TipeMethod('isEmpty', BoxedTipe, BooleanTipe, self => Boolean(self.value)),
-    //             // unwrapOr: needs constructors
-    //             // unwrap: needs errors
-    //         };
-    //         static new(value) { return new TipedValue(BoxedTipe, { value: value }); }
-    //     }
-    // }
-
-    // // equivalent to a statically sized Rust array
-    // static Array(tipe, size) {
-    //     return class ArrayTipe extends Tipe {
-    //         static name = `[${size}x${tipe.name}]`
-    //         static innerTipe = tipe;
-    //         static basic = true;
-    //         static size = size;
-    //         static methods = {
-    //             size: new TipeMethod('size', ArrayTipe, NumberTipe, () => size)
-    //         };
-    //         static isBoxTipe = true;
-    //         static streamable = true;
-
-    //         static new(...values) {
-    //             return new TipedValue(ArrayTipe, { value: values.slice(0, size).map(v => tipe.new(v)) });
-    //         }
-
-    //         static drawShadow() { TextTipe.draw(ArrayTipe.name, Layers.Shadow); }
-
-    //         static draw() { TextTipe.draw(ArrayTipe.name); }
-    //     }
-    // }
-
-    // static Function(inTipe, outTipe, inputBoxConstructor, args=null) {
-    //     return class FunctionTipe extends Tipe {
-    //         static name = `Function(${inTipe.name}) -> ${outTipe.name}`;
-    //         static inTipe = inTipe;
-    //         static outTipe = outTipe;
-    //         static isFunctionTipe = true;
-    //         static get methods() {
-    //             const box = new inputBoxConstructor(args);
-    //             return { 
-    //                 getInput: new UIMethod(
-    //                     'getInput',
-    //                     FunctionTipe,
-    //                     outTipe,
-    //                     box,
-    //                     self => self.value(box.value)
-    //                 )
-    //             }
-    //         };
-    //         static basic = true;
-
-    //         static new(func) { return new TipedValue(FunctionTipe, { value: func }); }
-
-    //         static drawShadow() {
-    //             TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
-    //         }
-    //         static draw() {
-    //             TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`);
-    //         }
-    //     }
-    // }
+    }
 }
 
-const BooleanLit = extendLiteral(TipeLit, {
+// equivalent to a haskell List
+Tipe.Stream = function(tipe) {
+    return extendLiteral(Tipe, {
+        name: `Stream(${tipe.name})`,
+        innerTipe: tipe,
+        basic: true,
+        isStream: true,
+        streamable: true,
+        new(...values) { return new TipedValue(this, { value: values }); }
+    });
+}
+
+// equivalent to haskell Maybe tipe
+Tipe.Boxed = function(tipe) {
+    return extendLiteral(Tipe, {
+        name: `Box(${tipe.name})`,
+        innerTipe: tipe,
+        basic: true,
+        isStreamTipe: true,
+        streamable: true,
+        get methods() {
+            const bxTipe = this;
+            return {
+                isEmpty: new TipeMethod('isEmpty', bxTipe, BooleanTipe, self => Boolean(self.value)),
+                // unwrapOr: needs constructors
+                // unwrap: needs errors
+            }
+        },
+        new(value) { return new TipedValue(this, { value: value }); }
+    });
+}
+
+
+
+Tipe.Function = function(inTipe, outTipe, inputBoxConstructor, args=null) {
+    return extendLiteral(Tipe, {
+        name: `Function(${inTipe.name}) -> ${outTipe.name}`,
+        inTipe: inTipe,
+        outTipe: outTipe,
+        isFunctionTipe: true,
+        basic: true,
+        get methods() {
+            const box = new inputBoxConstructor(args);
+            const fnTipe = this;
+            return { 
+                getInput: new UIMethod(
+                    'getInput',
+                    fnTipe,
+                    outTipe,
+                    box,
+                    self => self.value(box.value)
+                )
+            }
+        },
+
+        new(func) { return new TipedValue(this, { value: func }); },
+
+        drawShadow() {
+            TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`, Layers.Shadow);
+        },
+
+        draw() {
+            TextTipe.draw(`${inTipe.variableName}→${outTipe.variableName}`);
+        }
+    });
+}
+
+
+
+// equivalent to a statically sized Rust array
+Tipe.Array = function(tipe, size) {
+    return extendLiteral(Tipe, {
+        name: `[${size}x${tipe.name}]`,
+        innerTipe: tipe,
+        basic: true,
+        size: size,
+        isBoxTipe: true,
+        streamable: true,
+        get methods() {
+            const arrTipe = this;
+            return {
+                size: new TipeMethod('size', arrTipe, NumberTipe, () => size)
+            };
+        },
+        
+        new(...values) {
+            return new TipedValue(this, { value: values.slice(0, size).map(v => tipe.new(v)) });
+        },
+
+        drawShadow() { TextTipe.draw(this.name, Layers.Shadow); },
+
+        draw() { TextTipe.draw(this.name); }
+    });
+}
+
+const BooleanTipe = extendLiteral(Tipe, {
     name: 'Boolean',
     variableName: 'bool',
     basic: true,
     isBooleanTipe: true,
-    methods: {
-        negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, self => !self.value),
+    get methods() {
+        return {
+           negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, self => !self.value),
+        }
     },
 
     new(value=false) { 
@@ -145,7 +161,7 @@ const BooleanLit = extendLiteral(TipeLit, {
     }
 });
 
-const NumberLit = extendLiteral(TipeLit, {
+const NumberTipe = extendLiteral(Tipe, {
     name: 'Number',
     variableName: 'num',
     basic: true,
@@ -156,24 +172,24 @@ const NumberLit = extendLiteral(TipeLit, {
 
     get methods() {
         return {
-            absoluteValue: new TipeMethod('absoluteValue', this, this, self => abs(self.value)),
-            plusOne: new TipeMethod('plusOne', this, this, self => self.value + 1),
+            absoluteValue: new TipeMethod('absoluteValue', NumberTipe, NumberTipe, self => abs(self.value)),
+            plusOne: new TipeMethod('plusOne', NumberTipe, NumberTipe, self => self.value + 1),
             isPositive: new TipeMethod(
                 'isPositive', 
-                this, 
+                NumberTipe, 
                 BooleanTipe, 
                 self => self.value > 0),
             greaterThan: new TipeMethod(
                 'greaterThan', 
-                this, 
-                Tipe.Function(this, BooleanTipe, FloatBox, { defaultText: '0' }),
+                NumberTipe, 
+                Tipe.Function(NumberTipe, BooleanTipe, FloatBox, { defaultText: '0' }),
                 function(self) { 
                     return (nVal) => BooleanTipe.new(self.value > nVal)
                 }
             ),
             ballWithColor: new TipeMethod(
                 'ballWithColor', 
-                this, 
+                NumberTipe, 
                 Tipe.Function(ColorTipe, BallTipe, ColorPicker),
                 function(self) { 
                     return (colorName) => BallTipe.new({ size: self.value, color: colorName })
@@ -183,7 +199,7 @@ const NumberLit = extendLiteral(TipeLit, {
     },
     new(value=0) {
         if (typeof(value) !== typeof(0)) throw new Error('bad value: ' + value);
-        return new TipedValue(this, { value: value });
+        return new TipedValue(NumberTipe, { value: value });
     },
 
     drawShadow() {
@@ -204,151 +220,153 @@ const NumberLit = extendLiteral(TipeLit, {
     }
 });
 
-// class TextTipe extends Tipe {
-//     static name = 'Text';
-//     static variableName = 'text';
-//     static basic = true;
+const TextTipe = extendLiteral(Tipe, {
+    name: 'Text',
+    variableName: 'text',
+    basic: true,
+    get methods() {
+        return {
+            length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
+            firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
+            firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
+        }
+    },
+    get shadowTextWidth() { return Renderer.textWidth(this.shadowText, 20) },
+    shadowText: 'text',
 
-//     static methods = {
-//         length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
-//         firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
-//         firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
-//     };
-//     static new(value='') { 
-//         if (typeof(value) !== typeof('')) throw new Error('bad value: ' + value);
-//         return new TipedValue(TextTipe, { value: value });
-//     }
+    new(value='') { 
+        if (typeof(value) !== typeof('')) throw new Error('bad value: ' + value);
+        return new TipedValue(TextTipe, { value: value });
+    },
 
-//     static shadowTextWidth = null;
-//     static shadowText = 'text';
+    drawShadow() { this.draw(this.shadowText, Layers.Shadow); },
 
-//     static drawShadow() {
-//         TextTipe.draw(TextTipe.shadowText, Layers.Shadow);
-//     }
+    draw(str, layer=Layers.Data) {
+        if (str.length > 10) {
+            str = str.substring(0, 9) + '…';
+        }
+        Renderer.newRenderable(layer, () => {
+            textSize(20);
+            fill(30, 30, 30)
+            text('' + str, str == this.shadowText ? -this.shadowTextWidth/2 : -textWidth(str)/2, textAscent() * 0.7);
+        });
+    }
+});
 
-//     static draw(str, layer=Layers.Data) {
-//         if (str.length > 10) {
-//             str = str.substring(0, 9) + '…';
-//         }
-//         Renderer.newRenderable(layer, () => {
-//             textSize(20);
-//             if (!TextTipe.shadowTextWidth) {
-//                 TextTipe.shadowTextWidth = textWidth(TextTipe.shadowText);
-//             }
-//             fill(30, 30, 30)
-//             text('' + str, str == TextTipe.shadowText ? -TextTipe.shadowTextWidth/2 : -textWidth(str)/2, textAscent() * 0.7);
-//         });
-//     }
-// }
+const ColorTipe = extendLiteral(Tipe, {
+    name: 'Color',
+    variableName: 'color',
+    get variants() { 
+        return {
+            red: new TipedValue(ColorTipe, { name: 'red', hexString: '#C1301C' }),
+            orange: new TipedValue(ColorTipe, { name: 'orange', hexString: '#C96112' }),
+            yellow: new TipedValue(ColorTipe, { name: 'yellow', hexString: '#C4A705' }),
+            green: new TipedValue(ColorTipe, { name: 'green', hexString: '#177245' }),
+            blue: new TipedValue(ColorTipe, { name: 'blue', hexString: '#0E2753' }),
+            purple: new TipedValue(ColorTipe, { name: 'purple', hexString: '#4B2882' }),
+        };
+    },
+    get methods() {
+        return {
+            name: new TipeProperty('name', ColorTipe, TextTipe),
+            hexString: new TipeProperty('hexString', ColorTipe, TextTipe),
+            ballWithSize: new TipeMethod(
+                'ballWithSize', 
+                ColorTipe, 
+                Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
+                function(self) { 
+                    return (nVal) => BallTipe.new({ size: nVal, color: self })
+                }
+            ),
+            isOneOf: new TipeMethod(
+                'isOneOf', 
+                ColorTipe, 
+                Tipe.Function(ColorTipe, BooleanTipe, ColorPicker, true),
+                function(self) { 
+                    return (selectedColors) => BooleanTipe.new(selectedColors[self.name.value])
+                }
+            ),
+        }
+    },
+    
+    new(variant='blue') {
+        if (typeof(variant) !== typeof('')) throw new Error('bad variant: ' + variant);
+        return ColorTipe.variants[variant];
+    },
+    
+    asP5Color(c) { return color(c.hexString.value); },
 
-// class ColorTipe extends Tipe {
-//     static name = 'Color';
-//     static variableName = 'color';
-//     static get variants() { 
-//         return {
-//             red: new TipedValue(ColorTipe, { name: 'red', hexString: '#C1301C' }),
-//             orange: new TipedValue(ColorTipe, { name: 'orange', hexString: '#C96112' }),
-//             yellow: new TipedValue(ColorTipe, { name: 'yellow', hexString: '#C4A705' }),
-//             green: new TipedValue(ColorTipe, { name: 'green', hexString: '#177245' }),
-//             blue: new TipedValue(ColorTipe, { name: 'blue', hexString: '#0E2753' }),
-//             purple: new TipedValue(ColorTipe, { name: 'purple', hexString: '#4B2882' }),
-//         };
-//     }
-//     static get methods() {
-//         return {
-//             name: new TipeProperty('name', ColorTipe, TextTipe),
-//             hexString: new TipeProperty('hexString', ColorTipe, TextTipe),
-//             ballWithSize: new TipeMethod(
-//                 'ballWithSize', 
-//                 ColorTipe, 
-//                 Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
-//                 function(self) { 
-//                     return (nVal) => BallTipe.new({ size: nVal, color: self })
-//                 }
-//             ),
-//             isOneOf: new TipeMethod(
-//                 'isOneOf', 
-//                 ColorTipe, 
-//                 Tipe.Function(ColorTipe, BooleanTipe, ColorPicker, true),
-//                 function(self) { 
-//                     return (selectedColors) => BooleanTipe.new(selectedColors[self.name.value])
-//                 }
-//             ),
-//         }
-//     }
-//     static new(variant='blue') {
-//         if (typeof(variant) !== typeof('')) throw new Error('bad variant: ' + variant);
-//         return ColorTipe.variants[variant];
-//     }
-//     static asP5Color(c) { return color(c.hexString.value); }
+    drawShadow() { ColorTipe.draw(ColorTipe.new(), Layers.Shadow); },
 
-//     static drawShadow() {
-//         ColorTipe.draw(ColorTipe.new(), Layers.Shadow);
-//     }
+    draw(color, layer=Layers.Data) {
+        Renderer.newRenderable(layer, () => {
+            fill(ColorTipe.asP5Color(color));
+            stroke(10);
+            rect(-Pipe.mainWidth/3, 0, 2 * Pipe.mainWidth/3, Pipe.mainWidth/4);
+        });
+    }
+});
 
-//     static draw(color, layer=Layers.Data) {
-//         Renderer.newRenderable(layer, () => {
-//             fill(ColorTipe.asP5Color(color));
-//             stroke(10);
-//             rect(-Pipe.mainWidth/3, 0, 2 * Pipe.mainWidth/3, Pipe.mainWidth/4);
-//         });
-//     }
-// }
+const IDCardTipe = extendLiteral(Tipe, {
+    name: 'IDCard',
+    variableName: 'id',
+    get methods() {
+        return {
+            name: new TipeProperty('name', IDCardTipe, TextTipe),
+            age: new TipeProperty('age', IDCardTipe, NumberTipe),
+            eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
+        }
+    },
 
-// class IDCardTipe extends Tipe {
-//     static name = 'IDCard';
-//     static variableName = 'id';
-//     static methods = {
-//         name: new TipeProperty('name', IDCardTipe, TextTipe),
-//         age: new TipeProperty('age', IDCardTipe, NumberTipe),
-//         eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
-//     }
-//     static new(defaults={}) { return new TipedValue(IDCardTipe, defaults); }
-// }
+    new(defaults={}) { return new TipedValue(IDCardTipe, defaults); }
+});
 
-// class BallTipe extends Tipe {
-//     static name = 'Ball';
-//     static variableName = 'ball';
-//     static methods = {
-//         size: new TipeProperty('size', BallTipe, NumberTipe),
-//         color: new TipeProperty('color', BallTipe, ColorTipe),
-//         withColor: new TipeMethod(
-//             'withColor', 
-//             BallTipe, 
-//             Tipe.Function(ColorTipe, BallTipe, ColorPicker),
-//             function(self) { 
-//                 return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
-//             }
-//         ),
-//         withSize: new TipeMethod(
-//             'withSize', 
-//             BallTipe, 
-//             Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
-//             function(self) { 
-//                 return (nVal) => BallTipe.new({ size: nVal, color: self.color.name.value })
-//             }
-//         ),
-//     }
-//     static new(defaults={ size: 50, color: 'blue' }) { 
-//         defaults.size = exists(defaults.size) ? (1 > defaults.size ? 1 : defaults.size) : 50;
-//         return new TipedValue(BallTipe, defaults);
-//     }
+const BallTipe = extendLiteral(Tipe, {
+    name: 'Ball',
+    variableName: 'ball',
+    get methods() {
+        return {
+            size: new TipeProperty('size', BallTipe, NumberTipe),
+            color: new TipeProperty('color', BallTipe, ColorTipe),
+            withColor: new TipeMethod(
+                'withColor', 
+                BallTipe, 
+                Tipe.Function(ColorTipe, BallTipe, ColorPicker),
+                function(self) { 
+                    return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
+                }
+            ),
+            withSize: new TipeMethod(
+                'withSize', 
+                BallTipe, 
+                Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
+                function(self) { 
+                    return (nVal) => BallTipe.new({ size: nVal, color: self.color.name.value })
+                }
+            ),
+        }
+    },
 
-//     // expects top center
-//     static drawShadow() {
-//         Renderer.newRenderable(Layers.Shadow, function() {
-//             const radius = Machine.width / 4;
-//             const deviation = PI * 0.15;
-//             fill(150);
-//             arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
-//         });
-//     }
+    new(defaults={ size: 50, color: 'blue' }) { 
+        defaults.size = exists(defaults.size) ? (1 > defaults.size ? 1 : defaults.size) : 50;
+        return new TipedValue(BallTipe, defaults);
+    },
 
-//     static draw(ball, layer=Layers.Data) {
-//         Renderer.newRenderable(layer, () => {
-//             stroke(66);
-//             fill(ColorTipe.asP5Color(ball.color));
-//             circle(0, ball.size.value * Tipe.maxDrawWidth / 200, ball.size.value * Tipe.maxDrawWidth / 100);
-//         });
-//     }
-// }
+    // expects top center
+    drawShadow() {
+        Renderer.newRenderable(Layers.Shadow, function() {
+            const radius = Machine.width / 4;
+            const deviation = PI * 0.15;
+            fill(150);
+            arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
+        });
+    },
+
+    draw(ball, layer=Layers.Data) {
+        Renderer.newRenderable(layer, () => {
+            stroke(66);
+            fill(ColorTipe.asP5Color(ball.color));
+            circle(0, ball.size.value * Tipe.maxDrawWidth / 200, ball.size.value * Tipe.maxDrawWidth / 100);
+        });
+    }
+});
