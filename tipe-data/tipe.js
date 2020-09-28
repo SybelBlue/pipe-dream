@@ -99,10 +99,10 @@ class Tipe {
                 const box = new inputBoxConstructor(args);
                 return { 
                     getInput: new UIMethod(
-                        'getInput', 
-                        FunctionTipe, 
-                        outTipe, 
-                        box, 
+                        'getInput',
+                        FunctionTipe,
+                        outTipe,
+                        box,
                         self => self.value(box.value)
                     )
                 }
@@ -293,7 +293,7 @@ class ColorTipe extends Tipe {
             fill(ColorTipe.asP5Color(color));
             stroke(10);
             rect(-Pipe.mainWidth/3, 0, 2 * Pipe.mainWidth/3, Pipe.mainWidth/4);
-        })
+        });
     }
 }
 

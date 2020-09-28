@@ -46,3 +46,18 @@ function updateQueryStringParameter(key, value) {
 // reloads site!
 function updateLevelNumber(value) { updateQueryStringParameter('l', value); }
 function updatePromptDisplay(value) { updateQueryStringParameter('p', value); }
+
+function extendLiteral(obj, overrides)  {
+    const out = Object.create(
+        Object.getPrototypeOf(obj), 
+        Object.getOwnPropertyDescriptors(obj) 
+    );
+
+    const props = Object.keys(overrides);
+    for (const prop of props) {
+        const descriptor = Object.getOwnPropertyDescriptor(overrides, prop);
+        Object.defineProperty(out, prop, descriptor);
+    }
+    
+    return out;
+}
