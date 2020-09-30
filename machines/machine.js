@@ -133,7 +133,7 @@ class Machine {
         const lineHeight = Renderer.textHeight(24);
         const textBodyHeight = (lineHeight + lineGap) * lines.length - lineGap;
         
-        Renderer.newRenderable(Layers.Debug, () => {
+        Renderer.newRenderable(Layers.UI, () => {
             fill(0);
             stroke(0);
             textSize(24);

@@ -87,7 +87,6 @@ const SceneManager = {
         }
         Renderer.translate(0, Renderer.textHeight(36) + 5);
 
-        // draw machine explanations
         const width = windowWidth - 20;
         Renderer.translate(10, 30);
         for (const machine of SceneManager.level.machines) {
