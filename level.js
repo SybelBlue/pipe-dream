@@ -208,4 +208,6 @@ const levels = [
             Level.makeBall('yellow', 40),
             Level.makeBall('purple', 30)
         )
-].map((l, i) => { l.number = i; return l } );
+];
+
+levels.forEach((l, i) => l.number = i);
