@@ -122,7 +122,7 @@ class Machine {
     }
 
     drawDescription(width) {
-        const dummyWidth = this.width + 10;
+        const dummyWidth = Machine.width + 10;
         const textWidth = width - dummyWidth;
         if (textWidth < 0) return;
 

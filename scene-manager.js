@@ -68,27 +68,32 @@ const SceneManager = {
             stroke(0);
             fill(220);
             rect(15, 15, windowWidth - 30, windowHeight - 30, 15);
-
-            fill(0);
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                textSize(36);
-                text(line, 25, (i + 1) * (Renderer.textHeight(36) + 5) + 25 - 5);
-            }
         });
 
         Renderer.temporary(this, windowWidth - 95, windowHeight - 45,
             () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.prompt = false));
 
-        // draw machine explanations
-        const start = lines.length * (Renderer.textHeight(36) + 5) - 5 + 20;
-        const width = windowWidth - 20;
         Renderer.push(this);
-        Renderer.translate(10, start);
-        SceneManager.level.machines.forEach(machine => {
+        Renderer.translate(25, 0);
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            Renderer.translate(0, Renderer.textHeight(36) + 5);
+            Renderer.newRenderable(Layers.UI, () => {
+                stroke(0);
+                fill(0);
+                textSize(36);
+                text(line, 0, Renderer.textHeight(36) * 0.8);
+            });
+        }
+        Renderer.translate(0, Renderer.textHeight(36) + 5);
+
+        // draw machine explanations
+        const width = windowWidth - 20;
+        Renderer.translate(10, 30);
+        for (const machine of SceneManager.level.machines) {
             const h = machine.drawDescription(width);
-            Renderer.translate(0, h + 5);
-        });
+            Renderer.translate(0, h + 10);
+        }
         Renderer.pop(this);
     },
 
