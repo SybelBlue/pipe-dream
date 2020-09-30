@@ -139,7 +139,7 @@ class Machine {
             textSize(24);
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                text(line, dummyWidth, i * (lineHeight + lineGap));
+                text(line, dummyWidth, i * (lineHeight + lineGap) + lineHeight * 0.8);
             }
         });
 
