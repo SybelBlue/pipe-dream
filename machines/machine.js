@@ -10,6 +10,8 @@ class Machine {
         ];
     }
 
+    static get dummy() { return new this(-1, Tipe); }
+
     static width = Pipe.mainWidth + 2 * Editor.pipeIndent;
     static bodyIndent = Editor.pipeIndent;
     static bodyHeight = 50;
@@ -29,6 +31,7 @@ class Machine {
 
     get properOutputTipe() { return Tipe.Stream(this.outputTipe); }
 
+    description = "A simple machine, \n with simple uses.";
     textSize = 26;
     resilient = true;
     exclaimFrames = 0;
@@ -47,14 +50,14 @@ class Machine {
         this._inTipe = inTipe;
         this.color = bodyColor;
         this.text = text;
-        this.dummy = key < 0;
+        this.isDummy = key < 0;
     }
 
     draw() {
         Renderer.newRenderable(Layers.Machine, 
             (regions) => {
                 if (SceneManager.editable && regions.body.clicked) {
-                    if (regions.deleteButton.hovering && !this.dummy) {
+                    if (regions.deleteButton.hovering && !this.isDummy) {
                         editor.removeMachine(this.key);
                         SceneManager.tray.loadMachineOptions();
                     } else {
@@ -70,7 +73,7 @@ class Machine {
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
                 
-                if (!this.finished && !this.dummy) {
+                if (!this.finished && !this.isDummy) {
                     stroke(200, 5, 5);
                     const y = 20 + Renderer.textHeight(this.textSize) * 0.8;
                     line(10, y, Renderer.textWidth(this.text, this.textSize) + 10, y);
@@ -92,7 +95,7 @@ class Machine {
                     text('!', -30, 25 + 15);
                 }
 
-                if (SceneManager.editable && !this.dummy && regions.body.hovering) {
+                if (SceneManager.editable && !this.isDummy && regions.body.hovering) {
                     noStroke();
                     textSize(16)
                     text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
@@ -118,8 +121,30 @@ class Machine {
         );
     }
 
+    drawDescription(width) {
+        const dummyWidth = this.width + 10;
+        const textWidth = width - dummyWidth;
+        if (textWidth < 0) return;
+
+        this.draw();
+
+        const lines = Renderer.textToLines(this.description, 24, textWidth);
+        const lineGap = 5;
+        const lineHeight = Renderer.textHeight(24);
+        const textBodyHeight = (lineHeight + lineGap) * lines.length - lineGap;
+        
+        Renderer.newRenderable(Layers.UI, () => {
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                text(line, dummyWidth, i * (lineHeight + lineGap));
+            }
+        });
+
+        return max(textBodyHeight, this.height);
+    }
+
     onClick() {
-        if (this.dummy) {
+        if (this.isDummy) {
             editor.pushMachine(this.constructor);
         }
     }

@@ -29,7 +29,7 @@ class FilterMachine extends StackedMachine {
         Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
         Renderer.newRenderable(Layers.Machine, () => {
             noStroke();
-            fill(this.dummy ? Tray.backgroundColor : Editor.backgroundColor);
+            fill(this.isDummy ? Tray.backgroundColor : Editor.backgroundColor);
             BooleanTipe.shapeOutline(0)
         });
         Renderer.pop(this);

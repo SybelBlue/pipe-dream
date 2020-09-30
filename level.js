@@ -63,7 +63,7 @@ const levels = [
             Level.makeBall('red', 50),
         ),
     new Level(BallTipe, NumberTipe, test => test.map(x => x.size))
-        .withMachines(() => [new MapMachine(-1, Tipe)])
+        .withMachines(() => [MapMachine.dummy])
         .withPrompt('Use the map machine to turn each ball into its size!')
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
         .withTest(
@@ -87,7 +87,7 @@ const levels = [
             Level.makeBall('red', 50),
         ),
     new Level(BallTipe, BallTipe, test => test.filter(x => x.color === 'blue'))
-        .withMachines(() => [new FilterMachine(-1, Tipe)])
+        .withMachines(() => [FilterMachine.dummy])
         .withPrompt('Use the filter machine to only allow blue balls through the pipe!')
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
         .withTest()
@@ -112,7 +112,7 @@ const levels = [
             Level.makeBall('red', 50),
         ),
     new Level(BallTipe, NumberTipe, test => test.filter(x => ['red', 'green'].includes(x.color) && x.size > 50).map(x => x.size))
-       .withMachines(() => [new MapMachine(-1, Tipe), new FilterMachine(-1, Tipe)])
+       .withMachines(() => [MapMachine.dummy, FilterMachine.dummy])
        .withPrompt('Use the machines to create a pipe that only gives the sizes of christmas ornaments! (The ball can be red or green, and has to have a size over 50.)')
        .withTest(
            Level.makeBall('red', 30),
@@ -139,7 +139,7 @@ const levels = [
            Level.makeBall('yellow', 60),
        ),
     new Level(BallTipe, BallTipe, test => test.filter(x => x.color === 'purple').slice(0, 3))
-        .withMachines(() => [new MapMachine(-1, Tipe), new FilterMachine(-1, Tipe), new TakeMachine(-1, Tipe)])
+        .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy])
         .withPrompt('Use the machines to create a pipe that only gives the first three purple balls!')
         .withTest(...[30, 40, 50, 60].map(n => Level.makeBall('purple', n)))
         .withTest(
@@ -162,7 +162,7 @@ const levels = [
             Level.makeBall('purple', 80),
         ),
     new Level(BallTipe, BallTipe, test => test.filter(x => ['yellow', 'purple'].includes(x.color)).slice(0, 5).filter(x => x.size > 50).slice(0, 3))
-        .withMachines(() => [new MapMachine(-1, Tipe), new FilterMachine(-1, Tipe), new TakeMachine(-1, Tipe)])
+        .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy])
         .withPrompt('Create a pipe that gives the first three balls with size greater than 50 from the first 5 yellow or purple balls.')
         .withTest(...[30, 40, 50, 60, 70, 80].map((n, i) => Level.makeBall(i % 2 == 0 ? 'yellow' : 'purple', n)))
         // both takes are closed

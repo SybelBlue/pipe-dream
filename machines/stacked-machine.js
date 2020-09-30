@@ -26,7 +26,7 @@ class StackedMachine extends Machine {
             noStroke();
 
             // clean interior
-            fill(this.dummy ? Tray.backgroundColor : Editor.backgroundColor);
+            fill(this.isDummy ? Tray.backgroundColor : Editor.backgroundColor);
             rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
             // draw arm
@@ -80,7 +80,7 @@ class StackedMachine extends Machine {
 
     onClick() {
         super.onClick();
-        if (!this.dummy) {
+        if (!this.isDummy) {
             SceneManager.tray.loadOptionsFor(this.inTipe, this, -1);
         }
     }
