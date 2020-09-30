@@ -126,14 +126,17 @@ class Machine {
         const textWidth = width - dummyWidth;
         if (textWidth < 0) return;
 
-        this.draw();
+        this.draw(); // layering problem
 
         const lines = Renderer.textToLines(this.description, 24, textWidth);
         const lineGap = 5;
         const lineHeight = Renderer.textHeight(24);
         const textBodyHeight = (lineHeight + lineGap) * lines.length - lineGap;
         
-        Renderer.newRenderable(Layers.UI, () => {
+        Renderer.newRenderable(Layers.Debug, () => {
+            fill(0);
+            stroke(0);
+            textSize(24);
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 text(line, dummyWidth, i * (lineHeight + lineGap));

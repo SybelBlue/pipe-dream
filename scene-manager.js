@@ -82,6 +82,14 @@ const SceneManager = {
 
         // draw machine explanations
         const start = lines.length * (Renderer.textHeight(36) + 5) - 5 + 20;
+        const width = windowWidth - 20;
+        Renderer.push(this);
+        Renderer.translate(10, start);
+        SceneManager.level.machines.forEach(machine => {
+            const h = machine.drawDescription(width);
+            Renderer.translate(0, h + 5);
+        });
+        Renderer.pop(this);
     },
 
     drawTestPreviews() {
