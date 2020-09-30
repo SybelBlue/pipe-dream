@@ -51,10 +51,12 @@ class Machine {
         this.color = bodyColor;
         this.text = text;
         this.isDummy = key < 0;
+
+        this.drawLayer = Layers.Machine;
     }
 
     draw() {
-        Renderer.newRenderable(Layers.Machine, 
+        Renderer.newRenderable(this.drawLayer, 
             (regions) => {
                 if (SceneManager.editable && regions.body.clicked) {
                     if (regions.deleteButton.hovering && !this.isDummy) {
@@ -126,7 +128,10 @@ class Machine {
         const textWidth = width - dummyWidth;
         if (textWidth < 0) return;
 
-        this.draw(); // layering problem
+        const last = this.drawLayer;
+        this.drawLayer = Layers.UI;
+        this.draw();
+        this.drawLayer = last;
 
         const lines = Renderer.textToLines(this.description, 24, textWidth);
         const lineGap = 5;
@@ -139,7 +144,7 @@ class Machine {
             textSize(24);
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                text(line, dummyWidth, i * (lineHeight + lineGap) + lineHeight * 0.8);
+                text(line, dummyWidth, i * (lineHeight + lineGap) + lineHeight);
             }
         });
 

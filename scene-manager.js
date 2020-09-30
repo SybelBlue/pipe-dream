@@ -9,6 +9,8 @@ const SceneManager = {
 
     testIndex: 0,
 
+    get promptBackground() { return color(220) },
+
     get minHeight() {
         return this.runner ? this.runner.height : this.editor.minHeight;
     },
@@ -66,7 +68,7 @@ const SceneManager = {
         if (!exists(lines)) return;
         Renderer.newRenderable(Layers.UI, () => {
             stroke(0);
-            fill(220);
+            fill(this.promptBackground);
             rect(15, 15, windowWidth - 30, windowHeight - 30, 15);
         });
 

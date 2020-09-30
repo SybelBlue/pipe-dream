@@ -43,7 +43,7 @@ class InputBox {
         const width = this.width;
         const height = this.height;
 
-        Renderer.newRenderable(Layers.CodeFragment, 
+        Renderer.newRenderable(Layers.UI, 
             (regions) => {
                 if (interactable && clickThisFrame) {
                     this.selected = regions.body.clicked;

@@ -1,10 +1,12 @@
 class MapMachine extends StackedMachine {
+    description = "A machine that turns one object into another object."
     constructor(key, inTipe) {
         super(key, inTipe, color('#E8E288'), 'map');
     }
 }
 
 class FilterMachine extends StackedMachine {
+    description = "A machine that only allows certain objects through.\nIt requires a Boolean value inside."
     get outputTipe() { return this.inTipe; }
     get finished() { 
         const last = Array.last(this.methodStack);
@@ -27,9 +29,9 @@ class FilterMachine extends StackedMachine {
 
         Renderer.push(this);
         Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
-        Renderer.newRenderable(Layers.Machine, () => {
+        Renderer.newRenderable(this.drawLayer, () => {
             noStroke();
-            fill(this.isDummy ? Tray.backgroundColor : Editor.backgroundColor);
+            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
             BooleanTipe.shapeOutline(0)
         });
         Renderer.pop(this);

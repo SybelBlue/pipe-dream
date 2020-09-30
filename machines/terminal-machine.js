@@ -8,6 +8,8 @@ class TerminalMachine extends Machine {
 class FirstMachine extends TerminalMachine {
     get outputTipe() { return this.inTipe; }
 
+    description = "A machine that finishes the pipe, and returns the first object that enters."
+
     constructor(key, inTipe) {
         super(key, inTipe, color('#3D5A80'), 'first');
     }
@@ -32,7 +34,7 @@ class GreedyMachine extends TerminalMachine {
 
 class CountMachine extends GreedyMachine {
     outputTipe = NumberTipe;
-
+    description = "A machine that finishes the pipe, and returns the number of things that enter."
     get value() { return NumberTipe.new(this.count); }
 
     count = 0;

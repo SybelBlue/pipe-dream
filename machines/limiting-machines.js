@@ -1,6 +1,7 @@
 class TakeMachine extends Machine {
     static inputBoxStart = Machine.bodyHeight;
 
+    description = "A machine that only allows a certain number of things to pass through, then closes the pipe."
     finished = true;
 
     get height() { return this.bodyHeight; }
@@ -40,6 +41,7 @@ class TakeMachine extends Machine {
 class DropMachine extends Machine {
     static inputBoxStart = Machine.bodyHeight;
 
+    description = "A machine that discards the first x objects that pass through it."
     finished = true;
 
     get height() { return this.bodyHeight; }

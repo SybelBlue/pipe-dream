@@ -22,11 +22,11 @@ class StackedMachine extends Machine {
         // draw body
         super.draw();
 
-        Renderer.newRenderable(Layers.Machine, () => {
+        Renderer.newRenderable(this.drawLayer, () => {
             noStroke();
 
             // clean interior
-            fill(this.isDummy ? Tray.backgroundColor : Editor.backgroundColor);
+            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
             rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
             // draw arm
