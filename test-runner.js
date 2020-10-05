@@ -94,6 +94,12 @@ class TestRunner {
             if (!this.test.length || this.pipeline.closed) {
                 if (this.pipeline.terminalMachine && this.pipeline.terminalMachine.isGreedy) {
                     const finalValue = this.pipeline.terminalMachine.value;
+
+                    // if (finalValue instanceof Array) {
+                        
+                    //     return;
+                    // }
+
                     this.output.push(finalValue);
                     SceneManager.valueExitting(finalValue);
                 }

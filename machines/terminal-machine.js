@@ -68,33 +68,36 @@ class CountMachine extends TerminalMachine {
     accept(tipedValue) { this.count++; return null; }
 }
 
-class SortMachine extends TipedStackMachine {
-    description = "A machine that sorts objects based on a numeric property."
-    innerOutputTipe = NumberTipe;
+// broken still, need infrastructure for releasing values in test
+// class SortMachine extends TipedStackMachine {
+//     description = "A machine that sorts objects based on a numeric property."
+//     innerOutputTipe = NumberTipe;
 
-    constructor(key, inTipe) {
-        super(key, inTipe, color('#70877F'), 'sortBy');
-        GreedyMachine.makeGreedy(this);
-    }
+//     get value() { return this.process(stored); }
+
+//     constructor(key, inTipe) {
+//         super(key, inTipe, color('#70877F'), 'sortBy');
+//         GreedyMachine.makeGreedy(this);
+//     }
     
-    apply(tipedValue) { return tipedValue; }
+//     apply(tipedValue) { return tipedValue; }
 
-    process(values) {
-        if (this.finished) {
-            values.sort((a, b) => super.apply(a) - super.apply(b));
-        }
-        return values;
-    }
+//     process(values) {
+//         if (this.finished) {
+//             values.sort((a, b) => super.apply(a) - super.apply(b));
+//         }
+//         return values;
+//     }
 
-    stored = [];
+//     stored = [];
 
-    reset() { this.stored = []; }
+//     reset() { this.stored = []; }
 
-    accept(tipedValue) {
-        this.stored.push(tipedValue);
-        return null;
-    }
-}
+//     accept(tipedValue) {
+//         this.stored.push(tipedValue);
+//         return null;
+//     }
+// }
 
 // class ReduceMachine extends StackedMachine {
 //     get properOutputTipe() { return this.outputTipe; }
