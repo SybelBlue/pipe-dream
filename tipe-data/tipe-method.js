@@ -105,11 +105,10 @@ class TipeProperty extends TipeMethod {
 
 class TipeReduction extends TipeMethod {
     constructor(name, tipe, compute, seed) {
-        super(name, tipe, tipe, compute);
-        this.seed = seed;
+        super(name, tipe, tipe, compute, true);
+        this.tipedSeed = tipe.new(seed);
+        this.compute = (tipedValue, prev=this.tipedSeed) => this.outTipe.new(compute(prev, tipedValue));
     }
-
-    
 }
 
 class UIMethod extends TipeMethod {
