@@ -7,9 +7,8 @@ const Tipe = {
     shapeHeight: 8,
 
     name: 'top',
-    get methods() {
-        return {};
-    },
+    get variableName() { return this.name; },
+    get methods() { return {}; },
     get color() { return color('#3cdbd3') },
     new() { throw new Error('TopTipe cannot be instantiated') },
     // provide middle top
@@ -77,6 +76,7 @@ Tipe.Boxed = function(tipe) {
 Tipe.Function = function(inTipe, outTipe, inputBoxConstructor, args=null) {
     return extendLiteral(Tipe, {
         name: `Function(${inTipe.name}) -> ${outTipe.name}`,
+        variableName: `f(${inTipe.variableName}) -> ${outTipe.variableName}`,
         inTipe: inTipe,
         outTipe: outTipe,
         isFunctionTipe: true,

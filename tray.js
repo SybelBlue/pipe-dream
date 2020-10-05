@@ -18,6 +18,17 @@ class Tray {
         for (const option of this.drawable) {
             option.draw(() => this.optionClicked(option));
             Renderer.translate(0, option.height + 10);
+            if (this.mode.type !== 'fragment') continue;
+            const varName = option.outTipe.variableName;
+            const textHeight = Renderer.textHeight(16);
+            const start = Tray.maxWidth - 2 * Tray.indent - Renderer.textWidth(varName, 16);
+            Renderer.newRenderable(Layers.FragmentShape, () => {
+                textSize(16);
+                fill(255);
+                noStroke();
+                text(varName, start, textHeight * 0.8);
+            });
+            Renderer.translate(0, textHeight + 10);
         }
         Renderer.pop(this);
     }
