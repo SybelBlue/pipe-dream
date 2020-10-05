@@ -103,6 +103,12 @@ class TipeProperty extends TipeMethod {
     }
 }
 
+class TipeReduction extends TipeMethod {
+    constructor(name, tipe, compute) {
+        super(name, tipe, tipe, compute);
+    }
+}
+
 class UIMethod extends TipeMethod {
     get height() {
         return this.inputBox.height + 8;

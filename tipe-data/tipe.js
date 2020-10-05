@@ -9,6 +9,7 @@ const Tipe = {
     name: 'top',
     get variableName() { return this.name; },
     get methods() { return {}; },
+    get reductions() { return {}; },
     get color() { return color('#3cdbd3') },
     new() { throw new Error('TopTipe cannot be instantiated') },
     // provide middle top
@@ -143,6 +144,12 @@ const BooleanTipe = extendLiteral(Tipe, {
     get methods() {
         return {
            negate: new TipeMethod('negate', BooleanTipe, BooleanTipe, self => !self.value),
+        }
+    },
+
+    get reductions() {
+        return {
+            // all: new TipeReduction('all', BooleanTipe, self => )
         }
     },
 

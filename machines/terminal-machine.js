@@ -1,8 +1,31 @@
 class TerminalMachine extends Machine {
-    get properOutputTipe() { return this.outputTipe; }
-    isTerminal = true;
-    finished = true;
-    closedPipeline = false;
+    constructor(key, inTipe, bodyColor, text) {
+        super(key, inTipe, bodyColor, text);
+        TerminalMachine.makeTerminal(this);
+    }
+
+    static makeTerminal(obj) {
+        // get properOutputTipe() { return this.outputTipe; }
+        Object.defineProperty(obj, 'properOutputTipe', {
+            enumerable: true,
+            get() { return this.outputTipe; },
+        });
+        obj.isTerminal = true;
+        obj.finished = true;
+        obj.resilient = true;
+        Object.defineProperty(obj, 'closedPipeline', { value: false });
+    }
+}
+
+class GreedyMachine extends Machine {
+    constructor(key, inTipe, bodyColor, text) {
+        super(key, inTipe, bodyColor, text);
+        GreedyMachine.makeGreedy(this);
+    }
+
+    static makeGreedy(obj) {
+        obj.isGreedy = true;
+    }
 }
 
 class FirstMachine extends TerminalMachine {
@@ -28,7 +51,6 @@ class FirstMachine extends TerminalMachine {
 }
 
 class CountMachine extends TerminalMachine {
-    isGreedy = true;
     outputTipe = NumberTipe;
     description = "A machine that finishes the pipe, and returns the number of things that enter."
     get value() { return NumberTipe.new(this.count); }
@@ -36,6 +58,7 @@ class CountMachine extends TerminalMachine {
     count = 0;
     constructor(key, inTipe) {
         super(key, inTipe, color('#C14953'), 'count');
+        GreedyMachine.makeGreedy(this);
     }
 
     process(values) { return NumberTipe.new(values.length); }
@@ -47,4 +70,25 @@ class CountMachine extends TerminalMachine {
 
 // sortBy machine requires stacked greedy
 
-// reduce machine requires double stacked greedy
+// class ReduceMachine extends StackedMachine {
+//     get properOutputTipe() { return this.outputTipe; }
+//     isTerminal = true;
+//     isGreedy = false;
+//     finished = true;
+//     resilient = true;
+//     closedPipeline = false;
+
+//     isGreedy = true;
+//     resilient = false;
+//     get outputTipe() { return this.inTipe; }
+    
+//     constructor(key, inTipe) {
+//         super(key, inTipe, color('#70566D'), 'reduce');
+//     }
+
+//     process(values) { return NumberTipe.new(values.length); }
+
+//     reset() { this.count = 0; }
+
+//     accept(tipedValue) { this.count++; return null; }
+// }

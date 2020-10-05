@@ -43,12 +43,16 @@ class Pipeline extends Array /* of Machines */ {
         Renderer.pop(this);
     }
 
-    push(...args) {
+    push(machine) {
         if (this.terminalMachine) {
+            if (machine.isTerminal) {
+                this[this.length - 1] = machine;
+                return true;
+            }
             console.warn('aborted push!');
             return false;
         }
-        super.push(...args);
+        super.push(machine);
         return true;
     }
 
