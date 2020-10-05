@@ -10,9 +10,9 @@ class TerminalMachine extends Machine {
             enumerable: true,
             get() { return this.outputTipe; },
         });
-        obj.isTerminal = true;
-        obj.finished = true;
-        obj.resilient = true;
+        Object.defineProperty(obj, 'isTerminal', { value: true })
+        Object.defineProperty(obj, 'finished', { value: false })
+        Object.defineProperty(obj, 'resilient', { value: true })
         Object.defineProperty(obj, 'closedPipeline', { value: false });
     }
 }
@@ -24,7 +24,7 @@ class GreedyMachine extends Machine {
     }
 
     static makeGreedy(obj) {
-        obj.isGreedy = true;
+        Object.defineProperty(obj, 'isGreedy', { value: true })
     }
 }
 
@@ -99,13 +99,15 @@ class CountMachine extends TerminalMachine {
 //     }
 // }
 
-// needs special onclick?
-// class ReduceMachine extends TipedStackMachine {
+// class ScanMachine extends TipedStackMachine {
+//     description = "A machine that feeds ."
+
 //     get innerOutputTipe() { return this.inTipe; }
-//     get properOutputTipe() { return this.outputTipe; }
+
+//     isReduce = true;
 
 //     get outputTipe() { return this.inTipe; }
-    
+
 //     constructor(key, inTipe) {
 //         super(key, inTipe, color('#454372'), 'reduce');
 //         TerminalMachine.makeTerminal(this);
@@ -120,3 +122,27 @@ class CountMachine extends TerminalMachine {
 
 //     accept(tipedValue) { this.count++; return null; }
 // }
+
+class ReduceMachine extends TipedStackMachine {
+    description = "A machine that reduces a stream down to a single value."
+
+    get innerOutputTipe() { return this.inTipe; }
+
+    isReduce = true;
+
+    get outputTipe() { return this.inTipe; }
+
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#454372'), 'reduce');
+        TerminalMachine.makeTerminal(this);
+        GreedyMachine.makeGreedy(this);
+
+        this.resilient = false;
+    }
+
+    process(values) { return NumberTipe.new(values.length); }
+
+    reset() { this.count = 0; }
+
+    accept(tipedValue) { this.count++; return null; }
+}

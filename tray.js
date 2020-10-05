@@ -39,6 +39,7 @@ class Tray {
             type: 'fragment',
             selectedMachine: machine,
             machineIndex: index,
+            reducable: tipe.reductions && machine.isReduce,
         };
 
         for (const key in tipe.methods) {
@@ -51,8 +52,11 @@ class Tray {
     }
 
     loadMachineOptions() {
-        this.drawable = SceneManager.level.machines;
-        this.mode = { type: 'machine' };
+        this.mode = { 
+            type: 'machine', 
+            reducable: Boolean(SceneManager.editor && SceneManager.editor.outputTipe.reductions) 
+        };
+        this.drawable = SceneManager.level.machines.filter(m => !m.isReduce || this.mode.reducable);
     }
 
     optionClicked(option) {

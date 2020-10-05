@@ -9,7 +9,6 @@ const Tipe = {
     name: 'top',
     get variableName() { return this.name; },
     get methods() { return {}; },
-    get reductions() { return {}; },
     get color() { return color('#3cdbd3') },
     new() { throw new Error('TopTipe cannot be instantiated') },
     // provide middle top
@@ -176,6 +175,12 @@ const NumberTipe = extendLiteral(Tipe, {
 
     get shadowTextWidth() { return Renderer.textWidth(this.shadowText, 45, 'Georgia'); },
     shadowText: '#',
+
+    get reductions() {
+        return {
+            // add: new TipeReduction('add', BooleanTipe, self => )
+        }
+    },
 
     get methods() {
         return {
