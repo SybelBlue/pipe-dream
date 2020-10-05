@@ -99,3 +99,33 @@ class StackedMachine extends Machine {
 
     process(values) { return values.map(x => this.apply(x)).filter(x => exists(x, false)); }
 }
+
+class TipedStackMachine extends StackedMachine {
+    get outputTipe() { return this.inTipe; }
+
+    innerOutputTipe = Tipe;
+
+    get finished() { 
+        const last = Array.last(this.methodStack);
+        return (last ? last.outTipe : this.inTipe).equals(this.innerOutputTipe);
+    }
+
+    textSize = 24;
+
+    constructor(key, inTipe, bodyColor, text) {
+        super(key, inTipe, bodyColor, text);
+    }
+
+    draw() {
+        super.draw();
+
+        Renderer.push(this);
+        Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
+        Renderer.newRenderable(this.drawLayer, () => {
+            noStroke();
+            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
+            this.innerOutputTipe.shapeOutline(0)
+        });
+        Renderer.pop(this);
+    }
+}

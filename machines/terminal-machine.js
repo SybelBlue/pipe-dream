@@ -68,7 +68,27 @@ class CountMachine extends TerminalMachine {
     accept(tipedValue) { this.count++; return null; }
 }
 
-// sortBy machine requires stacked greedy
+class SortMachine extends StackedMachine {
+    get outputTipe() { return this.inTipe; }
+    get finished() { 
+        const last = Array.last(this.methodStack);
+        return (last ? last.outTipe : this.inTipe).equals(NumberTipe);
+    }
+
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#70877F'), 'sortBy');
+        GreedyMachine.makeGreedy(this);
+    }
+    
+    apply(tipedValue) { return tipedValue; }
+
+    process(values) { 
+        values.sort(function (a, b) {
+
+        })
+        return values;
+    }
+}
 
 // class ReduceMachine extends StackedMachine {
 //     get properOutputTipe() { return this.outputTipe; }
@@ -83,7 +103,7 @@ class CountMachine extends TerminalMachine {
 //     get outputTipe() { return this.inTipe; }
     
 //     constructor(key, inTipe) {
-//         super(key, inTipe, color('#70566D'), 'reduce');
+//         super(key, inTipe, color('#454372'), 'reduce');
 //     }
 
 //     process(values) { return NumberTipe.new(values.length); }

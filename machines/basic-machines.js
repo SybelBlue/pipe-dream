@@ -5,15 +5,9 @@ class MapMachine extends StackedMachine {
     }
 }
 
-class FilterMachine extends StackedMachine {
+class FilterMachine extends TipedStackMachine {
     description = "A machine that only allows certain objects through.\nIt requires a Boolean value inside."
-    get outputTipe() { return this.inTipe; }
-    get finished() { 
-        const last = Array.last(this.methodStack);
-        return (last ? last.outTipe : this.inTipe).equals(BooleanTipe);
-    }
-
-    textSize = 24;
+    innerOutputTipe = BooleanTipe;
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#7dce82'), 'filter');
@@ -22,18 +16,5 @@ class FilterMachine extends StackedMachine {
     apply(tipedValue) {
         const result = super.apply(tipedValue);
         return result.value ? tipedValue : null;
-    }
-
-    draw() {
-        super.draw();
-
-        Renderer.push(this);
-        Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
-        Renderer.newRenderable(this.drawLayer, () => {
-            noStroke();
-            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
-            BooleanTipe.shapeOutline(0)
-        });
-        Renderer.pop(this);
     }
 }
