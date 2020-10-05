@@ -34,6 +34,7 @@ class Machine {
     description = "A simple machine, \n with simple uses.";
     textSize = 26;
     resilient = true;
+    isGreedy = false;
     exclaimFrames = 0;
 
     get inTipe() { return this._inTipe; }
