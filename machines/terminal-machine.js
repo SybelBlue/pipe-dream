@@ -99,20 +99,19 @@ class CountMachine extends TerminalMachine {
 //     }
 // }
 
-// class ReduceMachine extends StackedMachine {
+// needs special onclick?
+// class ReduceMachine extends TipedStackMachine {
+//     get innerOutputTipe() { return this.inTipe; }
 //     get properOutputTipe() { return this.outputTipe; }
-//     isTerminal = true;
-//     isGreedy = false;
-//     finished = true;
-//     resilient = true;
-//     closedPipeline = false;
 
-//     isGreedy = true;
-//     resilient = false;
 //     get outputTipe() { return this.inTipe; }
     
 //     constructor(key, inTipe) {
 //         super(key, inTipe, color('#454372'), 'reduce');
+//         TerminalMachine.makeTerminal(this);
+//         GreedyMachine.makeGreedy(this);
+
+//         this.resilient = false;
 //     }
 
 //     process(values) { return NumberTipe.new(values.length); }
