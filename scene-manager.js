@@ -30,20 +30,18 @@ const SceneManager = {
             this.tray.draw();
             this.editor.draw();
 
-            if (!this.prompt) {
-                // draw run button
-                const margin = 10;
-                const width = Renderer.textWidth('Run', 24) + 2 * margin;
-                const start = canvas.width - width - margin;
-                Renderer.temporary(this, start, margin, 
-                    () => Renderer.newUIButton('Run', color(80, 250, 80), () => this.runLevel(), margin));
-                
-                // draw prompt button
-                const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
-                const pStart = start - pWidth - margin;
-                Renderer.temporary(this, pStart, margin,
-                    () => Renderer.newUIButton('Prompt', color('#5C9EAD'), () => this.prompt = true));
-            }
+            // draw run button
+            const margin = 10;
+            const width = Renderer.textWidth('Run', 24) + 2 * margin;
+            const start = windowWidth - width - margin;
+            Renderer.temporary(this, start, margin, 
+                () => Renderer.newUIButton('Run', color(80, 250, 80), () => !this.prompt && this.runLevel(), margin));
+            
+            // draw prompt button
+            const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
+            const pStart = start - pWidth - margin;
+            Renderer.temporary(this, pStart, margin,
+                () => Renderer.newUIButton('Prompt', color('#5C9EAD'), () => this.prompt = true));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {
