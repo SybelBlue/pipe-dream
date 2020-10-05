@@ -68,12 +68,9 @@ class CountMachine extends TerminalMachine {
     accept(tipedValue) { this.count++; return null; }
 }
 
-class SortMachine extends StackedMachine {
-    get outputTipe() { return this.inTipe; }
-    get finished() { 
-        const last = Array.last(this.methodStack);
-        return (last ? last.outTipe : this.inTipe).equals(NumberTipe);
-    }
+class SortMachine extends TipedStackMachine {
+    description = "A machine that sorts objects based on a numeric property."
+    innerOutputTipe = NumberTipe;
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#70877F'), 'sortBy');
@@ -82,11 +79,20 @@ class SortMachine extends StackedMachine {
     
     apply(tipedValue) { return tipedValue; }
 
-    process(values) { 
-        values.sort(function (a, b) {
-
-        })
+    process(values) {
+        if (this.finished) {
+            values.sort((a, b) => super.apply(a) - super.apply(b));
+        }
         return values;
+    }
+
+    stored = [];
+
+    reset() { this.stored = []; }
+
+    accept(tipedValue) {
+        this.stored.push(tipedValue);
+        return null;
     }
 }
 

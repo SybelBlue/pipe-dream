@@ -7,6 +7,7 @@ class Machine {
             new FirstMachine(-1, Tipe), 
             new DropMachine(-1, Tipe),
             new CountMachine(-1, Tipe),
+            new SortMachine(-1, Tipe),
         ];
     }
 
