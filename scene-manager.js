@@ -1,4 +1,6 @@
 const SceneManager = {
+    unsafeMode: false,
+
     editable: true,
     canContinue: false,
 
@@ -30,18 +32,19 @@ const SceneManager = {
             this.tray.draw();
             this.editor.draw();
 
+            const canRun = SceneManager.unsafeMode || this.editor.pipeTipeChecks;
             // draw run button
             const margin = 10;
             const width = Renderer.textWidth('Run', 24) + 2 * margin;
             const start = windowWidth - width - margin;
             Renderer.temporary(this, start, margin, 
-                () => Renderer.newUIButton('Run', color(80, 250, 80), () => !this.prompt && this.runLevel(), margin));
+                () => Renderer.newUIButton('Run', color(80, canRun ? 250 : 150, 80), () => canRun && !this.prompt && this.runLevel(), margin));
             
             // draw prompt button
             const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
             const pStart = start - pWidth - margin;
             Renderer.temporary(this, pStart, margin,
-                () => Renderer.newUIButton('Prompt', color('#5C9EAD'), () => this.prompt = true));
+                () => Renderer.newUIButton('Prompt', canRun ? color('#5C9EAD') : color(120, 210, 230), () => this.prompt = true));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {
@@ -123,7 +126,7 @@ const SceneManager = {
         const trayWidth = 200;
         const textHeight = Renderer.textHeight(24);
         const margin = 10;
-        const start = canvas.width - Renderer.textWidth('Stop', 24) - 3 * margin;
+        const start = windowWidth - Renderer.textWidth('Stop', 24) - 3 * margin;
         Renderer.temporary(this, start, margin, 
             () => Renderer.newUIButton('Stop', color(250, 80, 80), () => this.editable = true, margin));
 
