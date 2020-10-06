@@ -34,7 +34,6 @@ class Tray {
     }
 
     loadOptionsFor(tipe={methods:[]}, machine, index) {
-        this.drawable = [];
         this.mode = {
             type: 'fragment',
             selectedMachine: machine,
@@ -42,7 +41,7 @@ class Tray {
             reducable: tipe.reductions && machine.isReduce,
         };
 
-        this.drawable.push(...Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']));
+        this.drawable = Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']);
     }
 
     clearAllOptions() {
