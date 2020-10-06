@@ -9,6 +9,7 @@ class Machine {
             new CountMachine(-1, Tipe),
             // new SortMachine(-1, Tipe),
             new ReduceMachine(-1, Tipe),
+            new ScanMachine(-1, Tipe),
         ];
     }
 

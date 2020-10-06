@@ -148,7 +148,9 @@ const BooleanTipe = extendLiteral(Tipe, {
 
     get reductions() {
         return {
-            all: new TipeReduction('all', BooleanTipe, (prev, curr) => curr.value && prev.value, true)
+            all: new TipeReduction('all', BooleanTipe, (prev, curr) => curr.value && prev.value, true),
+            // needs lazy! (needs to close pipeline after a certain input)
+            // any: new TipeReduction('any', BooleanTipe, (prev, curr) => curr.value || prev.value, true)
         }
     },
 

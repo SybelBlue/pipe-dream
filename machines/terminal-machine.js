@@ -99,29 +99,61 @@ class CountMachine extends TerminalMachine {
 //     }
 // }
 
-// class ScanMachine extends TipedStackMachine {
-//     description = "A machine that accumulates calculation over time."
+class ScanMachine extends TipedStackMachine {
+    description = "A machine that accumulates results and returns the most recent one."
 
-//     get innerOutputTipe() { return this.inTipe; }
+    isReduce = true;
+    get innerOutputTipe() { return this.inTipe; }
+    get finished() { return this.methodStack.length > 0; }
 
-//     isReduce = true;
+    get outputTipe() { return this.inTipe; }
 
-//     get outputTipe() { return this.inTipe; }
+    get reductionFn() {
+        return this.finished && this.methodStack[0];
+    }
 
-//     constructor(key, inTipe) {
-//         super(key, inTipe, color('#454372'), 'reduce');
-//         TerminalMachine.makeTerminal(this);
-//         GreedyMachine.makeGreedy(this);
+    get value() { return this.last; }
 
-//         this.resilient = false;
-//     }
+    _last = null;
+    get last() {
+        this.last = this._last;
+        return this._last;
+    }
+    set last(value) { this._last = value || (this.reductionFn ? this.reductionFn.tipedSeed : null); }
 
-//     process(values) { return NumberTipe.new(values.length); }
+    constructor(key, inTipe) {
+        super(key, inTipe, color('#7572AC'), 'scan');
+        GreedyMachine.makeGreedy(this);
 
-//     reset() { this.count = 0; }
+        this.resilient = false;
+    }
 
-//     accept(tipedValue) { this.count++; return null; }
-// }
+    process(values) { 
+        if (!this.finished || !values.length) return values;
+        return values.reduce(
+            (p, c) => {
+                p.acc.push(p.last = this.reductionFn.run(c, p.last));
+                return p;
+            },
+            { acc: [], last: this.reductionFn.tipedSeed }
+        ).acc;
+    }
+
+    reset() { this.last = null; }
+
+    accept(tipedValue) {
+        if (!this.finished) return tipedValue; 
+        this.last = this.reductionFn.run(tipedValue, this.finished ? this.last : this.reductionFn.tipedSeed);
+
+        return this.last;
+    }
+
+    pushFragment(fragment, _sourceIndex) { 
+        this.methodStack = [fragment];
+        SceneManager.tray.loadMachineOptions();
+        editor.validatePipeline();
+    }
+}
 
 class ReduceMachine extends TipedStackMachine {
     description = "A machine that reduces a stream down to a single value."
@@ -149,7 +181,7 @@ class ReduceMachine extends TipedStackMachine {
         super(key, inTipe, color('#454372'), 'reduce');
         TerminalMachine.makeTerminal(this);
         GreedyMachine.makeGreedy(this);
-        
+
         Object.defineProperty(this, 'finished', {
             enumerable: true,
             configurable: true,
