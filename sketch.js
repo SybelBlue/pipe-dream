@@ -7,6 +7,7 @@ const config = (function() {
     const c  = {
         level: urlParams.get('l') || 1,
         prompt: !urlParams.get('p') || true,
+        unsafe: Boolean(urlParams.get('u')),
     };
     c.level = _min(_max(0, Number.parseInt(c.level)), levels.length - 1);
     c.prompt = !!c.prompt;
@@ -21,6 +22,7 @@ const config = (function() {
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
+    SceneManager.unsafeMode = config.unsafe;
     editor = SceneManager.startLevel(levels[config.level], config.prompt);
 }
 
