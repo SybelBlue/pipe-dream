@@ -42,9 +42,7 @@ class Tray {
             reducable: tipe.reductions && machine.isReduce,
         };
 
-        for (const key in tipe.methods) {
-            this.drawable.push(tipe.methods[key]);
-        }
+        this.drawable.push(...Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']));
     }
 
     clearAllOptions() {
@@ -56,7 +54,7 @@ class Tray {
             type: 'machine', 
             reducable: Boolean(SceneManager.editor && SceneManager.editor.outputTipe.reductions) 
         };
-        this.drawable = SceneManager.level.machines.filter(m => !m.isReduce || this.mode.reducable);
+        this.drawable = SceneManager.level.machines.filter(m => SceneManager.unsafeMode || !m.isReduce || this.mode.reducable);
     }
 
     optionClicked(option) {
