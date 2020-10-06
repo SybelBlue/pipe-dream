@@ -107,7 +107,19 @@ class TipeReduction extends TipeMethod {
     constructor(name, tipe, compute, seed) {
         super(name, tipe, tipe, compute, true);
         this.tipedSeed = tipe.new(seed);
-        this.compute = (tipedValue, prev=this.tipedSeed) => this.outTipe.new(compute(prev, tipedValue));
+        this.compute = (tipedValue, tipedPrev) => this.outTipe.new(compute(tipedPrev, tipedValue));
+    }
+
+    run(tipedValue, tipedPrev=this.tipedSeed) {
+        if (!tipedValue.tipe.equals(this.inTipe) || !tipedPrev.tipe.equals(this.inTipe)) {
+            console.warn(tipedValue, this);
+            throw new Error('mismatched in tipes!');
+        }
+        const out = this.compute(tipedValue, tipedPrev);
+        if (out.tipe.name !== this.outTipe.name) {
+            throw new Error('mismatched out tipes!', out, this);
+        }
+        return out;
     }
 }
 

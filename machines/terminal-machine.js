@@ -100,7 +100,7 @@ class CountMachine extends TerminalMachine {
 // }
 
 // class ScanMachine extends TipedStackMachine {
-//     description = "A machine that feeds ."
+//     description = "A machine that accumulates calculation over time."
 
 //     get innerOutputTipe() { return this.inTipe; }
 
@@ -127,10 +127,18 @@ class ReduceMachine extends TipedStackMachine {
     description = "A machine that reduces a stream down to a single value."
 
     get innerOutputTipe() { return this.inTipe; }
+    get finished() { return this.methodStack.length > 0; }
 
     isReduce = true;
 
     get outputTipe() { return this.inTipe; }
+
+    get reductionFn() {
+        return
+            this.finished ?
+                (p, c) => this.methodStack[0].run(c, p) :
+                (p, _c) => p;
+    }
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#454372'), 'reduce');
@@ -140,9 +148,15 @@ class ReduceMachine extends TipedStackMachine {
         this.resilient = false;
     }
 
-    process(values) { return NumberTipe.new(values.length); }
+    process(values) { return values.reduce(this.reductionFn); }
 
     reset() { this.count = 0; }
 
     accept(tipedValue) { this.count++; return null; }
+
+    pushFragment(fragment, _sourceIndex) { 
+        this.methodStack = [fragment];
+        SceneManager.tray.loadMachineOptions();
+        editor.validatePipeline();
+    }
 }

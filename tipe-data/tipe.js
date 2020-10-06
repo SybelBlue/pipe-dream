@@ -148,7 +148,7 @@ const BooleanTipe = extendLiteral(Tipe, {
 
     get reductions() {
         return {
-            // all: new TipeReduction('all', BooleanTipe, self => )
+            all: new TipeReduction('all', BooleanTipe, (prev, curr) => curr.value && prev.value, true)
         }
     },
 
@@ -341,16 +341,16 @@ const BallTipe = extendLiteral(Tipe, {
         return {
             size: new TipeProperty('size', BallTipe, NumberTipe),
             color: new TipeProperty('color', BallTipe, ColorTipe),
-            withColor: new TipeMethod(
-                'withColor', 
+            changeColor: new TipeMethod(
+                'changeColor', 
                 BallTipe, 
                 Tipe.Function(ColorTipe, BallTipe, ColorPicker),
                 function(self) { 
                     return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
                 }
             ),
-            withSize: new TipeMethod(
-                'withSize', 
+            changeSize: new TipeMethod(
+                'changeSize', 
                 BallTipe, 
                 Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
                 function(self) { 
