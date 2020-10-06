@@ -5,15 +5,15 @@ class TerminalMachine extends Machine {
     }
 
     static makeTerminal(obj) {
-        // get properOutputTipe() { return this.outputTipe; }
         Object.defineProperty(obj, 'properOutputTipe', {
             enumerable: true,
+            configurable: true,
             get() { return this.outputTipe; },
         });
-        Object.defineProperty(obj, 'isTerminal', { value: true })
-        Object.defineProperty(obj, 'finished', { value: false })
-        Object.defineProperty(obj, 'resilient', { value: true })
-        Object.defineProperty(obj, 'closedPipeline', { value: false });
+        Object.defineProperty(obj, 'isTerminal', { configurable: true, value: true })
+        Object.defineProperty(obj, 'finished', { configurable: true, value: false })
+        Object.defineProperty(obj, 'resilient', { configurable: true, value: true })
+        Object.defineProperty(obj, 'closedPipeline', { configurable: true, value: false });
     }
 }
 
@@ -24,7 +24,7 @@ class GreedyMachine extends Machine {
     }
 
     static makeGreedy(obj) {
-        Object.defineProperty(obj, 'isGreedy', { value: true })
+        Object.defineProperty(obj, 'isGreedy', { configurable: true, value: true })
     }
 }
 
@@ -126,33 +126,53 @@ class CountMachine extends TerminalMachine {
 class ReduceMachine extends TipedStackMachine {
     description = "A machine that reduces a stream down to a single value."
 
-    get innerOutputTipe() { return this.inTipe; }
-    get finished() { return this.methodStack.length > 0; }
-
     isReduce = true;
+    get innerOutputTipe() { return this.inTipe; }
+    // get finished() { return this.methodStack.length > 0; }
 
     get outputTipe() { return this.inTipe; }
 
     get reductionFn() {
-        return
-            this.finished ?
-                (p, c) => this.methodStack[0].run(c, p) :
-                (p, _c) => p;
+        return this.finished && this.methodStack[0];
     }
+
+    get value() { return this.last; }
+
+    _last = null;
+    get last() {
+        this.last = this._last;
+        return this._last;
+    }
+    set last(value) { this._last = value || (this.reductionFn ? this.reductionFn.tipedSeed : null); }
 
     constructor(key, inTipe) {
         super(key, inTipe, color('#454372'), 'reduce');
         TerminalMachine.makeTerminal(this);
         GreedyMachine.makeGreedy(this);
+        
+        Object.defineProperty(this, 'finished', {
+            enumerable: true,
+            configurable: true,
+            get() { return this.methodStack.length > 0; },
+        });
 
         this.resilient = false;
     }
 
-    process(values) { return values.reduce(this.reductionFn); }
+    process(values) { 
+        if (!this.finished) return values;
+        if (!values.length) return this.reductionFn.tipedSeed;
+        return values.reduce((p, c) => this.reductionFn.run(p, c));
+    }
 
-    reset() { this.count = 0; }
+    reset() { this.last = null; }
 
-    accept(tipedValue) { this.count++; return null; }
+    accept(tipedValue) {
+        if (!this.finished) return null; 
+        this.last = this.reductionFn.run(tipedValue, this.finished ? this.last : this.reductionFn.tipedSeed);
+
+        return null;
+    }
 
     pushFragment(fragment, _sourceIndex) { 
         this.methodStack = [fragment];
