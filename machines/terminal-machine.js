@@ -126,6 +126,9 @@ class ScanMachine extends TipedStackMachine {
         GreedyMachine.makeGreedy(this);
 
         this.resilient = false;
+        if (!this.isDummy) {
+            SceneManager.tray.loadOptionsFor(this.inTipe, this, 0);
+        }
     }
 
     process(values) { 
@@ -189,6 +192,9 @@ class ReduceMachine extends TipedStackMachine {
         });
 
         this.resilient = false;
+        if (!this.isDummy) {
+            SceneManager.tray.loadOptionsFor(this.inTipe, this, 0);
+        }
     }
 
     process(values) { 

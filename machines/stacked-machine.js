@@ -13,8 +13,8 @@ class StackedMachine extends Machine {
 
     constructor(key, inTipe, color, text) {
         super(key, inTipe, color, text);
-        if (key >= 0) {
-            SceneManager.tray.loadOptionsFor(inTipe, this, 0);
+        if (!this.isDummy) {
+            SceneManager.tray.loadOptionsFor(this.inTipe, this, 0);
         }
     }
 
