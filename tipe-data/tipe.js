@@ -254,6 +254,7 @@ const TextTipe = extendLiteral(Tipe, {
     drawShadow() { this.draw(this.shadowText, Layers.Shadow); },
 
     draw(str, layer=Layers.Data) {
+        str = str.value ? str.value : str;
         if (str.length > 10) {
             str = str.substring(0, 9) + '…';
         }
