@@ -16,7 +16,7 @@ class Tray {
         Renderer.push(this);
         Renderer.translate(Tray.indent, 20);
         for (const option of this.drawable) {
-            option.draw(() => this.optionClicked(option));
+            option.draw(() => this.optionClicked(option), true);
             Renderer.translate(0, option.height + 10);
             if (this.mode.type !== 'fragment') continue;
             const varName = option.outTipe.variableName;

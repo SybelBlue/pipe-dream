@@ -37,7 +37,7 @@ class TipeMethod {
     }
 
     // expects upper left corner is baseline
-    draw(onClick) {
+    draw(onClick, _interactable) {
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 if (regions.fragment.clicked && onClick) onClick();
@@ -138,8 +138,9 @@ class UIMethod extends TipeMethod {
         this.showName = false;
     }
 
-    draw(onClick) {
+    draw(onClick, passThrough=false) {
         super.draw(onClick);
+        this.inputBox.onClick = passThrough ? onClick : () => {};
         Renderer.temporary(this, Tipe.shapeIndent, 4, () => this.inputBox.draw(SceneManager.editable));
     }
 }

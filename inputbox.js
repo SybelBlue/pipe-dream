@@ -36,6 +36,8 @@ class InputBox {
         this.font = config.font || Renderer.defaultFont;
         this.fontSize = config.fontSize || 16;
 
+        this.onClick = () => {};
+
         InputBox.keyListeners.push(this);
     }
 
@@ -47,6 +49,7 @@ class InputBox {
             (regions) => {
                 if (interactable && clickThisFrame) {
                     this.selected = regions.body.clicked;
+                    this.onClick();
                 }
 
                 fill(this.selected ? color(100, 200, 200) : color(200));
