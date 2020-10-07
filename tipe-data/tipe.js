@@ -150,7 +150,7 @@ const BooleanTipe = extendLiteral(Tipe, {
         return {
             all: new TipeReduction('all', BooleanTipe, (prev, curr) => curr.value && prev.value, true),
             // needs lazy! (needs to close pipeline after a certain input)
-            // any: new TipeReduction('any', BooleanTipe, (prev, curr) => curr.value || prev.value, true)
+            any: new TipeReduction('any', BooleanTipe, (prev, curr) => curr.value || prev.value, true)
         }
     },
 
@@ -343,22 +343,22 @@ const BallTipe = extendLiteral(Tipe, {
         return {
             size: new TipeProperty('size', BallTipe, NumberTipe),
             color: new TipeProperty('color', BallTipe, ColorTipe),
-            changeColor: new TipeMethod(
-                'changeColor', 
-                BallTipe, 
-                Tipe.Function(ColorTipe, BallTipe, ColorPicker),
-                function(self) { 
-                    return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
-                }
-            ),
-            changeSize: new TipeMethod(
-                'changeSize', 
-                BallTipe, 
-                Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
-                function(self) { 
-                    return (nVal) => BallTipe.new({ size: nVal, color: self.color.name.value })
-                }
-            ),
+            // changeColor: new TipeMethod(
+            //     'changeColor', 
+            //     BallTipe, 
+            //     Tipe.Function(ColorTipe, BallTipe, ColorPicker),
+            //     function(self) { 
+            //         return (colorName) => BallTipe.new({ size: self.size.value, color: colorName })
+            //     }
+            // ),
+            // changeSize: new TipeMethod(
+            //     'changeSize', 
+            //     BallTipe, 
+            //     Tipe.Function(NumberTipe, BallTipe, FloatBox, { defaultText: '1.5' }),
+            //     function(self) { 
+            //         return (nVal) => BallTipe.new({ size: nVal, color: self.color.name.value })
+            //     }
+            // ),
         }
     },
 
