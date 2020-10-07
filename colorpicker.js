@@ -45,6 +45,8 @@ class ColorPicker {
             multiMode ? 
                 (name) => this.current[name]:
                 (name) => name == this.current;
+
+        this.onClick = () => {};
     }
 
     draw(interactable=true) {
@@ -57,6 +59,7 @@ class ColorPicker {
                 for (const box of ColorPicker.colorBoxes) {
                     if (interactable && regions[box.name].clicked) {
                         this.selected(box.name);
+                        this.onClick();
                     }
 
                     strokeWeight(4);
