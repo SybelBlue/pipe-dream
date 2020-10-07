@@ -183,10 +183,10 @@ const Renderer = {
             region.clicked = region.hovering && clickThisFrame;
             results.intercepted = results.intercepted || region.hovering;
 
-            results.found = results.found || (region.hovering && region.blocking);
+            results.found = results.found || (region.hovering && region.blocking && region);
 
             return results;
-        }, { found: false, intercepted: true });
+        }, { found: false, intercepted: false });
     },
 
     renderAll() {

@@ -11,6 +11,8 @@ const SceneManager = {
 
     testIndex: 0,
 
+    lastFocused: null,
+
     get promptBackground() { return color(220) },
 
     get minHeight() {
@@ -58,9 +60,20 @@ const SceneManager = {
 
         const focused = Renderer.renderAll().found;
 
-        if (!focused && clickThisFrame) {
-            SceneManager.tray.loadMachineOptions();
+        if (clickThisFrame) {
+            if (this.lastFocused && this.lastFocused != focused) {
+                this.lastFocused.loseFocus && this.lastFocused.loseFocus();
+            }
+
+            this.lastFocused = focused;
+
+            if (focused) {
+                focused.gainFocus && focused.gainFocus();
+            } else {
+                SceneManager.tray.loadMachineOptions();
+            }
         }
+
         Renderer.clearStack();
     },
 
