@@ -42,6 +42,19 @@ class Editor {
 
         this.pipeline.draw(this.startingTipe, this.pipeTipeChecks);
 
+        const targetStart = this.pipeline.positionOf(lens(SceneManager, 'tray', 'mode', 'selectedMachine'));
+        if (targetStart) {
+            const arrowMidline = targetStart + Machine.bodyHeight/2;
+            Renderer.newRenderable(Layers.Background, () => {
+                fill(255);
+                stroke(255);
+                strokeWeight(4);
+                line(Editor.gutterSize - 20, arrowMidline, Editor.gutterSize - 5, arrowMidline);
+                line(Editor.gutterSize - 15, arrowMidline - 5, Editor.gutterSize - 5, arrowMidline);
+                line(Editor.gutterSize - 15, arrowMidline + 5, Editor.gutterSize - 5, arrowMidline);
+            });
+        }
+
         Renderer.newRenderable(Layers.Background, () => {
             // pipe inlet shadow
             fill(20);

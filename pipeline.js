@@ -56,6 +56,17 @@ class Pipeline extends Array /* of Machines */ {
         return true;
     }
 
+    positionOf(machine) {
+        if (!machine) return null;
+        const index = this.findIndex(m => m.key === machine.key);
+        if (index < 0) return null;
+        let start = Pipe.height;
+        for (let i = 0; i < index; i++) {
+            start += this[i].height + Pipe.height;
+        }
+        return start;
+    }
+
     test(tipedValue) {
         let value = tipedValue;
         for (const machine of this.pipeline) {

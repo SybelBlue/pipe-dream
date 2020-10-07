@@ -61,3 +61,9 @@ function extendLiteral(obj, overrides)  {
     
     return out;
 }
+
+function lens(obj, ...lensLayers) {
+    if (!exists(obj) || !lensLayers.length) return obj;
+    const inner = obj[lensLayers.shift()];
+    return lensLayers.length ? lens(inner, ...lensLayers) : inner;
+}
