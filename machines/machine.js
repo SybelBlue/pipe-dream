@@ -28,6 +28,8 @@ class Machine {
     get height() { return Machine.bodyHeight; }
     get bodyHeight() { return Machine.bodyHeight; }
 
+    get indicatorOffset() { return Machine.bodyHeight / 2; }
+
     get closedPipeline() { return false; }
 
     get outputTipe() { return BallTipe; }

@@ -9,6 +9,8 @@ class StackedMachine extends Machine {
     get finished() { return true; }
     get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finished ? 0 : 20)); }
 
+    get indicatorOffset() { return this.height - StackedMachine.tailHeight; }
+
     methodStack = [];
 
     constructor(key, inTipe, color, text) {

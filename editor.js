@@ -42,18 +42,7 @@ class Editor {
 
         this.pipeline.draw(this.startingTipe, this.pipeTipeChecks);
 
-        const targetStart = this.pipeline.positionOf(lens(SceneManager, 'tray', 'mode', 'selectedMachine'));
-        if (targetStart) {
-            const arrowMidline = targetStart + Machine.bodyHeight/2;
-            Renderer.newRenderable(Layers.Background, () => {
-                fill(255);
-                stroke(255);
-                strokeWeight(4);
-                line(Editor.gutterSize - 20, arrowMidline, Editor.gutterSize - 5, arrowMidline);
-                line(Editor.gutterSize - 15, arrowMidline - 5, Editor.gutterSize - 5, arrowMidline);
-                line(Editor.gutterSize - 15, arrowMidline + 5, Editor.gutterSize - 5, arrowMidline);
-            });
-        }
+        this.drawIndicator();
 
         Renderer.newRenderable(Layers.Background, () => {
             // pipe inlet shadow
@@ -86,6 +75,22 @@ class Editor {
             }
         });
         Renderer.pop(this);
+    }
+
+    drawIndicator() {
+        const selectedMachine = lens(SceneManager, 'tray', 'mode', 'selectedMachine');
+        const targetStart = this.pipeline.positionOf(selectedMachine);
+        const arrowMidline = targetStart ? targetStart + selectedMachine.indicatorOffset : this.pipeline.height;
+        const bobOffset = 3 * sin(frameCount / 10);
+        const leftX = Editor.gutterSize - 20 + bobOffset;
+        Renderer.newRenderable(Layers.UI, () => {
+            fill(255);
+            stroke(255);
+            strokeWeight(4);
+            line(leftX, arrowMidline, leftX + 15, arrowMidline);
+            line(leftX + 5, arrowMidline - 5, leftX + 15, arrowMidline);
+            line(leftX + 5, arrowMidline + 5, leftX + 15, arrowMidline);
+        });
     }
 
     removeMachine(key) {
