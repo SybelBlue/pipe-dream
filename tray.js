@@ -7,10 +7,10 @@ class Tray {
     mode = null;
 
     draw() {
-        Renderer.newRenderable(Layers.TrayBackground, function() {
+        Renderer.newRenderable(Layers.TrayBackground, () => {
             stroke(80);
             fill(Tray.backgroundColor);
-            rect(0, 0, Tray.maxWidth, editor.height, 0, 20, 20, 0);
+            rect(0, 0, !this.drawable || !this.drawable.length ? 30: Tray.maxWidth, SceneManager.editor.height, 0, 20, 20, 0);
         });
 
         Renderer.push(this);
@@ -34,7 +34,6 @@ class Tray {
     }
 
     loadOptionsFor(tipe={methods:[]}, machine, index) {
-        console.log('frag ops');
         this.mode = {
             type: 'fragment',
             selectedMachine: machine,
@@ -50,7 +49,6 @@ class Tray {
     }
 
     loadMachineOptions() {
-        console.log('machine ops');
         this.mode = { 
             type: 'machine', 
             reducable: Boolean(lens(SceneManager.editor, 'outputTipe', 'reductions')), 
