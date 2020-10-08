@@ -1,5 +1,4 @@
 class InputBox {
-    static keyListeners = [];
     static boxMaxLength = 150;
     static margin = 5;
 
@@ -10,7 +9,7 @@ class InputBox {
         return max(
             20, 
             Renderer.textWidth(
-                this.selected ? this.text : this.text.substring(0, this.boxMaxChars),
+                this.text.substring(0, this.boxMaxChars),
                 this.fontSize,
                 this.font
             ) + 2 * InputBox.margin
@@ -18,13 +17,6 @@ class InputBox {
     }
 
     enforceCharLimit = false;
-
-    _selected = false;
-    get selected() { return this._selected; }
-    set selected(value) {
-        if (!value) this.accept();
-        this._selected = value;
-    }
 
     used = false;
 
@@ -39,8 +31,6 @@ class InputBox {
         this.fontSize = config.fontSize || 16;
 
         this.onClick = () => {};
-
-        InputBox.keyListeners.push(this);
     }
 
     draw(interactable=true) {
@@ -49,19 +39,16 @@ class InputBox {
 
         Renderer.newRenderable(Layers.UI, 
             (regions) => {
-                if (interactable && clickThisFrame) {
-                    this.selected = regions.body.clicked;
-                    if (this.selected) {
-                        Renderer.prompt(this.promptMsg, this.text, (out) => { this.text = out; this.accept(); })
-                        this.onClick();
-                    }
+                if (interactable && regions.body.clicked) {
+                    Renderer.prompt(this.promptMsg, this.text, (out) => { this.text = out; this.accept(); })
+                    this.onClick();
                 }
 
-                fill(this.selected ? color(100, 200, 200) : color(200));
+                fill(color(200));
                 rect(0, 0, width, height);
 
                 let displayText = this.text.substring(0);
-                if (!this.selected && displayText.length > this.boxMaxChars) {
+                if (displayText.length > this.boxMaxChars) {
                     displayText = displayText.substring(0, this.boxMaxChars - 1) + '…';
                 }
 
@@ -75,24 +62,9 @@ class InputBox {
         )
     }
 
-    keyDown(key) {
-        if (!this.selected || (this.enforceCharLimit && this.text.length >= this.boxMaxChars)) return;
-        this.text = !this.used ? key : this.text + key;
-        this.used = true;
-    }
-    backspaceDown() {
-        if (this.text.length === 0 || !this.used) return;
-        this.text = this.text.substring(0, this.text.length - 1);
-        if (this.text.length === 0) {
-            this.used = false;
-            this.text = this.defaultText;
-        }
-    }
-
     reject() { 
         this.used = this.last !== this.defaultText;
         this.text = this.last;
-        this._selected = false;
     }
 
     accept() {
@@ -100,7 +72,6 @@ class InputBox {
             this.reject();
         } else {
             this.last = this.text;
-            this._selected = false;
         }
     }
 

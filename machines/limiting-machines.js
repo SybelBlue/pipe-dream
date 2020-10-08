@@ -19,7 +19,7 @@ class TakeMachine extends Machine {
     draw() {
         super.draw();
         Renderer.temporary(this, StackedMachine.bodyIndent, TakeMachine.inputBoxStart, 
-            () => this.inputBox.draw(SceneManager.editable));
+            () => this.inputBox.draw(SceneManager.editable && !this.isDummy));
     }
 
     process(values) { return values.slice(0, this.inputBox.value); }
@@ -58,7 +58,7 @@ class DropMachine extends Machine {
     draw() {
         super.draw();
         Renderer.temporary(this, StackedMachine.bodyIndent, TakeMachine.inputBoxStart, 
-            () => this.inputBox.draw(SceneManager.editable));
+            () => this.inputBox.draw(SceneManager.editable && !this.isDummy));
     }
 
     process(values) { return values.slice(this.inputBox.value); }

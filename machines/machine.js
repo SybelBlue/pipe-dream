@@ -40,6 +40,7 @@ class Machine {
     textSize = 26;
     resilient = true;
     isGreedy = false;
+    isDummy = true;
     exclaimFrames = 0;
 
     get inTipe() { return this._inTipe; }

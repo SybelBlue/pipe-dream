@@ -19,7 +19,6 @@ const Renderer = {
     toRender: [],
     regions: [],
 
-    keyListeners: [],
     promptRequests: [],
 
     textBoundMemoized: {},

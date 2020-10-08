@@ -44,24 +44,3 @@ function windowResized() {
 }
 
 function mouseClicked() { clickThisFrame = true; }
-
-function keyTyped() { 
-    if (/[\S ]+/.test(key)) {
-        InputBox.keyListeners.forEach(l => l.keyDown(key)); 
-    }
-}
-
-function keyPressed() { 
-    switch (keyCode) {
-        case BACKSPACE:
-            InputBox.keyListeners.forEach(l => l.backspaceDown()); 
-            break;
-        case ESCAPE:
-            InputBox.keyListeners.forEach(l => l.reject());
-            break;
-        case ENTER:
-        case RETURN:
-            InputBox.keyListeners.forEach(l => l.accept());
-            break;
-    }
-}
