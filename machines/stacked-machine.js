@@ -28,7 +28,7 @@ class StackedMachine extends Machine {
             noStroke();
 
             // clean interior
-            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
+            fill(SceneManager.showPrompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
             rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
             // draw arm
@@ -125,7 +125,7 @@ class TipedStackMachine extends StackedMachine {
         Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
         Renderer.newRenderable(this.drawLayer, () => {
             noStroke();
-            fill(SceneManager.prompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
+            fill(SceneManager.showPrompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
             this.innerOutputTipe.shapeOutline(0)
         });
         Renderer.pop(this);

@@ -41,7 +41,7 @@ class Tray {
             reducable: tipe.reductions && machine.isReduce,
         };
 
-        this.drawable = machine.isTerminal ? [] : Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']);
+        this.drawable = machine.isTerminal && !this.mode.reducable ? [] : Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']);
     }
 
     clearAllOptions() {

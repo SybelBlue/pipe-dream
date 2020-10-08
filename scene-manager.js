@@ -61,7 +61,7 @@ const SceneManager = {
         }
 
         this.promptHeight = 0;
-        if (this.prompt) this.drawPrompt();
+        if (this.showPrompt) this.drawPrompt();
 
         if (this.minHeight > height) {
             requestRescaleCanvas = true;

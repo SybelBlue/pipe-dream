@@ -72,6 +72,8 @@ class Editor {
             }
         });
         Renderer.pop(this);
+
+        if (gutterSize + )
     }
 
     drawIndicator() {
