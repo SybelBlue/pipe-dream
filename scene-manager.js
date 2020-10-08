@@ -16,7 +16,7 @@ const SceneManager = {
     get promptBackground() { return color(220) },
 
     get minHeight() {
-        return lens(this.runner, 'height') || lens(this.editor, minHeight) || 0;
+        return lens(this.runner, 'height') || lens(this.editor, 'minHeight') || 0;
     },
 
     startLevel(level, prompt=false) {
