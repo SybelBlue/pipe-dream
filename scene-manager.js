@@ -23,10 +23,13 @@ const SceneManager = {
 
     startLevel(level, prompt=false) {
         this.level = level;
-        this.prompt = prompt;
+        this.showPrompt = prompt;
         this.tray = new Tray();
+        this.editor = new Editor(level.startingTipe, level.endingTipe, windowWidth, windowHeight);
+
         this.tray.loadMachineOptions();
-        return (this.editor = new Editor(level.startingTipe, level.endingTipe, windowWidth, windowHeight));
+        
+        return this.editor;
     },
 
     draw() {
@@ -47,7 +50,7 @@ const SceneManager = {
             const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
             const pStart = start - pWidth - margin;
             Renderer.temporary(this, pStart, margin,
-                () => Renderer.newUIButton('Prompt', this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230), () => this.prompt = true));
+                () => Renderer.newUIButton('Prompt', this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230), () => this.showPrompt = true));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {
@@ -91,7 +94,7 @@ const SceneManager = {
             fill(this.promptBackground);
             rect(15, 15, windowWidth - 30, this.promptHeight, 15);
             if (clickThisFrame) {
-                this.prompt = false;
+                this.showPrompt = false;
             }
         });
 
@@ -121,7 +124,7 @@ const SceneManager = {
         Renderer.pop(this);
 
         Renderer.temporary(this, windowWidth - 95, this.promptHeight - 15,
-            () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.prompt = false));
+            () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.showPrompt = false));
     },
 
     drawTestPreviews() {
