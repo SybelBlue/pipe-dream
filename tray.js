@@ -34,6 +34,7 @@ class Tray {
     }
 
     loadOptionsFor(tipe={methods:[]}, machine, index) {
+        console.log('frag ops');
         this.mode = {
             type: 'fragment',
             selectedMachine: machine,
@@ -41,7 +42,7 @@ class Tray {
             reducable: tipe.reductions && machine.isReduce,
         };
 
-        this.drawable = Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']);
+        this.drawable = machine.isTerminal ? [] : Object.values(tipe[this.mode.reducable ? 'reductions' : 'methods']);
     }
 
     clearAllOptions() {
@@ -49,11 +50,12 @@ class Tray {
     }
 
     loadMachineOptions() {
+        console.log('machine ops');
         this.mode = { 
             type: 'machine', 
-            reducable: Boolean(SceneManager.editor && SceneManager.editor.outputTipe.reductions) 
+            reducable: Boolean(lens(SceneManager.editor, 'outputTipe', 'reductions')), 
         };
-        this.drawable = SceneManager.level.machines.filter(m => SceneManager.unsafeMode || !m.isReduce || this.mode.reducable);
+        this.drawable = lens(SceneManager.editor, 'pipeline', 'terminalMachine') ? [] : SceneManager.level.machines.filter(m => SceneManager.unsafeMode || !m.isReduce || this.mode.reducable);
     }
 
     optionClicked(option) {

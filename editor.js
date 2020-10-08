@@ -79,6 +79,7 @@ class Editor {
 
     drawIndicator() {
         const selectedMachine = lens(SceneManager, 'tray', 'mode', 'selectedMachine');
+        if ((!selectedMachine && this.pipeline.terminalMachine) || lens(selectedMachine, 'isTerminal')) return;
         const targetStart = this.pipeline.positionOf(selectedMachine);
         const arrowMidline = targetStart ? targetStart + selectedMachine.indicatorOffset : this.pipeline.height;
         const bobOffset = 3 * sin(frameCount / 10);
@@ -104,6 +105,7 @@ class Editor {
     pushMachine(machineConstructor, ...args) {
         if (this.pipeline.terminalMachine) return;
         this.pipeline.push(new machineConstructor(this._keyCount++, this.outputTipe, ...args));
+        if (this.pipeline.terminalMachine) SceneManager.tray.loadMachineOptions();
     }
 
     validatePipeline() {

@@ -10,10 +10,10 @@ class TerminalMachine extends Machine {
             configurable: true,
             get() { return this.outputTipe; },
         });
-        Object.defineProperty(obj, 'isTerminal', { configurable: true, value: true })
-        Object.defineProperty(obj, 'finished', { configurable: true, value: false })
-        Object.defineProperty(obj, 'resilient', { configurable: true, value: true })
-        Object.defineProperty(obj, 'closedPipeline', { configurable: true, value: false });
+        Object.defineProperty(obj, 'isTerminal', { configurable: true, writable: true, value: true })
+        Object.defineProperty(obj, 'finished', { configurable: true, writable: true, value: false })
+        Object.defineProperty(obj, 'resilient', { configurable: true, writable: true, value: true })
+        Object.defineProperty(obj, 'closedPipeline', { configurable: true, writable: true, value: false });
     }
 }
 
@@ -24,7 +24,7 @@ class GreedyMachine extends Machine {
     }
 
     static makeGreedy(obj) {
-        Object.defineProperty(obj, 'isGreedy', { configurable: true, value: true })
+        Object.defineProperty(obj, 'isGreedy', { configurable: true, writable: true, value: true })
     }
 }
 
