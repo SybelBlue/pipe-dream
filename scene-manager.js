@@ -16,7 +16,7 @@ const SceneManager = {
     get promptBackground() { return color(220) },
 
     get minHeight() {
-        return this.runner ? this.runner.height : this.editor.minHeight;
+        return lens(this.runner, 'height') || lens(this.editor, minHeight) || 0;
     },
 
     startLevel(level, prompt=false) {
@@ -34,19 +34,18 @@ const SceneManager = {
             this.tray.draw();
             this.editor.draw();
 
-            const canRun = SceneManager.unsafeMode || this.editor.pipeTipeChecks;
             // draw run button
             const margin = 10;
             const width = Renderer.textWidth('Run', 24) + 2 * margin;
             const start = windowWidth - width - margin;
             Renderer.temporary(this, start, margin, 
-                () => Renderer.newUIButton('Run', color(80, canRun ? 250 : 150, 80), () => canRun && !this.prompt && this.runLevel(), margin));
+                () => Renderer.newUIButton('Run', color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), () => !this.prompt && this.runLevel(), margin));
             
             // draw prompt button
             const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
             const pStart = start - pWidth - margin;
             Renderer.temporary(this, pStart, margin,
-                () => Renderer.newUIButton('Prompt', canRun ? color('#5C9EAD') : color(120, 210, 230), () => this.prompt = true));
+                () => Renderer.newUIButton('Prompt', this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230), () => this.prompt = true));
         } else {
             this.runner.draw();
             for (const key in this.exittingValues) {
