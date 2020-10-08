@@ -20,6 +20,7 @@ const Renderer = {
     regions: [],
 
     keyListeners: [],
+    promptRequests: [],
 
     textBoundMemoized: {},
 
@@ -201,6 +202,11 @@ const Renderer = {
             pop();
         }
         pop();
+
+        // must come after rendering!
+        Renderer.promptRequests.forEach(request => request.fulfill());
+
+        Renderer.promptRequests = [];
         Renderer.toRender = [];
         Renderer.regions = [];
 
@@ -208,6 +214,10 @@ const Renderer = {
         Renderer._keyCount = 1;
 
         return hit;
+    },
+
+    prompt(msg, def, callback) {
+        this.promptRequests.push(new Renderer.PromptRequest(msg, def, callback));
     }
 }
 
@@ -268,5 +278,17 @@ Renderer.Renderable = class {
         });
 
         return new Renderer.Renderable(layer, drawCallback, [Renderer.xTranslation, Renderer.yTranslation], regions);
+    }
+}
+
+Renderer.PromptRequest = class {
+    constructor(promptMsg, promptDefault, callback) {
+        this.msg = promptMsg;
+        this.default = promptDefault;
+        this.callback = callback;
+    }
+
+    fulfill() {
+        this.callback(prompt(this.msg, this.default));
     }
 }

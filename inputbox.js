@@ -28,6 +28,8 @@ class InputBox {
 
     used = false;
 
+    promptMsg = 'Enter text:';
+
     constructor(config={}) {
         this.defaultText = config.defaultText || '';
         this.text = this.defaultText;
@@ -49,7 +51,10 @@ class InputBox {
             (regions) => {
                 if (interactable && clickThisFrame) {
                     this.selected = regions.body.clicked;
-                    this.onClick();
+                    if (this.selected) {
+                        Renderer.prompt(this.promptMsg, this.text, (out) => { this.text = out; this.accept(); })
+                        this.onClick();
+                    }
                 }
 
                 fill(this.selected ? color(100, 200, 200) : color(200));
@@ -91,7 +96,7 @@ class InputBox {
     }
 
     accept() {
-        if (!this.validate()) {
+        if (!exists(this.text) || !this.validate()) {
             this.reject();
         } else {
             this.last = this.text;
@@ -104,6 +109,8 @@ class InputBox {
 
 class FloatBox extends InputBox {
     enforceCharLimit = true;
+
+    promptMsg = 'Enter a number (decimals okay):';
 
     get value() { return Number.parseFloat(this.last); }
     validate() {
@@ -119,6 +126,8 @@ class FloatBox extends InputBox {
 
 class IntegerBox extends InputBox {
     enforceCharLimit = true;
+
+    promptMsg = 'Enter a round number:';
 
     get value() { return Number.parseInt(this.last); }
     validate() {
