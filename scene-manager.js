@@ -13,10 +13,12 @@ const SceneManager = {
 
     lastFocused: null,
 
+    promptHeight: 0,
+
     get promptBackground() { return color(220) },
 
     get minHeight() {
-        return lens(this.runner, 'height') || lens(this.editor, 'minHeight') || 0;
+        return robustMax(lens(this.runner, 'height'), lens(this.editor, 'minHeight'), this.promptHeight + 30);
     },
 
     startLevel(level, prompt=false) {
@@ -55,7 +57,12 @@ const SceneManager = {
             this.drawTestTray();
         }
 
+        this.promptHeight = 0;
         if (this.prompt) this.drawPrompt();
+
+        if (this.minHeight > height) {
+            requestRescaleCanvas = true;
+        }
 
         const focused = Renderer.renderAll().found;
 
@@ -82,11 +89,11 @@ const SceneManager = {
         Renderer.newRenderable(Layers.UI, () => {
             stroke(0);
             fill(this.promptBackground);
-            rect(15, 15, windowWidth - 30, windowHeight - 30, 15);
+            rect(15, 15, windowWidth - 30, this.promptHeight, 15);
+            if (clickThisFrame) {
+                this.prompt = false;
+            }
         });
-
-        Renderer.temporary(this, windowWidth - 95, windowHeight - 45,
-            () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.prompt = false));
 
         Renderer.push(this);
         Renderer.translate(25, 0);
@@ -108,7 +115,13 @@ const SceneManager = {
             const h = machine.drawDescription(width);
             Renderer.translate(0, h + 10);
         }
+        
+        this.promptHeight = Renderer.stackTop.localY + 30;
+        
         Renderer.pop(this);
+
+        Renderer.temporary(this, windowWidth - 95, this.promptHeight - 15,
+            () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.prompt = false));
     },
 
     drawTestPreviews() {

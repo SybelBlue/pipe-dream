@@ -223,6 +223,10 @@ const Renderer = {
 
 Renderer.Node = class {
     static get Head() { return new Renderer.Node(0, null, 'Renderer Head'); }
+    
+    get localX() { return this.x - (this.previous ? this.previous.x : 0); }
+    get localY() { return this.y - (this.previous ? this.previous.y : 0); }
+    
     constructor(key, previous, source) {
         this.key = key;
         this.previous = previous;

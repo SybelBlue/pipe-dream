@@ -69,9 +69,6 @@ class Editor {
             const newMinHeight = bottomBarHeight + Editor.darkMargin + Editor.topMargin;
             if (newMinHeight > this.minHeight) {
                 this.minHeight = newMinHeight;
-                if (this.minHeight > height) {
-                    requestRescaleCanvas = true;
-                }
             }
         });
         Renderer.pop(this);

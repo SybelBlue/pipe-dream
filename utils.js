@@ -67,3 +67,7 @@ function lens(obj, ...lensLayers) {
     const inner = obj[lensLayers.shift()];
     return lensLayers.length ? lens(inner, ...lensLayers) : inner;
 }
+
+function robustMax(...objs) {
+    return max(objs.filter(x => exists(x)));
+}
