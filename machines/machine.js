@@ -77,7 +77,7 @@ class Machine {
                 rect(0, 0, Machine.width, this.bodyHeight, 10, 10, 10, 0);
 
                 stroke(0);
-                textSize(this.textSize);
+                textSize(this.textSize + (this.isDummy && regions.body.hovering ? 2 : 0));
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
                 
