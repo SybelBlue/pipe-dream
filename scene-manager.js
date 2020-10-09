@@ -9,6 +9,7 @@ const SceneManager = {
     tray: null,
     runner: null,
 
+    testXOffset: 0,
     testIndex: 0,
 
     lastFocused: null,
@@ -129,6 +130,8 @@ const SceneManager = {
 
     drawTestPreviews() {
         Renderer.push(this);
+        Renderer.translate(this.testXOffset, 0);
+
         const pipeGap = Machine.width / 2;
         const slotWidth = Machine.width + pipeGap;
         let indexStart;
@@ -137,7 +140,7 @@ const SceneManager = {
             Renderer.translate(Editor.gutterSize, 0);
         } else {
             indexStart = this.testIndex - 1;
-            Renderer.translate(Editor.gutterSize - slotWidth, 0);
+            Renderer.translate(Editor.gutterSize - slotWidth + Editor.pipeIndent, 0);
         }
         
         for (var i = indexStart; i < min(indexStart + 4, this.level.tests.length); i++) {
@@ -220,6 +223,20 @@ const SceneManager = {
 
     testCompleted(output) {
         this.testIndex++;
+        // const oldRunner = this.runner;
+        // this.runner = new IterateAnimator(
+        //     (offset) => {
+        //         oldRunner.draw();
+        //         this.testXOffset = offset;
+        //     },
+        //     0,
+        //     (offset) => offset - TestRunner.speed,
+        //     (offset) => offset <= -Editor.gutterSize,
+        //     () => {
+        //         this.testXOffset = 0;
+        //         this.beginTest();
+        //     }
+        // );
         this.beginTest();
     },
 
@@ -241,9 +258,9 @@ const SceneManager = {
         this.exittingValues[key] = 
             new LerpAnimator(
                 () => tipedValue.draw(),
-                [Editor.pipelineMidline, this.runner.bottomMarginStart],
-                [Editor.pipelineMidline, canvas.height],
-                this.runner.speed,
+                [Editor.pipelineMidline, lens(this.runner, 'bottomMarginStart') || windowHeight - Editor.darkMargin],
+                [Editor.pipelineMidline, windowHeight],
+                lens(this.runner, 'speed') || TestRunner.speed,
                 () => delete this.exittingValues[key]
             );
     }

@@ -1,13 +1,14 @@
 class TestRunner {
     static darkMargin = 300;
+    static speed = 4;
 
-    speed = 4;
+    speed = TestRunner.speed;
     currentItem = null;
     output = [];
 
     done = false;
     signaled = false;
-    offset = 0;
+    ballYOffset = 0;
     finishedFrame = null;
 
     constructor(pipeline, test) {
@@ -61,8 +62,8 @@ class TestRunner {
         );
         
         Renderer.temporary(this, Editor.pipeGutterSize, 0,
-            () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.offset));
-        this.offset = max(this.offset - this.speed * 0.8, 0);
+            () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.ballYOffset));
+        this.ballYOffset = max(this.ballYOffset - this.speed * 0.8, 0);
 
         // pipeline
         Renderer.temporary(this, 0, TestRunner.darkMargin, () => this.pipeline.draw());
@@ -94,12 +95,6 @@ class TestRunner {
             if (!this.test.length || this.pipeline.closed) {
                 if (this.pipeline.terminalMachine && this.pipeline.terminalMachine.isGreedy) {
                     const finalValue = this.pipeline.terminalMachine.value;
-
-                    // if (finalValue instanceof Array) {
-                        
-                    //     return;
-                    // }
-
                     this.output.push(finalValue);
                     SceneManager.valueExitting(finalValue);
                 }
@@ -108,7 +103,7 @@ class TestRunner {
                 return;
             }
             const tipedValue = this.test.shift();
-            this.offset += Tipe.maxDrawWidth;
+            this.ballYOffset += Tipe.maxDrawWidth;
 
             this.currentItem = {
                 value: tipedValue,
