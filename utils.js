@@ -69,5 +69,5 @@ function lens(obj, ...lensLayers) {
 }
 
 function robustMax(...objs) {
-    return max(objs.filter(x => exists(x)));
+    return objs.length ? objs.filter(x => exists(x)).reduce((a, b) => a > b ? a : b) : null;
 }
