@@ -55,15 +55,30 @@ class LerpAnimator extends Animator {
     }
 }
 
-class PauseAnimator extends Animator {
+class IterateAnimator extends Animator {
+    constructor(drawFunction, seed, update, sentinel, callback) {
+        super(
+            () => drawFunction(this.value),
+            [0, 0],
+            (offset) => {
+                this.value = update(this.value);
+                return offset;
+            },
+            (_offset) => sentinel(this.value),
+            callback
+        )
+        this.value = seed;
+    }
+}
+
+class PauseAnimator extends IterateAnimator {
     constructor(drawFunction, frames, callback) {
         super(
             drawFunction,
-            [0, 0],
-            () => { this.frames--; return [0, 0]},
-            () => this.frames <= 0,
+            frames,
+            (frames) => frames - 1,
+            (frames) => frames <= 0,
             callback
         )
-        this.frames = frames;
     }
 }
