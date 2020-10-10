@@ -10,7 +10,7 @@ class StackedMachine extends Machine {
     get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finished ? 0 : 20)); }
 
     get innerBackgroundColor() {
-        const marginColor = this.isTerminal && SceneManager.editable ? Editor.darkMarginColor : Editor.backgroundColor;
+        const marginColor = this.isTerminal && SceneManager.editable && SceneManager.editor.pipeTipeChecks ? Editor.darkMarginColor : Editor.backgroundColor;
         const dummyColor = this.isDummy ? Tray.backgroundColor : marginColor;
         return SceneManager.showPrompt ? SceneManager.promptBackground : dummyColor;
     }

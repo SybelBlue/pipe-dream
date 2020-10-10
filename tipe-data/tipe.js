@@ -250,6 +250,7 @@ const TextTipe = extendLiteral(Tipe, {
     get reductions() {
         return {
             join: new TipeReduction('join', TextTipe, (prev, curr) => curr.value + prev.value, ''),
+            unwords: new TipeReduction('unwords', TextTipe, (prev, curr) => curr.value + ' ' + prev.value, ''),
         }
     },
 
