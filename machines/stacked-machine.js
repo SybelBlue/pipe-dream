@@ -9,6 +9,12 @@ class StackedMachine extends Machine {
     get finished() { return true; }
     get innerHeight() { return max(10, Array.sum(this.methodStack.map(m => m.height)) + (this.finished ? 0 : 20)); }
 
+    get innerBackgroundColor() {
+        const marginColor = this.isTerminal && SceneManager.editable ? Editor.darkMarginColor : Editor.backgroundColor;
+        const dummyColor = this.isDummy ? Tray.backgroundColor : marginColor;
+        return SceneManager.showPrompt ? SceneManager.promptBackground : dummyColor;
+    }
+
     get indicatorOffset() { return this.height - StackedMachine.tailHeight; }
 
     methodStack = [];
@@ -28,7 +34,7 @@ class StackedMachine extends Machine {
             noStroke();
 
             // clean interior
-            fill(SceneManager.showPrompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
+            fill(this.innerBackgroundColor);
             rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
             // draw arm
@@ -125,7 +131,7 @@ class TipedStackMachine extends StackedMachine {
         Renderer.translate(Machine.bodyIndent + Tipe.shapeMidline, this.height - MapMachine.tailHeight);
         Renderer.newRenderable(this.drawLayer, () => {
             noStroke();
-            fill(SceneManager.showPrompt ? SceneManager.promptBackground : (this.isDummy ? Tray.backgroundColor : Editor.backgroundColor));
+            fill(this.innerBackgroundColor);
             this.innerOutputTipe.shapeOutline(0)
         });
         Renderer.pop(this);

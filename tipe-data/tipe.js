@@ -180,7 +180,7 @@ const NumberTipe = extendLiteral(Tipe, {
 
     get reductions() {
         return {
-            // add: new TipeReduction('add', BooleanTipe, self => )
+            sum: new TipeReduction('sum', NumberTipe, (prev, curr) => curr.value + prev.value, 0),
         }
     },
 
@@ -238,6 +238,7 @@ const TextTipe = extendLiteral(Tipe, {
     name: 'Text',
     variableName: 'text',
     basic: true,
+
     get methods() {
         return {
             length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
@@ -245,6 +246,13 @@ const TextTipe = extendLiteral(Tipe, {
             firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
         }
     },
+
+    get reductions() {
+        return {
+            join: new TipeReduction('join', TextTipe, (prev, curr) => curr.value + prev.value, ''),
+        }
+    },
+
     get shadowTextWidth() { return Renderer.textWidth(this.shadowText, 20) },
     shadowText: 'text',
 
