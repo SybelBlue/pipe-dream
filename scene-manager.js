@@ -120,7 +120,7 @@ const SceneManager = {
             Renderer.translate(0, h + 10);
         }
         
-        this.promptHeight = Renderer.stackTop.localY + 30;
+        this.promptHeight = max(windowHeight - 30, Renderer.stackTop.localY + 30);
         
         Renderer.pop(this);
 
@@ -259,7 +259,7 @@ const SceneManager = {
             new LerpAnimator(
                 () => tipedValue.draw(),
                 [Editor.pipelineMidline, lens(this.runner, 'bottomMarginStart') || windowHeight - Editor.darkMargin],
-                [Editor.pipelineMidline, windowHeight],
+                [Editor.pipelineMidline, dimensions.height],
                 lens(this.runner, 'speed') || TestRunner.speed,
                 () => delete this.exittingValues[key]
             );

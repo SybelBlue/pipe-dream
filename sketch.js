@@ -1,6 +1,7 @@
 let editor;
 let requestRescaleCanvas = false;
 let clickThisFrame = false;
+let dimensions = null;
 
 const config = (function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@ const config = (function() {
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    dimensions = { width: windowWidth, height: windowHeight };
 
     SceneManager.unsafeMode = config.unsafe;
     editor = SceneManager.startLevel(levels[config.level], config.prompt);
@@ -30,6 +32,7 @@ function draw() {
     if (requestRescaleCanvas) {
         resizeCanvas(editor.width, SceneManager.minHeight);
         editor.height = SceneManager.minHeight;
+        dimensions.height = editor.height;
     }
 
     SceneManager.draw();
@@ -41,6 +44,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     editor.width = windowWidth;
     editor.height = max(SceneManager.minHeight, windowHeight);
+    dimensions = { width: windowWidth, height: editor.height };
 }
 
 function mouseClicked() { clickThisFrame = true; }
