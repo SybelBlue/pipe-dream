@@ -76,9 +76,10 @@ class Editor {
 
     drawIndicator() {
         const selectedMachine = lens(SceneManager, 'tray', 'mode', 'selectedMachine');
+        const fragmentIndex = lens(SceneManager, 'tray', 'mode', 'fragmentIndex');
         if ((!selectedMachine && this.pipeline.terminalMachine) || lens(selectedMachine, 'isTerminal')) return;
         const targetStart = this.pipeline.positionOf(selectedMachine);
-        const arrowMidline = targetStart ? targetStart + selectedMachine.indicatorOffset : this.pipeline.height;
+        const arrowMidline = targetStart ? targetStart + selectedMachine.indicatorOffset(fragmentIndex) : this.pipeline.height;
         const bobOffset = 3 * sin(frameCount / 10);
         const leftX = Editor.gutterSize - 20 + bobOffset;
         Renderer.newRenderable(Layers.UI, () => {

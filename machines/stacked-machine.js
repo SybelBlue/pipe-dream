@@ -15,8 +15,6 @@ class StackedMachine extends Machine {
         return SceneManager.showPrompt ? SceneManager.promptBackground : dummyColor;
     }
 
-    get indicatorOffset() { return this.height - StackedMachine.tailHeight; }
-
     methodStack = [];
 
     constructor(key, inTipe, color, text) {
@@ -59,7 +57,6 @@ class StackedMachine extends Machine {
             const onClick = () => {
                 if (!SceneManager.editable) return;
                 SceneManager.tray.loadOptionsFor(method.outTipe, this, index);
-                this.fragmentClicked(method, index);
             }
 
             if (!SceneManager.editable) {
@@ -75,7 +72,9 @@ class StackedMachine extends Machine {
         Renderer.pop(this);
     }
 
-    fragmentClicked() { }
+    indicatorOffset(fragmentIndex) { 
+        return this.height - StackedMachine.tailHeight - this.methodStack.slice(fragmentIndex + 1).reduce((p, fragment) => p + fragment.height, 0);
+    }
 
     deleteFragment(index) {
         this.resilient = this.methodStack.length === 0;

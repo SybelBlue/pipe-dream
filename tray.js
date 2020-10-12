@@ -37,7 +37,7 @@ class Tray {
         this.mode = {
             type: 'fragment',
             selectedMachine: machine,
-            machineIndex: index,
+            fragmentIndex: index,
             reducable: tipe.reductions && machine.isReduce,
         };
 
@@ -60,7 +60,7 @@ class Tray {
         if (!this.mode) return;
         if (this.mode.type === 'fragment') {
             if (this.mode.selectedMachine) {
-                this.mode.selectedMachine.pushFragment(option, this.mode.machineIndex);
+                this.mode.selectedMachine.pushFragment(option, this.mode.fragmentIndex);
             }
         } else if (this.mode.type === 'machine') {
             console.log('something weird happened');
