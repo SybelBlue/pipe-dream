@@ -145,7 +145,7 @@ const SceneManager = {
         
         for (var i = indexStart; i < min(indexStart + 4, this.level.tests.length); i++) {
             const test = this.level.tests[i];
-            if (i !== this.testIndex) {
+            if (i !== this.testIndex || this.testXOffset !== 0) {
                 TestRunner.drawTestPreview(test); // make clickable
             }
             Renderer.translate(slotWidth, 0);
@@ -212,32 +212,31 @@ const SceneManager = {
     runLevel() {
         this.editable = false;
         this.canContinue = false;
-        this.testIndex = 0;
         this.exittingValues = {};
         this.currentSolutions = this.level.tests.map(t => this.editor.pipeline.process(t));
         this.passedTests = this.currentSolutions.map((sol, i) => {
             return this.level.solutions[i].length === sol.length && this.level.solutions[i].every((s, j) => s.equals(sol[j]));
         });
-        this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);
+        this.runTest(0);
     },
 
     testCompleted(output) {
-        this.testIndex++;
-        // const oldRunner = this.runner;
-        // this.runner = new IterateAnimator(
-        //     (offset) => {
-        //         oldRunner.draw();
-        //         this.testXOffset = offset;
-        //     },
-        //     0,
-        //     (offset) => offset - TestRunner.speed,
-        //     (offset) => offset <= -Editor.gutterSize,
-        //     () => {
-        //         this.testXOffset = 0;
-        //         this.beginTest();
-        //     }
-        // );
-        this.beginTest();
+        const oldRunner = this.runner;
+        this.runner = new IterateAnimator(
+            (offset) => {
+                oldRunner.draw(false);
+                this.testXOffset = offset;
+            },
+            0,
+            (offset) => offset - TestRunner.speed,
+            (offset) => offset <= -Editor.gutterSize,
+            () => {
+                this.testXOffset = 0;
+                this.testIndex++;
+                this.runner = oldRunner;
+                this.beginTest();
+            }
+        );
     },
 
     runTest(index) {
@@ -246,8 +245,12 @@ const SceneManager = {
     },
 
     beginTest() {
+        this.testXOffset = 0;
         if (this.level.tests.length <= this.testIndex) {
             this.canContinue = this.passedTests.reduce((p, v) => p && v);
+            this.testXOffset = -Editor.gutterSize;
+            const oldRunner = this.runner;
+            this.runner = new PauseAnimator(() => oldRunner.draw(false), 100000, () => this.editable = true);
             return;
         }
         this.runner = new TestRunner(this.editor.pipeline, this.level.tests[this.testIndex]);

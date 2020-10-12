@@ -38,7 +38,7 @@ class Machine {
 
     description = "A simple machine, \n with simple uses.";
     textSize = 26;
-    resilient = true;
+    resilient = false;
     isGreedy = false;
     isDummy = true;
     exclaimFrames = 0;

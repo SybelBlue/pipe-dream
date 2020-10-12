@@ -53,7 +53,7 @@ class TestRunner {
         Renderer.pop(this);
     }
 
-    draw() {
+    draw(drawTestPreview=true) {
         // bottom pipe
         Renderer.temporary(this, Editor.pipeGutterSize, this.bottomMarginStart, 
             !Array.last(this.pipeline) || Array.last(this.pipeline).properOutputTipe.isStream ?
@@ -61,8 +61,10 @@ class TestRunner {
                 () => Conveyor.draw(null, this.bottomMarginHeight)
         );
         
-        Renderer.temporary(this, Editor.pipeGutterSize, 0,
-            () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.ballYOffset));
+        if (drawTestPreview) {
+            Renderer.temporary(this, Editor.pipeGutterSize, 0,
+                () => TestRunner.drawTestPreview(this.test, this.pipeline.closed, this.done, this.ballYOffset));
+        }
         this.ballYOffset = max(this.ballYOffset - this.speed * 0.8, 0);
 
         // pipeline

@@ -24,6 +24,7 @@ class StackedMachine extends Machine {
         if (!this.isDummy) {
             SceneManager.tray.loadOptionsFor(this.inTipe, this, 0);
         }
+        this.resilient = true;
     }
 
     draw() {
@@ -77,6 +78,7 @@ class StackedMachine extends Machine {
     fragmentClicked() { }
 
     deleteFragment(index) {
+        this.resilient = this.methodStack.length === 0;
         this.methodStack = this.methodStack.slice(0, index);
         SceneManager.tray.loadOptionsFor(
             Array.last(this.methodStack) ? Array.last(this.methodStack).outTipe : this.inTipe, 
@@ -93,7 +95,8 @@ class StackedMachine extends Machine {
         }
     }
 
-    pushFragment(fragment, sourceIndex) { 
+    pushFragment(fragment, sourceIndex) {
+        this.resilient = false; 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
         SceneManager.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);
         editor.validatePipeline();
