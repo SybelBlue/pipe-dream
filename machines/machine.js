@@ -175,4 +175,8 @@ class Machine {
     exclaim() {
         this.exclaimFrames += 90;
     }
+
+    transpile() {
+        return `${this.text}()`;
+    }
 }

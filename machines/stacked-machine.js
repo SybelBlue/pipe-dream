@@ -108,6 +108,17 @@ class StackedMachine extends Machine {
     }
 
     process(values) { return values.map(x => this.apply(x)).filter(x => exists(x, false)); }
+
+    transpile() {
+        if (this.methodStack.length === 0) {
+            // import java.util.function.Function
+            return `${this.text}(Function.identity())`;
+        }
+        if (this.methodStack.length === 1) {
+            return `${this.text}(${this.methodStack[0].transpile(true)})`;
+        }
+        return `${this.text}(${this.inTipe.variableName} -> ${this.inTipe.variableName}` + this.methodStack.reduce((prev, method) => prev + method.transpile(), '') + ')';
+    }
 }
 
 class TipedStackMachine extends StackedMachine {

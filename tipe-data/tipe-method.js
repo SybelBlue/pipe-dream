@@ -15,7 +15,7 @@ class TipeMethod {
         this.inTipe = inTipe;
         this.outTipe = outTipe;
         this.compute = prewrapped ? compute : 
-            function(tipedValue) { return outTipe.new(compute(tipedValue)); }
+            tipedValue => outTipe.new(compute(tipedValue));
     }
 
     graftOnto(object, _defaults) {
@@ -88,6 +88,10 @@ class TipeMethod {
             Renderer.regionStub('deleteButton', start, midline - halfWidth, 2 * halfWidth, 2 * halfWidth)
         );
     }
+
+    transpile(asRef=false) {
+        return asRef ? `${this.inTipe.name}::${this.name}` : `.${this.name}()`;
+    }
 }
 
 class TipeProperty extends TipeMethod {
@@ -100,6 +104,10 @@ class TipeProperty extends TipeMethod {
             defaults[this.name] ? 
                 (defaults[this.name].tipe ? defaults[this.name] : this.outTipe.new(defaults[this.name])) : 
                 this.outTipe.new();
+    }
+
+    transpile(asRef=false) {
+        return asRef ? `${this.inTipe.name}::get${this.name.charAt(0).toUpperCase() + this.name.slice(1)}` : `.${this.name}`;
     }
 }
 
@@ -120,6 +128,13 @@ class TipeReduction extends TipeMethod {
             throw new Error('mismatched out tipes!', out, this);
         }
         return out;
+    }
+
+    transpile(_asRef=false) {
+        if (_asRef) {
+            console.warn('Cannot deref a TipeReduction!');
+        }
+        return `${this.inTipe.name}::${this.name}`
     }
 }
 

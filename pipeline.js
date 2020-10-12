@@ -87,4 +87,10 @@ class Pipeline extends Array /* of Machines */ {
     process(tipedValues) {
         return this.reduce((prev, machine) => machine.process(prev), tipedValues);
     }
+
+    transpile(streamStr) {
+        return this.reduce((str, machine) => {
+            return str + '\n\t.' + machine.transpile();
+        }, streamStr);
+    }
 }
