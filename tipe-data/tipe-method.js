@@ -10,12 +10,13 @@ class TipeMethod {
         return Renderer.textWidth(this.name, TipeProperty.fontSize, TipeProperty.font) + 10 + Tipe.shapeIndent;
     }
 
-    constructor(name, inTipe, outTipe, compute, prewrapped=false) {
+    constructor(name, inTipe, outTipe, compute) {
         this.name = name;
         this.inTipe = inTipe;
         this.outTipe = outTipe;
-        this.compute = prewrapped ? compute : 
-            tipedValue => outTipe.new(compute(tipedValue));
+        if (compute) {
+            this.compute = tipedValue => outTipe.new(compute(tipedValue));
+        }
     }
 
     graftOnto(object, _defaults) {
@@ -89,14 +90,16 @@ class TipeMethod {
         );
     }
 
-    transpile(asRef=false) {
-        return asRef ? `${this.inTipe.name}::${this.name}` : `.${this.name}()`;
+    transpile(asRef=false, hasNext=true) {
+        const nonRef = `.${this.name}` + (this.outTipe.isFunctionTipe ? '' : '()');
+        return asRef ? `${this.inTipe.name}::${this.name}` : nonRef;
     }
 }
 
 class TipeProperty extends TipeMethod {
     constructor(name, inTipe, outTipe) {
-        super(name, inTipe, outTipe, function(self) { return self[name]; }, true);
+        super(name, inTipe, outTipe, null);
+        this.compute = function(self) { return self[name]; };
     }
 
     graftOnto(object, defaults) {
@@ -113,7 +116,7 @@ class TipeProperty extends TipeMethod {
 
 class TipeReduction extends TipeMethod {
     constructor(name, tipe, compute, seed) {
-        super(name, tipe, tipe, compute, true);
+        super(name, tipe, tipe, null);
         this.tipedSeed = tipe.new(seed);
         this.compute = (tipedValue, tipedPrev) => this.outTipe.new(compute(tipedPrev, tipedValue));
     }
@@ -148,7 +151,8 @@ class UIMethod extends TipeMethod {
     }
 
     constructor(name, inTipe, outTipe, inputBox, compute) {
-        super(name, inTipe, outTipe, compute, true);
+        super(name, inTipe, outTipe, null);
+        this.compute = compute;
         this.inputBox = inputBox;
         this.showName = false;
     }
@@ -157,5 +161,9 @@ class UIMethod extends TipeMethod {
         super.draw(onClick);
         this.inputBox.onClick = passThrough ? onClick : () => {};
         Renderer.temporary(this, Tipe.shapeIndent, 4, () => this.inputBox.draw(SceneManager.editable));
+    }
+
+    transpile(asRef) {
+        return `(${this.inputBox.transpileValue})`;
     }
 }

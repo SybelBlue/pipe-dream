@@ -244,6 +244,14 @@ const TextTipe = extendLiteral(Tipe, {
             length: new TipeMethod('length', TextTipe, NumberTipe, self => self.value.length),
             firstLetter: new TipeMethod('firstLetter', TextTipe, TextTipe, self => self.value.substring(0, 1)),
             firstWord: new TipeMethod('firstWord', TextTipe, TextTipe, self => self.value.split(' ')[0]),
+            equals: new TipeMethod(
+                'equals', 
+                TextTipe, 
+                Tipe.Function(TextTipe, BooleanTipe, InputBox, { defaultText: 'hello' }),
+                function(self) { 
+                    return (text) => BooleanTipe.new(self.value.trim() == text)
+                }
+            ),
         }
     },
 

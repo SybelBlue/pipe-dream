@@ -76,6 +76,8 @@ class InputBox {
     }
 
     validate() { return true; }
+
+    get transpileValue() { return `"${this.value}"`; }
 }
 
 class FloatBox extends InputBox {
@@ -93,6 +95,8 @@ class FloatBox extends InputBox {
         this.text = '' + parsed;
         return true;
     }
+
+    get transpileValue() { return this.value; }
 }
 
 class IntegerBox extends InputBox {
@@ -110,4 +114,6 @@ class IntegerBox extends InputBox {
         this.text = '' + parsed;
         return true;
     }
+
+    get transpileValue() { return this.value; }
 }
