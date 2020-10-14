@@ -47,7 +47,8 @@ Tipe.Stream = function(tipe) {
         basic: true,
         isStream: true,
         streamable: true,
-        new(...values) { return new TipedValue(this, { value: values }); }
+        new(values) { return new TipedValue(this, { value: values }); },
+        of(...values) { return this.new(values); }
     });
 }
 

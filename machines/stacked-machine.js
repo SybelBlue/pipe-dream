@@ -117,7 +117,13 @@ class StackedMachine extends Machine {
         if (this.methodStack.length === 1) {
             return `${this.text}(${this.methodStack[0].transpile(true)})`;
         }
-        return `${this.text}(${this.inTipe.variableName} -> ${this.inTipe.variableName}` + this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '') + ')';
+        const prefix = `${this.text}(${this.inTipe.variableName} -> `;
+        const methodStackStr = this.inTipe.variableName + this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '');
+        if (this.outputTipe.isFunctionTipe) {
+            const fVarName = this.outputTipe.inTipe.variableName;
+            return`${prefix}(${fVarName} -> ${methodStackStr}(${fVarName})))`;
+        }
+        return prefix + methodStackStr + ')';
     }
 }
 
