@@ -112,7 +112,7 @@ class StackedMachine extends Machine {
     transpile() {
         if (this.methodStack.length === 0) {
             // import java.util.function.Function
-            return `${this.text}(Function.identity())`;
+            return `${this.text}( ____ )`;
         }
         if (this.methodStack.length === 1) {
             return `${this.text}(${this.methodStack[0].transpile(true)})`;
