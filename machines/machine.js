@@ -179,4 +179,8 @@ class Machine {
     transpile() {
         return `${this.text}()`;
     }
+
+    get cacheData() { return null; }
+
+    recieveCacheData(_data) { }
 }

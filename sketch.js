@@ -26,6 +26,10 @@ function setup() {
 
     SceneManager.unsafeMode = config.unsafe;
     editor = SceneManager.startLevel(levels[config.level], config.prompt);
+
+    if (!SceneManager.unsafeMode) {
+        SceneManager.loadFromCache();
+    }
 }
 
 function draw() {

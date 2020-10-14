@@ -112,7 +112,7 @@ class StackedMachine extends Machine {
     transpile() {
         if (this.methodStack.length === 0) {
             // import java.util.function.Function
-            return `${this.text}( ____ )`;
+            return `${this.text}(ball -> ball /* does nothing */)`;
         }
         if (this.methodStack.length === 1) {
             return `${this.text}(${this.methodStack[0].transpile(true)})`;
@@ -120,10 +120,21 @@ class StackedMachine extends Machine {
         const prefix = `${this.text}(${this.inTipe.variableName} -> `;
         const methodStackStr = this.inTipe.variableName + this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '');
         if (this.outputTipe.isFunctionTipe) {
-            const fVarName = this.outputTipe.inTipe.variableName;
-            return`${prefix}(${fVarName} -> ${methodStackStr}(${fVarName})))`;
+            const paramTipe = this.outputTipe.inTipe;
+            const fVarName = paramTipe.variableName;
+            return`${prefix}(Function<${paramTipe.name}, ${this.outputTipe.outTipe.name}>) (${fVarName} -> ${methodStackStr}(${fVarName})))`;
         }
         return prefix + methodStackStr + ')';
+    }
+
+    get cacheData() {
+        return JSON.stringify(this.methodStack.map(method => method.name));
+    }
+
+    recieveCacheData(data) {
+        for (const methodName of JSON.parse(data)) {
+            this.pushFragment(this.outputTipe.methods[methodName], this.methodStack.length - 1);
+        }
     }
 }
 

@@ -100,10 +100,17 @@ class Editor {
         this.validatePipeline();
     }
 
-    pushMachine(machineConstructor, ...args) {
+    pushMachine(machineConstructor, doCache=true) {
         if (this.pipeline.terminalMachine) return;
-        this.pipeline.push(new machineConstructor(this._keyCount++, this.outputTipe, ...args));
-        if (this.pipeline.terminalMachine) SceneManager.tray.loadMachineOptions();
+        const machine = new machineConstructor(this._keyCount++, this.outputTipe);
+        this.pipeline.push(machine);
+        if (this.pipeline.terminalMachine && !machine.isReduction) SceneManager.tray.loadMachineOptions();
+
+        if (doCache) {
+            SceneManager.cache();
+        }
+
+        return machine;
     }
 
     validatePipeline() {
@@ -115,10 +122,12 @@ class Editor {
                     machine.inTipe = currentTipe;
                 } else {
                     this.pipeline = this.pipeline.slice(0, i);
-                    return;
+                    break;
                 }
             }
             currentTipe = machine.outputTipe;
         }
+
+        SceneManager.cache();
     }
 }

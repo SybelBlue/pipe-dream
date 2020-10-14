@@ -93,4 +93,16 @@ class Pipeline extends Array /* of Machines */ {
             return str + '\n\t.' + machine.transpile();
         }, streamStr);
     }
+
+    get cacheData() {
+        return JSON.stringify(this.map(m => { return { name: m.constructor.name, data: m.cacheData }; }));
+    }
+
+    recieveCacheData(data) {
+        for (const machineData of JSON.parse(data)) {
+            const dummy = Machine.machines.find(m => m.constructor.name == machineData.name);
+            const machine = SceneManager.editor.pushMachine(dummy.constructor, false);
+            machine.recieveCacheData(machineData.data);
+        }
+    }
 }
