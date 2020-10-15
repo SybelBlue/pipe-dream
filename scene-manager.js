@@ -96,12 +96,14 @@ const SceneManager = {
             () => this.showPrompt = true
         ).start;
 
-        nextStart = this.drawHeaderButton(
-            'Undo', 
-            nextStart,
-            color('#B796AC'), 
-            () => SceneManager.undo()
-        ).start;
+        if (SceneManager.actionStack.length) {
+            nextStart = this.drawHeaderButton(
+                'Undo', 
+                nextStart,
+                color('#B796AC'), 
+                () => SceneManager.undo()
+            ).start;
+        }
 
         if (SceneManager.redoStack.length || SceneManager.unsafeMode) {
             nextStart = this.drawHeaderButton(
