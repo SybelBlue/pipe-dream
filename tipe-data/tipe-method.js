@@ -114,7 +114,8 @@ class TipeProperty extends TipeMethod {
     }
 
     transpile(asRef=false) {
-        return asRef ? `${this.inTipe.name}::get${this.name.charAt(0).toUpperCase() + this.name.slice(1)}` : `.${this.name}`;
+        const getter = `get${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`;
+        return asRef ? `${this.inTipe.name}::${getter}` : `.${getter}()`;
     }
 }
 
