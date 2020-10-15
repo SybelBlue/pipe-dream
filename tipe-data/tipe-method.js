@@ -10,10 +10,11 @@ class TipeMethod {
         return Renderer.textWidth(this.name, TipeProperty.fontSize, TipeProperty.font) + 10 + Tipe.shapeIndent;
     }
 
-    constructor(name, inTipe, outTipe, compute) {
+    constructor(name, inTipe, outTipe, compute, documentation='') {
         this.name = name;
         this.inTipe = inTipe;
         this.outTipe = outTipe;
+        this.documentation = documentation;
         if (compute) {
             this.compute = tipedValue => outTipe.new(compute(tipedValue));
         }
@@ -38,7 +39,7 @@ class TipeMethod {
     }
 
     // expects upper left corner is baseline
-    draw(onClick, _interactable) {
+    draw(onClick, _passThrough) {
         Renderer.newRenderable(Layers.CodeFragment, 
             (regions) => {
                 if (regions.fragment.clicked && onClick) onClick();
