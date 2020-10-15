@@ -87,7 +87,7 @@ class TestRunner {
 
         if (this.done) {
             if (this.finishedFrame + 100 < frameCount) {
-                SceneManager.testCompleted(this.output);
+                TestManager.testCompleted(this.output);
                 this.signaled = true;
             }
             return;
@@ -98,7 +98,7 @@ class TestRunner {
                 if (this.pipeline.terminalMachine && this.pipeline.terminalMachine.isGreedy) {
                     const finalValue = this.pipeline.terminalMachine.value;
                     this.output.push(finalValue);
-                    SceneManager.valueExitting(finalValue);
+                    TestManager.valueExitting(finalValue);
                 }
                 this.done = true;
                 this.finishedFrame = frameCount;
@@ -125,7 +125,7 @@ class TestRunner {
     currentEnteredMachine(index) {
         if (this.pipeline.length <= index) {
             this.output.push(this.currentItem.value);
-            SceneManager.valueExitting(this.currentItem.value);
+            TestManager.valueExitting(this.currentItem.value);
             this.currentItem = null;
             return;
         }
@@ -139,7 +139,7 @@ class TestRunner {
         }
 
         if (machine.isTerminal) {
-            SceneManager.valueExitting(this.currentItem.value);
+            TestManager.valueExitting(this.currentItem.value);
             this.currentItem = null;
             return;
         }

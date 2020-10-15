@@ -45,7 +45,7 @@ const SceneManager = {
             const width = Renderer.textWidth('Run', 24) + 2 * margin;
             const start = windowWidth - width - margin;
             Renderer.temporary(this, start, margin, 
-                () => Renderer.newUIButton('Run', color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), () => !this.prompt && this.runLevel(), margin));
+                () => Renderer.newUIButton('Run', color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), () => !this.prompt && TestManager.runLevel(), margin));
             
             // draw prompt button
             const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
@@ -121,25 +121,5 @@ const SceneManager = {
 
         Renderer.temporary(this, windowWidth - 95, this.promptHeight - 15,
             () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.showPrompt = false));
-    },
-
-    runLevel() {
-        TestManager.runLevel();
-    },
-
-    testCompleted(output) {
-        TestManager.testCompleted(output);
-    },
-
-    runTest(index) {
-        TestManager.runTest(index);
-    },
-
-    beginTest() {
-        TestManager.beginTest();
-    },
-
-    valueExitting(tipedValue) {
-        TestManager.valueExitting(tipedValue);
     }
 }
