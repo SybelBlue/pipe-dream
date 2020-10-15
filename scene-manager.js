@@ -121,5 +121,49 @@ const SceneManager = {
 
         Renderer.temporary(this, windowWidth - 95, this.promptHeight - 15,
             () => Renderer.newUIButton('Okay!', color('#5C9EAD'), () => this.showPrompt = false));
+    },
+
+    actionStack: [],
+    redoStack: [],
+
+    get cacheKey() { return (lens(SceneManager, 'level', 'number') || 'missing') + ''; },
+
+    cache() {
+        const pipeline = lens(SceneManager, 'editor', 'pipeline');
+        if (!pipeline) return;
+
+        const lastData = SceneManager.retrieve();
+        const data = pipeline.cacheData;
+
+        if (lastData == data) return;
+
+        SceneManager.actionStack.push(lastData);
+        localStorage.setItem(SceneManager.cacheKey, data);
+    },
+    
+    retrieve() {
+        return localStorage.getItem(SceneManager.cacheKey);
+    },
+    
+    loadFromCache() {
+        const pipeline = SceneManager.retrieve();
+        if (!pipeline) return;
+        SceneManager.editor.pipeline.recieveCacheData(pipeline);
+    },
+
+    undo() {
+        if (!this.actionStack.length) return;
+        const last = this.actionStack.pop();
+        this.redoStack.push(SceneManager.retrieve());
+        localStorage.setItem(SceneManager.cacheKey, last);
+        SceneManager.loadFromCache();
+    },
+
+    redo() {
+        if (!this.redoStack.length) return;
+        const next = this.redoStack.pop();
+        this.actionStack.push(SceneManager.retrieve());
+        localStorage.setItem(SceneManager.cacheKey, next);
+        SceneManager.loadFromCache();
     }
 }
