@@ -105,10 +105,10 @@ class Editor {
         const bobOffset = 3 * sin(frameCount / 10);
         const leftX = Editor.gutterSize - 20 + bobOffset;
         Renderer.newRenderable(Layers.UI, () => {
-            fill(255);
-            stroke(255);
+            fill(0);
+            stroke(0);
             strokeWeight(4);
-            line(leftX, arrowMidline, leftX + 15, arrowMidline);
+            line(Tray.maxWidth, arrowMidline, leftX + 15, arrowMidline);
             line(leftX + 5, arrowMidline - 5, leftX + 15, arrowMidline);
             line(leftX + 5, arrowMidline + 5, leftX + 15, arrowMidline);
         });
