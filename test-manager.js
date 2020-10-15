@@ -52,7 +52,7 @@ const TestManager = {
         const trayWidth = 200;
         const textHeight = Renderer.textHeight(24);
         const margin = 10;
-        const start = windowWidth - Renderer.textWidth('Stop', 24) - 3 * margin;
+        const start = windowWidth - Renderer.textWidth('Stop', 24) - 4 * margin;
         Renderer.temporary(this, start, margin, 
             () => Renderer.newUIButton('Stop', color(250, 80, 80), () => SceneManager.editable = true, margin));
 

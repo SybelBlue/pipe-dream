@@ -90,7 +90,7 @@ const SceneManager = {
         // constructs buttons right to left, updating nextStart each time
         let nextStart = this.drawHeaderButton(
             'Run', 
-            windowWidth, 
+            windowWidth - 10, 
             color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), 
             () => !this.prompt && TestManager.runLevel()
         ).start;
