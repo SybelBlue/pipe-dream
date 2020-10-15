@@ -39,19 +39,7 @@ const SceneManager = {
         if (this.editable) {
             this.tray.draw();
             this.editor.draw();
-
-            // draw run button
-            const margin = 10;
-            const width = Renderer.textWidth('Run', 24) + 2 * margin;
-            const start = windowWidth - width - margin;
-            Renderer.temporary(this, start, margin, 
-                () => Renderer.newUIButton('Run', color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), () => !this.prompt && TestManager.runLevel(), margin));
-            
-            // draw prompt button
-            const pWidth = Renderer.textWidth('Prompt', 24) + 2 * margin;
-            const pStart = start - pWidth - margin;
-            Renderer.temporary(this, pStart, margin,
-                () => Renderer.newUIButton('Prompt', this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230), () => this.showPrompt = true));
+            this.drawHeaderButtons();
         } else {
             TestManager.draw();
         }
@@ -80,6 +68,55 @@ const SceneManager = {
         }
 
         Renderer.clearStack();
+    },
+
+    drawHeaderButtons() {
+        // constructs buttons right to left, updating nextStart each time
+        let nextStart = this.drawHeaderButton(
+            'Run', 
+            windowWidth, 
+            color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), 
+            () => !this.prompt && TestManager.runLevel()
+        ).start;
+        
+        nextStart = this.drawHeaderButton(
+            'Prompt', 
+            nextStart, 
+            this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230),
+            () => this.showPrompt = true
+        ).start;
+
+        nextStart = this.drawHeaderButton(
+            'Undo', 
+            nextStart,
+            color('#B796AC'), 
+            () => SceneManager.undo()
+        ).start;
+
+        if (SceneManager.redoStack.length || SceneManager.unsafeMode) {
+            nextStart = this.drawHeaderButton(
+                'Redo', 
+                nextStart,
+                color('#FFD400'), 
+                () => SceneManager.redo()
+            ).start;
+        }
+
+        if (SceneManager.editor.pipeline.length) {
+            nextStart = this.drawHeaderButton(
+                'Clear', 
+                nextStart,
+                color('#D72638'), 
+                () => SceneManager.clear()
+            ).start;
+        }
+    },
+
+    drawHeaderButton(text, start, color, onClick, margin=10) {
+        const width = Renderer.textWidth(text, 24) + 2 * margin;
+        const buttonStart = start - width - margin;
+        Renderer.temporary(this, buttonStart, margin, () => Renderer.newUIButton(text, color, onClick, margin));
+        return { width: width, start: buttonStart };
     },
 
     drawPrompt() {
@@ -143,7 +180,7 @@ const SceneManager = {
         if (SceneManager.actionStack.length > 1000) {
             SceneManager.actionStack = SceneManager.actionStack.slice(SceneManager.actionStack.length - 990);
         }
-        
+
         SceneManager.actionStack.push(lastData);
         SceneManager.redoStack = [];
         localStorage.setItem(SceneManager.cacheKey, data);
@@ -178,5 +215,10 @@ const SceneManager = {
         SceneManager.allowCaching = false;
         try { SceneManager.loadFromCache(); } 
         finally { SceneManager.allowCaching = true; }
+    },
+
+    clear() {
+        SceneManager.editor.clearPipeline();
+        SceneManager.cache();
     }
 }
