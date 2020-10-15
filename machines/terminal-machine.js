@@ -11,7 +11,7 @@ class TerminalMachine extends Machine {
             get() { return this.outputTipe; },
         });
         Object.defineProperty(obj, 'isTerminal', { configurable: true, writable: true, value: true })
-        Object.defineProperty(obj, 'finished', { configurable: true, writable: true, value: false })
+        Object.defineProperty(obj, 'finished', { configurable: true, writable: true, value: true })
         Object.defineProperty(obj, 'resilient', { configurable: true, writable: true, value: true })
         Object.defineProperty(obj, 'closedPipeline', { configurable: true, writable: true, value: false });
     }
@@ -163,7 +163,6 @@ class ReduceMachine extends TipedStackMachine {
 
     isReduce = true;
     get innerOutputTipe() { return this.inTipe; }
-    // get finished() { return this.methodStack.length > 0; }
 
     get outputTipe() { return this.inTipe; }
 
