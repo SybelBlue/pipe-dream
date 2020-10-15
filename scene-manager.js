@@ -140,6 +140,10 @@ const SceneManager = {
 
         if (lastData == data) return;
 
+        if (SceneManager.actionStack.length > 1000) {
+            SceneManager.actionStack = SceneManager.actionStack.slice(SceneManager.actionStack.length - 990);
+        }
+        
         SceneManager.actionStack.push(lastData);
         SceneManager.redoStack = [];
         localStorage.setItem(SceneManager.cacheKey, data);
