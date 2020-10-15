@@ -150,9 +150,13 @@ class Editor {
 
     pushMachine(machineConstructor, doCache=true) {
         if (this.pipeline.terminalMachine) return;
+        
         const machine = new machineConstructor(this._keyCount++, this.outputTipe);
         this.pipeline.push(machine);
-        if (this.pipeline.terminalMachine && !machine.isReduction) SceneManager.tray.loadMachineOptions();
+        
+        if (this.pipeline.terminalMachine && !machine.isReduction) {
+            SceneManager.tray.loadMachineOptions();
+        }
 
         if (doCache) {
             SceneManager.cache();

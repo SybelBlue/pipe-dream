@@ -38,6 +38,14 @@ class Level {
     }
 }
 
+class ReductionLevel extends Level {
+    withTest(...startingTipeArgs) {
+        this.tests.push(startingTipeArgs.map(this.startingTipe.new));
+        this.solutions.push(this.endingTipe.new(this.solutionFn(startingTipeArgs)));
+        return this;
+    }
+}
+
 const levels = [
     new Level(BallTipe, NumberTipe, test => test.map(x => x.size).slice(1, 3))
         .withPrompt('sandbox (return the second and third sizes)')
@@ -159,6 +167,29 @@ const levels = [
             Level.makeBall('yellow', 20),
             Level.makeBall('red', 40),
             Level.makeBall('blue', 50),
+            Level.makeBall('purple', 80),
+        ),
+    new ReductionLevel(BallTipe, NumberTipe, test => test.filter(x => ['red', 'green', 'blue'].includes(x.color)).length)
+        .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy, CountMachine.dummy])
+        .withPrompt('Use the machines to create a pipe that counts how many balls have primary colors (red, green, or blue).')
+        .withTest(...[30, 40, 50, 60].map((n, i) => Level.makeBall(i % 2 ? 'red' : 'blue', n)))
+        .withTest(
+            Level.makeBall('red', 30),
+            Level.makeBall('orange', 40),
+            Level.makeBall('yellow', 50),
+            Level.makeBall('green', 60),
+            Level.makeBall('blue', 70),
+            Level.makeBall('purple', 80),
+        )
+        .withTest(
+            Level.makeBall('purple', 80),
+            Level.makeBall('red', 20),
+            Level.makeBall('green', 70),
+            Level.makeBall('orange', 30),
+            Level.makeBall('purple', 70),
+            Level.makeBall('green', 20),
+            Level.makeBall('red', 40),
+            Level.makeBall('blue', 30),
             Level.makeBall('purple', 80),
         ),
     new Level(BallTipe, BallTipe, test => test.filter(x => ['yellow', 'purple'].includes(x.color)).slice(0, 5).filter(x => x.size > 50).slice(0, 3))

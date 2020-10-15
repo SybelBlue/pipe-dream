@@ -37,8 +37,10 @@ class TakeMachine extends Machine {
         return null;
     }
 
+    get transpileText() { return 'limit'; }
+
     transpile() {
-        return `${this.text}(${this.inputBox.value})`;
+        return `${this.transpileText}(${this.inputBox.value})`;
     }
 }
 
@@ -77,7 +79,9 @@ class DropMachine extends Machine {
         return tipedValue;
     }
 
+    get transpileText() { return 'skip'; }
+
     transpile() {
-        return `${this.text}(${this.inputBox.value})`;
+        return `${this.transpileText}(${this.inputBox.value})`;
     }
 }

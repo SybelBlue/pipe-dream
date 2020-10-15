@@ -112,12 +112,12 @@ class StackedMachine extends Machine {
     transpile() {
         if (this.methodStack.length === 0) {
             // import java.util.function.Function
-            return `${this.text}(ball -> ball /* does nothing */)`;
+            return `${this.transpileText}(ball -> ball /* does nothing */)`;
         }
         if (this.methodStack.length === 1) {
-            return `${this.text}(${this.methodStack[0].transpile(true)})`;
+            return `${this.transpileText}(${this.methodStack[0].transpile(true)})`;
         }
-        const prefix = `${this.text}(${this.inTipe.variableName} -> `;
+        const prefix = `${this.transpileText}(${this.inTipe.variableName} -> `;
         const methodStackStr = this.inTipe.variableName + this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '');
         if (this.outputTipe.isFunctionTipe) {
             const paramTipe = this.outputTipe.inTipe;

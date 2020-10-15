@@ -177,8 +177,10 @@ class Machine {
         this.exclaimFrames += 90;
     }
 
+    get transpileText() { return this.text; }
+
     transpile() {
-        return `${this.text}()`;
+        return `${this.transpileText}()`;
     }
 
     // get cacheData() { return null; }

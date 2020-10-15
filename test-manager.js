@@ -110,7 +110,11 @@ const TestManager = {
         this.exittingValues = {};
         this.currentSolutions = SceneManager.level.tests.map(t => SceneManager.editor.pipeline.process(t));
         this.passedTests = this.currentSolutions.map((sol, i) => {
-            return SceneManager.level.solutions[i].length === sol.length && SceneManager.level.solutions[i].every((s, j) => s.equals(sol[j]));
+            const solution = SceneManager.level.solutions[i];
+            if (!(solution instanceof Array)) {
+                return solution.equals && solution.equals(sol);
+            }
+            return solution.length === sol.length && solution.every((s, j) => s.equals(sol[j]));
         });
         this.runTest(0);
     },
