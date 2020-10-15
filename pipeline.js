@@ -100,7 +100,6 @@ class Pipeline extends Array /* of Machines */ {
 
     recieveCacheData(data) {
         for (const machineData of JSON.parse(data)) {
-            console.log(machineData);
             const dummy = Machine.machines.find(m => m.constructor.name == machineData.name);
             const machine = SceneManager.editor.pushMachine(dummy.constructor, false);
             machine.recieveCacheData(machineData.data);

@@ -134,7 +134,6 @@ class StackedMachine extends Machine {
     recieveCacheData(data) {
         for (const methodData of JSON.parse(data)) {
             const outputTipe = Array.last(this.methodStack) ? Array.last(this.methodStack).outTipe : this.inTipe;
-            console.log(methodData, outputTipe.name);
             const fragment = outputTipe.methods[methodData.name];
             this.pushFragment(fragment, this.methodStack.length - 1);
             fragment.recieveCacheData(methodData.data);
