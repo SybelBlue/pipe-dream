@@ -77,6 +77,14 @@ class ColorPicker {
         )
     }
 
+    get transpileValue() {
+        if (typeof(this.current) == typeof('')) {
+            return `"${this.current}"`;
+        }
+        const selectedColorNames = ColorPicker.variantNames.filter(n => this.isSelected(n));
+        return selectedColorNames.length ? `"${selectedColorNames.join(`", "`)}"` : '';
+    }
+
     get cacheData() { return JSON.stringify(this.current); }
     
     recieveCacheData(data) { this.current = JSON.parse(data); }
