@@ -65,6 +65,7 @@ class InputBox {
     reject() { 
         this.used = this.last !== this.defaultText;
         this.text = this.last;
+        SceneManager.cache();
     }
 
     accept() {
@@ -73,11 +74,19 @@ class InputBox {
         } else {
             this.last = this.text;
         }
+        SceneManager.cache();
     }
 
     validate() { return true; }
 
     get transpileValue() { return `"${this.value}"`; }
+
+    get cacheData() { return this.text; }
+
+    recieveCacheData(data) {
+        this.text = data;
+        this.accept();
+    }
 }
 
 class FloatBox extends InputBox {

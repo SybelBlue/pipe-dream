@@ -154,7 +154,7 @@ class ScanMachine extends TipedStackMachine {
     pushFragment(fragment, _sourceIndex) { 
         this.methodStack = [fragment];
         SceneManager.tray.loadMachineOptions();
-        editor.validatePipeline();
+        SceneManager.editor.validatePipeline();
     }
 }
 
@@ -215,6 +215,6 @@ class ReduceMachine extends TipedStackMachine {
     pushFragment(fragment, _sourceIndex) { 
         this.methodStack = [fragment];
         SceneManager.tray.loadMachineOptions();
-        editor.validatePipeline();
+        SceneManager.editor.validatePipeline();
     }
 }

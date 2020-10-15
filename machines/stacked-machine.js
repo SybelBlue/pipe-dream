@@ -84,7 +84,7 @@ class StackedMachine extends Machine {
             this, 
             index
         ); 
-        editor.validatePipeline();
+        SceneManager.editor.validatePipeline();
     }
 
     onClick() {
@@ -98,7 +98,7 @@ class StackedMachine extends Machine {
         this.resilient = false; 
         this.methodStack.splice(sourceIndex + 1, this.methodStack.length - sourceIndex - 1, fragment);
         SceneManager.tray.loadOptionsFor(fragment.outTipe, this, sourceIndex + 1);
-        editor.validatePipeline();
+        SceneManager.editor.validatePipeline();
     }
 
     apply(tipedValue) { 
@@ -128,12 +128,16 @@ class StackedMachine extends Machine {
     }
 
     get cacheData() {
-        return JSON.stringify(this.methodStack.map(method => method.name));
+        return JSON.stringify(this.methodStack.map(method => { return { name: method.name, data: method.cacheData }; }));
     }
 
     recieveCacheData(data) {
-        for (const methodName of JSON.parse(data)) {
-            this.pushFragment(this.outputTipe.methods[methodName], this.methodStack.length - 1);
+        for (const methodData of JSON.parse(data)) {
+            const outputTipe = Array.last(this.methodStack) ? Array.last(this.methodStack).outTipe : this.inTipe;
+            console.log(methodData, outputTipe.name);
+            const fragment = outputTipe.methods[methodData.name];
+            this.pushFragment(fragment, this.methodStack.length - 1);
+            fragment.recieveCacheData(methodData.data);
         }
     }
 }

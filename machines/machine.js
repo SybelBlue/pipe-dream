@@ -67,7 +67,7 @@ class Machine {
             (regions) => {
                 if (SceneManager.editable && regions.body.clicked) {
                     if (regions.deleteButton.hovering && !this.isDummy) {
-                        editor.removeMachine(this.key);
+                        SceneManager.editor.removeMachine(this.key);
                         SceneManager.tray.loadMachineOptions();
                     } else {
                         this.onClick();
@@ -160,7 +160,7 @@ class Machine {
 
     onClick() {
         if (this.isDummy) {
-            editor.pushMachine(this.constructor);
+            SceneManager.editor.pushMachine(this.constructor);
         }
     }
 
@@ -180,7 +180,7 @@ class Machine {
         return `${this.text}()`;
     }
 
-    get cacheData() { return null; }
+    // get cacheData() { return null; }
 
     recieveCacheData(_data) { }
 }

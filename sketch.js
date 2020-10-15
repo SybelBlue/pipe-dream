@@ -1,4 +1,3 @@
-let editor;
 let requestRescaleCanvas = false;
 let clickThisFrame = false;
 let dimensions = null;
@@ -25,7 +24,7 @@ function setup() {
     dimensions = { width: windowWidth, height: windowHeight };
 
     SceneManager.unsafeMode = config.unsafe;
-    editor = SceneManager.startLevel(levels[config.level], config.prompt);
+    SceneManager.startLevel(levels[config.level], config.prompt);
 
     if (!SceneManager.unsafeMode) {
         SceneManager.loadFromCache();
@@ -34,9 +33,9 @@ function setup() {
 
 function draw() {
     if (requestRescaleCanvas) {
-        resizeCanvas(editor.width, SceneManager.minHeight);
-        editor.height = SceneManager.minHeight;
-        dimensions.height = editor.height;
+        resizeCanvas(SceneManager.editor.width, SceneManager.minHeight);
+        SceneManager.editor.height = SceneManager.minHeight;
+        dimensions.height = SceneManager.editor.height;
     }
 
     SceneManager.draw();
@@ -46,9 +45,9 @@ function draw() {
 
 function windowResized() { 
     resizeCanvas(windowWidth, windowHeight);
-    editor.width = windowWidth;
-    editor.height = max(SceneManager.minHeight, windowHeight);
-    dimensions = { width: windowWidth, height: editor.height };
+    SceneManager.editor.width = windowWidth;
+    SceneManager.editor.height = max(SceneManager.minHeight, windowHeight);
+    dimensions = { width: windowWidth, height: SceneManager.editor.height };
 }
 
 function mouseClicked() { clickThisFrame = true; }

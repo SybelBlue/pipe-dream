@@ -94,6 +94,10 @@ class TipeMethod {
         const nonRef = `.${this.name}` + (this.outTipe.isFunctionTipe ? '' : '()');
         return asRef ? `${this.inTipe.name}::${this.name}` : nonRef;
     }
+
+    // get cacheData() { return null; }
+
+    recieveCacheData(_data) { }
 }
 
 class TipeProperty extends TipeMethod {
@@ -166,4 +170,8 @@ class UIMethod extends TipeMethod {
     transpile(asRef) {
         return `(${this.inputBox.transpileValue})`;
     }
+
+    get cacheData() { return this.inputBox.cacheData; }
+
+    recieveCacheData(data) { this.inputBox.recieveCacheData(data); }
 }

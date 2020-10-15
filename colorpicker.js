@@ -31,10 +31,15 @@ class ColorPicker {
     }
 
     constructor(multiMode=false) {
-        this.selected = 
-            multiMode ?
-                (name) => this.current[name] = !this.current[name]:
-                (name) => this.current = name;
+        this.selected = (name) => {
+            if (multiMode) {
+                this.current[name] = !this.current[name];
+            }
+            else {
+                this.current = name;
+            }
+            SceneManager.cache();
+        };
 
         this.current = 
             multiMode ?
@@ -71,4 +76,8 @@ class ColorPicker {
             ...ColorPicker.colorBoxes.map(o => Renderer.regionStub(o.name, o.x, o.y, o.width, o.height))
         )
     }
+
+    get cacheData() { return JSON.stringify(this.current); }
+    
+    recieveCacheData(data) { this.current = JSON.parse(data); }
 }
