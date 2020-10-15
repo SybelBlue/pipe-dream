@@ -155,6 +155,16 @@ class ScanMachine extends TipedStackMachine {
         this.methodStack = [fragment];
         SceneManager.tray.loadMachineOptions();
         SceneManager.editor.validatePipeline();
+        SceneManager.cache();
+    }
+
+    recieveCacheData(data) {
+        const list = JSON.parse(data);
+        if (list.length) {
+            this.pushFragment(this.inTipe.reductions[list[0].name]);
+        } else {
+            this.methodStack = [];
+        }
     }
 }
 
@@ -215,5 +225,15 @@ class ReduceMachine extends TipedStackMachine {
         this.methodStack = [fragment];
         SceneManager.tray.loadMachineOptions();
         SceneManager.editor.validatePipeline();
+        SceneManager.cache();
+    }
+
+    recieveCacheData(data) {
+        const list = JSON.parse(data);
+        if (list.length) {
+            this.pushFragment(this.inTipe.reductions[list[0].name]);
+        } else {
+            this.methodStack = [];
+        }
     }
 }
