@@ -74,7 +74,7 @@ function draw() {
 }
 
 function loadLevel() {
-    window.location = location.href;
+    window.location = 'https://sybelblue.github.io/pipe-dream/';
 }
 
 function windowResized() { 
