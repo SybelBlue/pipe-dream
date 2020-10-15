@@ -82,6 +82,7 @@ class Machine {
                 fill(Machine.textColor);
                 text(this.text, 10, 30);
                 
+                // draw red line
                 if (!this.finished && !this.isDummy) {
                     stroke(200, 5, 5);
                     const y = 20 + Renderer.textHeight(this.textSize) * 0.8;

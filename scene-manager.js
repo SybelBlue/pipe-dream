@@ -22,6 +22,11 @@ const SceneManager = {
         return robustMax(lens(this.runner, 'height'), lens(this.editor, 'minHeight'), this.promptHeight + 30);
     },
 
+    get transpiled() {
+        const varName = lens(SceneManager.level, 'startingTipe', 'variableName');
+        return lens(SceneManager.editor, 'pipeline', 'transpile') && varName && SceneManager.editor.pipeline.transpile(varName + 's');
+    },
+
     startLevel(level, prompt=false) {
         this.level = level;
         this.showPrompt = prompt;
@@ -88,7 +93,7 @@ const SceneManager = {
     },
 
     drawPrompt() {
-        const lines = Renderer.textToLines(this.level.prompt, 36, windowWidth - 30);
+        const lines = Renderer.textToLines(this.level.prompt, 36, windowWidth - 50);
         if (!exists(lines)) return;
         Renderer.newRenderable(Layers.UI, () => {
             stroke(0);

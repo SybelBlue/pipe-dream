@@ -61,7 +61,7 @@ const Renderer = {
         const charsInLine = floor(maxWidth / charWidth);
         if (charsInLine <= 1) return null;
 
-        return rawText.split('\n').map(line => line.split(/\s/)).reduce((output, line) => {
+        return rawText.split('\n').map(line => line.split(' ')).reduce((output, line) => {
             let current = '';
             let i = 0;
             while (i < line.length) {
@@ -84,7 +84,7 @@ const Renderer = {
                     continue;
                 }
 
-                current += (current.length > 0 ? ' ' : '') + word;
+                current += (current.length > 0 || word.startsWith(' ') ? ' ' : '') + word;
                 i++;
             }
             output.push(current);

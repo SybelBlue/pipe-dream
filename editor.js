@@ -10,6 +10,26 @@ class Editor {
 
     static get pipelineMidline() { return Editor.gutterSize + Machine.width / 2; }
 
+    get transpilerTray() {
+        const out = {
+            x: Editor.gutterSize + Machine.width * 2,
+            y: Editor.darkMargin * 2,
+            margin: 10,
+            fontSize: 14
+        };
+
+        out.width = this.width - out.x;
+        out.lineGap = Renderer.textHeight(out.fontSize) + 4;
+        
+        const text = SceneManager.transpiled + (this.pipeline.length ? '' : '...');
+        out.lines = Renderer.textToLines(text, out.fontSize, out.width - 2 * out.margin);
+
+        const linesHeight = (out.lines.length + 1) * out.lineGap;
+        out.height = windowHeight < linesHeight ? this.height - out.y : linesHeight;
+
+        return out;
+    }
+
     _keyCount = 0;
 
     get outputTipe() { return this.pipeline.outputTipe || this.startingTipe; }
@@ -72,6 +92,8 @@ class Editor {
             }
         });
         Renderer.pop(this);
+
+        this.drawTranspilerOutput();
     }
 
     drawIndicator() {
@@ -90,6 +112,32 @@ class Editor {
             line(leftX + 5, arrowMidline - 5, leftX + 15, arrowMidline);
             line(leftX + 5, arrowMidline + 5, leftX + 15, arrowMidline);
         });
+    }
+
+    drawTranspilerOutput() {
+        const trayConfig = this.transpilerTray;
+        if (trayConfig.width < 200) return;
+
+        Renderer.push(this);
+        Renderer.translate(trayConfig.x, trayConfig.y);
+        Renderer.newRenderable(Layers.TrayBackground, () => {
+            stroke(0);
+            fill(Pipe.edgeColor);
+            rect(0, 0, trayConfig.width, trayConfig.height, 10, 0, 0, 10);
+        });
+
+        Renderer.translate(trayConfig.margin, trayConfig.lineGap);
+        for (const line of trayConfig.lines) {
+            Renderer.newRenderable(Layers.TrayBackground, () => {
+                textSize(trayConfig.fontSize);
+                stroke(0);
+                text(line, 0, 0);
+            });
+
+            Renderer.translate(0, trayConfig.lineGap);
+        }
+
+        Renderer.pop(this);
     }
 
     removeMachine(key) {
