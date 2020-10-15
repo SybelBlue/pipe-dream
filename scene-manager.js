@@ -36,12 +36,17 @@ const SceneManager = {
     draw() {
         if (!this.editor) return;
 
-        if (this.editable) {
-            this.tray.draw();
-            this.editor.draw();
-            this.drawHeaderButtons();
-        } else {
-            TestManager.draw();
+        try {
+            if (this.editable) {
+                this.tray.draw();
+                this.editor.draw();
+                this.drawHeaderButtons();
+            } else {
+                TestManager.draw();
+            }
+        } catch (e) {
+            console.warn('Problem drawing');
+            console.error(e);
         }
 
         this.promptHeight = 0;
@@ -51,23 +56,28 @@ const SceneManager = {
             requestRescaleCanvas = true;
         }
 
-        const focused = Renderer.renderAll().found;
+        try {
+            const focused = Renderer.renderAll().found;
 
-        if (clickThisFrame) {
-            if (this.lastFocused && this.lastFocused != focused) {
-                this.lastFocused.loseFocus && this.lastFocused.loseFocus();
+            if (clickThisFrame) {
+                if (this.lastFocused && this.lastFocused != focused) {
+                    this.lastFocused.loseFocus && this.lastFocused.loseFocus();
+                }
+
+                this.lastFocused = focused;
+
+                if (focused) {
+                    focused.gainFocus && focused.gainFocus();
+                } else {
+                    SceneManager.tray.loadMachineOptions();
+                }
             }
-
-            this.lastFocused = focused;
-
-            if (focused) {
-                focused.gainFocus && focused.gainFocus();
-            } else {
-                SceneManager.tray.loadMachineOptions();
-            }
+        } catch (e) {
+            console.warn('Problem rendering');
+            console.error(e);
+        } finally {
+            Renderer.clearStack();
         }
-
-        Renderer.clearStack();
     },
 
     drawHeaderButtons() {

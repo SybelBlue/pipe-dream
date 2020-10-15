@@ -27,7 +27,12 @@ function setup() {
     SceneManager.startLevel(levels[config.level], config.prompt);
 
     if (!SceneManager.unsafeMode) {
-        SceneManager.loadFromCache();
+        try {
+            SceneManager.loadFromCache();
+        } catch {
+            alert('Something went wrong loading stored session data, clearing.')
+            SceneManager.clear();
+        }
     }
 }
 
