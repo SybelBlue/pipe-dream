@@ -45,8 +45,8 @@ const SceneManager = {
                 TestManager.draw();
             }
         } catch (e) {
-            console.warn('Problem drawing');
             console.error(e);
+            SceneManager.suggestReload('problem rendering');
         }
 
         this.promptHeight = 0;
@@ -73,10 +73,16 @@ const SceneManager = {
                 }
             }
         } catch (e) {
-            console.warn('Problem rendering');
             console.error(e);
+            SceneManager.suggestReload('problem rendering');
         } finally {
             Renderer.clearStack();
+        }
+    },
+
+    suggestReload(issue) {
+        if (confirm(`There has been a ${issue}.\nWe recommend reloading the page, your data should be saved.\nMore details are in the console.`)) {
+            location.reload();      
         }
     },
 

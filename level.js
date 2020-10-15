@@ -193,7 +193,7 @@ const levels = [
             Level.makeBall('purple', 80),
         ),
     new Level(BallTipe, BallTipe, test => test.filter(x => ['yellow', 'purple'].includes(x.color)).slice(0, 5).filter(x => x.size > 50).slice(0, 3))
-        .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy])
+        .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy, CountMachine.dummy])
         .withPrompt('Create a pipe that gives the first three balls with size greater than 50 from the first 5 yellow or purple balls.')
         .withTest(...[30, 40, 50, 60, 70, 80].map((n, i) => Level.makeBall(i % 2 == 0 ? 'yellow' : 'purple', n)))
         // both takes are closed
