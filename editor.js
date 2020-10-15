@@ -161,6 +161,10 @@ class Editor {
         return machine;
     }
 
+    clearPipeline() {
+        this.pipeline = new Pipeline();
+    }
+
     validatePipeline() {
         let currentTipe = this.startingTipe;
         for (let i = 0; i < this.pipeline.length; i++) {

@@ -126,9 +126,12 @@ const SceneManager = {
     actionStack: [],
     redoStack: [],
 
+    allowCaching: true,
+
     get cacheKey() { return (lens(SceneManager, 'level', 'number') || 'missing') + ''; },
 
     cache() {
+        if (!SceneManager.allowCaching) return;
         const pipeline = lens(SceneManager, 'editor', 'pipeline');
         if (!pipeline) return;
 
@@ -138,6 +141,7 @@ const SceneManager = {
         if (lastData == data) return;
 
         SceneManager.actionStack.push(lastData);
+        SceneManager.redoStack = [];
         localStorage.setItem(SceneManager.cacheKey, data);
     },
     
@@ -148,6 +152,7 @@ const SceneManager = {
     loadFromCache() {
         const pipeline = SceneManager.retrieve();
         if (!pipeline) return;
+        SceneManager.editor.clearPipeline();
         SceneManager.editor.pipeline.recieveCacheData(pipeline);
     },
 
@@ -156,7 +161,9 @@ const SceneManager = {
         const last = this.actionStack.pop();
         this.redoStack.push(SceneManager.retrieve());
         localStorage.setItem(SceneManager.cacheKey, last);
-        SceneManager.loadFromCache();
+        SceneManager.allowCaching = false;
+        try { SceneManager.loadFromCache(); }
+        finally { SceneManager.allowCaching = true; }
     },
 
     redo() {
@@ -164,6 +171,8 @@ const SceneManager = {
         const next = this.redoStack.pop();
         this.actionStack.push(SceneManager.retrieve());
         localStorage.setItem(SceneManager.cacheKey, next);
-        SceneManager.loadFromCache();
+        SceneManager.allowCaching = false;
+        try { SceneManager.loadFromCache(); } 
+        finally { SceneManager.allowCaching = true; }
     }
 }
