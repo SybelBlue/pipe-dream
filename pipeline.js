@@ -44,6 +44,11 @@ class Pipeline extends Array /* of Machines */ {
     }
 
     push(machine) {
+        if (!(machine instanceof Machine)) {
+            console.warn('Tried pushing non-machine to pipeline');
+            return false;
+        }
+        
         if (this.terminalMachine) {
             if (machine.isTerminal) {
                 this[this.length - 1] = machine;
