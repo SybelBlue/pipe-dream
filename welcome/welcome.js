@@ -74,7 +74,9 @@ function draw() {
 }
 
 function loadLevel() {
-    window.location = 'https://sybelblue.github.io/pipe-dream/';
+    let level = localStorage.getItem('last-level');
+    if (exists(level)) window.updateQueryStringParameter('l', level);
+    window.location.pathname = '/pipe-dream/';
 }
 
 function windowResized() { 

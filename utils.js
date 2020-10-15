@@ -44,7 +44,11 @@ function updateQueryStringParameter(key, value) {
 }
 
 // reloads site!
-function updateLevelNumber(value) { updateQueryStringParameter('l', value); }
+function updateLevelNumber(value) {
+    if (typeof(value) !== typeof(0)) return;
+    updateQueryStringParameter('l', value);
+    localStorage.setItem('last-level', value);
+}
 function updatePromptDisplay(value) { updateQueryStringParameter('p', value); }
 
 function extendLiteral(obj, overrides)  {
