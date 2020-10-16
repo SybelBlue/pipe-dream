@@ -237,6 +237,7 @@ const SceneManager = {
 
     clear() {
         SceneManager.editor.clearPipeline();
+        SceneManager.tray.loadMachineOptions();
         SceneManager.cache();
     }
 }
