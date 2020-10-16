@@ -169,9 +169,9 @@ const levels = [
             Level.makeBall('blue', 50),
             Level.makeBall('purple', 80),
         ),
-    new ReductionLevel(BallTipe, NumberTipe, test => test.filter(x => ['red', 'green', 'blue'].includes(x.color)).length)
+    new ReductionLevel(BallTipe, NumberTipe, test => test.filter(x => ['red', 'yellow', 'blue'].includes(x.color)).length)
         .withMachines(() => [MapMachine.dummy, FilterMachine.dummy, TakeMachine.dummy, CountMachine.dummy])
-        .withPrompt('Use the machines to create a pipe that counts how many balls have primary colors (red, green, or blue).')
+        .withPrompt('Use the machines to create a pipe that counts how many balls have primary colors (red, yellow, or blue).')
         .withTest(...[30, 40, 50, 60].map((n, i) => Level.makeBall(i % 2 ? 'red' : 'blue', n)))
         .withTest(
             Level.makeBall('red', 30),
