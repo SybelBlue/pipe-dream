@@ -56,7 +56,7 @@ const Renderer = {
     },
 
     // assumes monospaced font!
-    textToLines(rawText, textSize, maxWidth, font=this.defaultFont) {
+    textToLines(rawText, textSize, maxWidth, font=this.defaultFont, hypenateOnOverflow=true) {
         const charWidth = Renderer.textWidth(' ', textSize, font);
         const charsInLine = floor(maxWidth / charWidth);
         if (charsInLine <= 1) return null;
@@ -72,8 +72,13 @@ const Renderer = {
                         current = '';
                     }
 
-                    output.push(word.substring(0, charsInLine - 1) + '-');
-                    line[i] = word.substring(charsInLine - 1);
+                    if (hypenateOnOverflow) {
+                        output.push(word.substring(0, charsInLine - 1) + '-');
+                        line[i] = word.substring(charsInLine - 1);
+                    } else {
+                        output.push(word.substring(0, charsInLine));
+                        line[i] = word.substring(charsInLine);
+                    }
                     continue;
                 }
 

@@ -10,26 +10,6 @@ class Editor {
 
     static get pipelineMidline() { return Editor.gutterSize + Machine.width / 2; }
 
-    get transpilerTray() {
-        const out = {
-            x: Editor.gutterSize + Machine.width * 2,
-            y: Editor.darkMargin * 2,
-            margin: 10,
-            fontSize: 14
-        };
-
-        out.width = this.width - out.x;
-        out.lineGap = Renderer.textHeight(out.fontSize) + 4;
-        
-        const text = SceneManager.transpiled + (this.pipeline.length ? '' : '...');
-        out.lines = Renderer.textToLines(text, out.fontSize, out.width - 2 * out.margin);
-
-        const linesHeight = (out.lines.length + 1) * out.lineGap;
-        out.height = windowHeight < linesHeight ? this.height - out.y : linesHeight;
-
-        return out;
-    }
-
     _keyCount = 0;
 
     get outputTipe() { return this.pipeline.outputTipe || this.startingTipe; }
@@ -115,7 +95,44 @@ class Editor {
     }
 
     drawTranspilerOutput() {
-        const trayConfig = this.transpilerTray;
+        if (!this.pipeline.length) return;
+
+        const trayConfig = {
+            x: Editor.gutterSize + Machine.width * 2,
+            y: Editor.darkMargin * 2,
+            margin: 10,
+            fontSize: 14
+        };
+
+        trayConfig.width = this.width - trayConfig.x;
+        trayConfig.lineGap = Renderer.textHeight(trayConfig.fontSize) + 4;
+        trayConfig.textWidth = trayConfig.width - 4.5 * trayConfig.margin;
+
+        const promptLines = Renderer.textToLines('\nPrompt:\n' + SceneManager.level.prompt + '\n', trayConfig.fontSize, trayConfig.textWidth);
+        if (promptLines.length == 1) {
+            promptLines[0] = '// ' + promptLines[0];
+        } else for (let i = 0; i < promptLines.length; i++) {
+            const line = promptLines[i];
+            if (i == 0) {
+                promptLines[i] = '/**' + line;
+            } else if (i == promptLines.length - 1) {
+                promptLines[i] = ' */' + line;
+            } else {
+                promptLines[i] = ' * ' + line;
+            }
+        }
+        
+        const transpiledLines = Renderer.textToLines(SceneManager.transpiled, trayConfig.fontSize, trayConfig.textWidth, Renderer.defaultFont, false);
+        const justifiedLines = transpiledLines.map((line, i) => {
+            if (i == 0 || !line.length) return line;
+            return line[0] == '\t' ? line : '    ' + line;
+        })
+        trayConfig.lines = promptLines.concat(justifiedLines);
+
+
+        const linesHeight = (trayConfig.lines.length + 1) * trayConfig.lineGap;
+        trayConfig.height = windowHeight < linesHeight ? this.height - trayConfig.y : linesHeight;
+        
         if (trayConfig.width < 200) return;
 
         Renderer.push(this);
