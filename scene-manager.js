@@ -195,8 +195,8 @@ const SceneManager = {
 
         if (lastData == data) return;
 
-        if (SceneManager.actionStack.length > 1000) {
-            SceneManager.actionStack = SceneManager.actionStack.slice(SceneManager.actionStack.length - 990);
+        if (SceneManager.actionStack.length > 200) {
+            SceneManager.actionStack = SceneManager.actionStack.slice(SceneManager.actionStack.length - 190);
         }
 
         SceneManager.actionStack.push(lastData);
