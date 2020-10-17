@@ -3,6 +3,7 @@ class TakeMachine extends Machine {
 
     description = "A machine that only allows a certain number of things to pass through, then closes the pipe."
     finished = true;
+    resilient = true;
 
     get height() { return this.bodyHeight; }
     get bodyHeight() { return TakeMachine.inputBoxStart + this.inputBox.height + 10; }
@@ -49,6 +50,7 @@ class DropMachine extends Machine {
 
     description = "A machine that discards the first x objects that pass through it."
     finished = true;
+    resilient = true;
 
     get height() { return this.bodyHeight; }
 

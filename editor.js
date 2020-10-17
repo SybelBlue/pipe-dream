@@ -197,6 +197,7 @@ class Editor {
                     machine.inTipe = currentTipe;
                 } else {
                     this.pipeline = this.pipeline.slice(0, i);
+                    SceneManager.tray.loadMachineOptions();
                     break;
                 }
             }
@@ -204,5 +205,21 @@ class Editor {
         }
 
         SceneManager.cache();
+    }
+
+    swapUp(machine) {
+        if (machine.isTerminal) return;
+        let i = this.pipeline.findIndex(m => machine.key === m.key);
+        if (i <= 0 || i >= this.pipeline.length) return;
+        Array.swap(this.pipeline, i - 1);
+        this.validatePipeline();
+    }
+
+    swapDown(machine) {
+        let i = this.pipeline.findIndex(m => machine.key === m.key);
+        if (i < 0 || i >= this.pipeline.length - 1) return;
+        if (i == this.pipeline.length - 2 && exists(this.pipeline.terminalMachine)) return;
+        Array.swap(this.pipeline, i);
+        this.validatePipeline();
     }
 }

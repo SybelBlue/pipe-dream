@@ -24,6 +24,11 @@ class Machine {
     static deleteButtonWidth = 15;
     static deleteButtonIndent = Machine.width - Machine.deleteButtonWidth - 10;
     static deleteButtonMidline = Machine.bodyHeight / 2;
+    
+    static swapButtonHeight = Machine.deleteButtonWidth;
+    static swapButtonWidth = Machine.deleteButtonWidth * 1.25;
+    static swapButtonMidline = Machine.deleteButtonMidline;
+    static swapButtonStart = -Machine.swapButtonWidth - 3;
 
     get height() { return Machine.bodyHeight; }
     get bodyHeight() { return Machine.bodyHeight; }
@@ -41,6 +46,8 @@ class Machine {
     resilient = false;
     isGreedy = false;
     isDummy = true;
+    
+    drawSwapButtons = true;
     exclaimFrames = 0;
 
     get inTipe() { return this._inTipe; }
@@ -105,29 +112,56 @@ class Machine {
                     text('!', -30, 25 + 15);
                 }
 
-                if (SceneManager.editable && !this.isDummy && regions.body.hovering) {
-                    noStroke();
-                    textSize(16)
-                    text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
+                if (SceneManager.editable && !this.isDummy) {
+                    if (regions.body.hovering) {
+                        noStroke();
+                        textSize(16)
+                        text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
 
-                    stroke(255, 20, 20);
-                    strokeWeight(5);
-                    const halfWidth = Machine.deleteButtonWidth / 2;
-                    line(
-                        Machine.deleteButtonIndent, Machine.deleteButtonMidline - halfWidth, 
-                        Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline + halfWidth
-                    );
-                    line(
-                        Machine.deleteButtonIndent, Machine.deleteButtonMidline + halfWidth, 
-                        Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline - halfWidth
-                    );
+                        stroke(255, 20, 20);
+                        strokeWeight(5);
+                        const halfWidth = Machine.deleteButtonWidth / 2;
+                        line(
+                            Machine.deleteButtonIndent, Machine.deleteButtonMidline - halfWidth, 
+                            Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline + halfWidth
+                        );
+                        line(
+                            Machine.deleteButtonIndent, Machine.deleteButtonMidline + halfWidth, 
+                            Machine.deleteButtonIndent + Machine.deleteButtonWidth, Machine.deleteButtonMidline - halfWidth
+                        );
+                    }
+
+                    if (!this.drawSwapButtons) return;
+
+                    if (regions.body.hovering || regions.swapUpButton.hovering || regions.swapDownButton.hovering) {
+                        fill(20);
+                        noStroke();
+                        triangle(
+                            Machine.swapButtonStart, Machine.swapButtonMidline - 1,
+                            Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline - 1,
+                            Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline - Machine.swapButtonHeight
+                        );
+                        triangle(
+                            Machine.swapButtonStart, Machine.swapButtonMidline + 1,
+                            Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline + 1,
+                            Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline + Machine.swapButtonHeight
+                        );
+                    }
+                    if (regions.swapUpButton.clicked) {
+                        SceneManager.editor.swapUp(this);
+                    }
+                    if (regions.swapDownButton.clicked) {
+                        SceneManager.editor.swapDown(this);
+                    }
                 }
             },
             Renderer.regionStub('body', 0, 0, Machine.width, this.bodyHeight),
             Renderer.regionStub('deleteButton', 
                 Machine.deleteButtonIndent, Machine.deleteButtonMidline - Machine.deleteButtonWidth/2, 
                 20, 20, 
-                false)
+                false),
+            Renderer.regionStub('swapUpButton', Machine.swapButtonStart, Machine.swapButtonMidline - Machine.swapButtonHeight, -Machine.swapButtonStart, Machine.swapButtonHeight),
+            Renderer.regionStub('swapDownButton', Machine.swapButtonStart, Machine.swapButtonMidline, -Machine.swapButtonStart, Machine.swapButtonHeight)
         );
     }
 

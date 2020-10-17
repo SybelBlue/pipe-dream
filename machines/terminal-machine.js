@@ -10,9 +10,10 @@ class TerminalMachine extends Machine {
             configurable: true,
             get() { return this.outputTipe; },
         });
-        Object.defineProperty(obj, 'isTerminal', { configurable: true, writable: true, value: true })
-        Object.defineProperty(obj, 'finished', { configurable: true, writable: true, value: true })
-        Object.defineProperty(obj, 'resilient', { configurable: true, writable: true, value: true })
+        Object.defineProperty(obj, 'isTerminal', { configurable: true, writable: true, value: true });
+        Object.defineProperty(obj, 'finished', { configurable: true, writable: true, value: true });
+        Object.defineProperty(obj, 'resilient', { configurable: true, writable: true, value: true });
+        Object.defineProperty(obj, 'drawSwapButtons', { configurable: true, writable: true, value: false });
         Object.defineProperty(obj, 'closedPipeline', { configurable: true, writable: true, value: false });
     }
 }

@@ -1,9 +1,16 @@
-Array.last = function (arr) {
+Array.last = function(arr) {
     return arr && arr.length ? arr[arr.length - 1] : null;
 }
 
-Array.sum = function (arr) {
+Array.sum = function(arr) {
     return arr ? arr.reduce(function(sum, next) { return sum + next}, 0) : 0;
+}
+
+Array.swap = function(arr, i, j=null) {
+    j = exists(j) ? j : i + 1;
+    const old = arr[i];
+    arr[i] = arr[j];
+    arr[j] = old;
 }
 
 function exists(item, _throw=false) {
