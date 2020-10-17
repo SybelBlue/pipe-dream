@@ -95,8 +95,6 @@ class Editor {
     }
 
     drawTranspilerOutput() {
-        if (!this.pipeline.length) return;
-
         const trayConfig = {
             x: Editor.gutterSize + Machine.width * 2,
             y: Editor.darkMargin * 2,
