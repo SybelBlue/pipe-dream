@@ -207,19 +207,27 @@ class Editor {
         SceneManager.cache();
     }
 
+    canSwapUp(machine) {
+        if (machine.isTerminal) return false;
+        const i = this.pipeline.findIndex(m => machine.key === m.key);
+        return 0 < i && i < this.pipeline.length;
+    }
+
     swapUp(machine) {
-        if (machine.isTerminal) return;
-        let i = this.pipeline.findIndex(m => machine.key === m.key);
-        if (i <= 0 || i >= this.pipeline.length) return;
-        Array.swap(this.pipeline, i - 1);
+        if (!this.canSwapUp(machine)) return;
+        Array.swap(this.pipeline, this.pipeline.findIndex(m => machine.key === m.key) - 1);
         this.validatePipeline();
     }
 
+    canSwapDown(machine) {
+        const i = this.pipeline.findIndex(m => machine.key === m.key);
+        if (i < 0 || i >= this.pipeline.length - 1) return false;
+        return !(i == this.pipeline.length - 2 && exists(this.pipeline.terminalMachine));
+    }
+
     swapDown(machine) {
-        let i = this.pipeline.findIndex(m => machine.key === m.key);
-        if (i < 0 || i >= this.pipeline.length - 1) return;
-        if (i == this.pipeline.length - 2 && exists(this.pipeline.terminalMachine)) return;
-        Array.swap(this.pipeline, i);
+        if (!this.canSwapDown(machine)) return;
+        Array.swap(this.pipeline, this.pipeline.findIndex(m => machine.key === m.key));
         this.validatePipeline();
     }
 }

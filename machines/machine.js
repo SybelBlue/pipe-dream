@@ -136,16 +136,20 @@ class Machine {
                     if (regions.body.hovering || regions.swapUpButton.hovering || regions.swapDownButton.hovering) {
                         fill(20);
                         noStroke();
-                        triangle(
-                            Machine.swapButtonStart, Machine.swapButtonMidline - 1,
-                            Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline - 1,
-                            Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline - Machine.swapButtonHeight
-                        );
-                        triangle(
-                            Machine.swapButtonStart, Machine.swapButtonMidline + 1,
-                            Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline + 1,
-                            Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline + Machine.swapButtonHeight
-                        );
+                        if (SceneManager.editor.canSwapUp(this)) {
+                            triangle(
+                                Machine.swapButtonStart, Machine.swapButtonMidline - 1,
+                                Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline - 1,
+                                Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline - Machine.swapButtonHeight
+                            );
+                        }
+                        if (SceneManager.editor.canSwapDown(this)) {
+                            triangle(
+                                Machine.swapButtonStart, Machine.swapButtonMidline + 1,
+                                Machine.swapButtonStart + Machine.swapButtonWidth, Machine.swapButtonMidline + 1,
+                                Machine.swapButtonStart + Machine.swapButtonWidth/2, Machine.swapButtonMidline + Machine.swapButtonHeight
+                            );
+                        }
                     }
                     if (regions.swapUpButton.clicked) {
                         SceneManager.editor.swapUp(this);
