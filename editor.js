@@ -103,35 +103,39 @@ class Editor {
         };
 
         trayConfig.width = this.width - trayConfig.x;
+        
+        if (trayConfig.width < 200) return;
+
         trayConfig.lineGap = Renderer.textHeight(trayConfig.fontSize) + 4;
         trayConfig.textWidth = trayConfig.width - 4.5 * trayConfig.margin; // + 2.5*margin for the javadoc/spacing prefixes
 
-        const javaDocs = Renderer.textToLines(`\nTodo:\n${SceneManager.level.prompt}\n`, trayConfig.fontSize, trayConfig.textWidth);
-        if (javaDocs.length == 1) {
-            javaDocs[0] = '// ' + javaDocs[0];
-        } else for (let i = 0; i < javaDocs.length; i++) {
-            const line = javaDocs[i];
-            if (i == 0) {
-                javaDocs[i] = '/**' + line;
-            } else if (i == javaDocs.length - 1) {
-                javaDocs[i] = ' */' + line;
-            } else {
-                javaDocs[i] = ' * ' + line;
-            }
-        }
+        const rawJavaDocs = Renderer.textToLines(
+            `\nTODO:\n${SceneManager.level.prompt}\n`, 
+            trayConfig.fontSize, 
+            trayConfig.textWidth
+        );
+        const javaDocs = rawJavaDocs.map((line, i) => {
+            if (i == 0) return (rawJavaDocs.length == 1 ? '//' : '/**') + line;
+            if (i == rawJavaDocs.length - 1) return ' */' + line;
+            return ' * ' + line;
+        });
         
-        const transpiledLines = Renderer.textToLines(`return ${SceneManager.transpiled};`, trayConfig.fontSize, trayConfig.textWidth, Renderer.defaultFont, false);
-        const justifiedLines = transpiledLines.map((line, i) => {
-            if (i == 0 || !line.length) return line;
-            return line[0] == '\t' ? line : '    ' + line;
-        })
-        trayConfig.lines = javaDocs.concat(justifiedLines);
+        const transpiledLines = 
+            Renderer.textToLines(
+                `return ${SceneManager.transpiled};`, 
+                trayConfig.fontSize, 
+                trayConfig.textWidth, 
+                Renderer.defaultFont, 
+                false
+            ).map((line, i) => {
+                if (i == 0 || !line.length) return line;
+                return line[0] == '\t' ? line : '    ' + line;
+            });
+        trayConfig.lines = javaDocs.concat(transpiledLines);
 
 
         const linesHeight = (trayConfig.lines.length + 1) * trayConfig.lineGap;
         trayConfig.height = windowHeight < linesHeight ? this.height - trayConfig.y : linesHeight;
-        
-        if (trayConfig.width < 200) return;
 
         Renderer.push(this);
         Renderer.translate(trayConfig.x, trayConfig.y);
