@@ -110,21 +110,32 @@ class StackedMachine extends Machine {
     process(values) { return values.map(x => this.apply(x)).filter(x => exists(x, false)); }
 
     transpile() {
+        const inFunc = this.inTipe.isFunctionTipe;
+        const inVarName = inFunc ? 'f' : this.inTipe.variableName;
+
         if (this.methodStack.length === 0) {
             // import java.util.function.Function
-            return `${this.transpileText}(ball -> ball /* does nothing */)`;
+            return `${this.transpileText}(${inVarName} -> ${inVarName} /* does nothing */)`;
         }
+        const suffix = ')';
+        const methodStackStr = this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '');
+
         if (this.methodStack.length === 1) {
+            if (inFunc) {
+                return this.transpileText + `(f -> f.apply` + methodStackStr + suffix;
+            }
             return `${this.transpileText}(${this.methodStack[0].transpile(true)})`;
         }
-        const prefix = `${this.transpileText}(${this.inTipe.variableName} -> `;
-        const methodStackStr = this.inTipe.variableName + this.methodStack.reduce((prev, method, i) => prev + method.transpile(false, i < this.methodStack.length - 1), '');
-        if (this.outputTipe.isFunctionTipe) {
+        
+        const prefix = `${this.transpileText}(${inVarName} -> ${inFunc ? 'f.apply' : ''}`;
+        
+        if ((this.innerOutputTipe || this.outputTipe).isFunctionTipe) {
             const paramTipe = this.outputTipe.inTipe;
             const fVarName = paramTipe.variableName;
-            return`${prefix}(Function<${paramTipe.name}, ${this.outputTipe.outTipe.name}>) (${fVarName} -> ${methodStackStr}(${fVarName})))`;
+            return prefix + `(Function<${paramTipe.name}, ${this.outputTipe.outTipe.name}>) (${fVarName} -> ${inVarName + methodStackStr}(${fVarName}))` + suffix;
         }
-        return prefix + methodStackStr + ')';
+
+        return prefix + (inFunc ? '' : inVarName) + methodStackStr + suffix;
     }
 
     get cacheData() {
