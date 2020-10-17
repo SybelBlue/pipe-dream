@@ -115,8 +115,8 @@ class Machine {
                 if (SceneManager.editable && !this.isDummy) {
                     if (regions.body.hovering) {
                         noStroke();
-                        textSize(16)
-                        text(`(${this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
+                        textSize(16);
+                        text(`(${this.inTipe.isFunctionTipe ? `f(${this.inTipe.inTipe.variableName})` : this.inTipe.variableName})`, 20 + Renderer.textWidth(this.text, 26), 30);
 
                         stroke(255, 20, 20);
                         strokeWeight(5);
