@@ -104,28 +104,28 @@ class Editor {
 
         trayConfig.width = this.width - trayConfig.x;
         trayConfig.lineGap = Renderer.textHeight(trayConfig.fontSize) + 4;
-        trayConfig.textWidth = trayConfig.width - 4.5 * trayConfig.margin;
+        trayConfig.textWidth = trayConfig.width - 4.5 * trayConfig.margin; // + 2.5*margin for the javadoc/spacing prefixes
 
-        const promptLines = Renderer.textToLines('\nPrompt:\n' + SceneManager.level.prompt + '\n', trayConfig.fontSize, trayConfig.textWidth);
-        if (promptLines.length == 1) {
-            promptLines[0] = '// ' + promptLines[0];
-        } else for (let i = 0; i < promptLines.length; i++) {
-            const line = promptLines[i];
+        const javaDocs = Renderer.textToLines(`\nTodo:\n${SceneManager.level.prompt}\n`, trayConfig.fontSize, trayConfig.textWidth);
+        if (javaDocs.length == 1) {
+            javaDocs[0] = '// ' + javaDocs[0];
+        } else for (let i = 0; i < javaDocs.length; i++) {
+            const line = javaDocs[i];
             if (i == 0) {
-                promptLines[i] = '/**' + line;
-            } else if (i == promptLines.length - 1) {
-                promptLines[i] = ' */' + line;
+                javaDocs[i] = '/**' + line;
+            } else if (i == javaDocs.length - 1) {
+                javaDocs[i] = ' */' + line;
             } else {
-                promptLines[i] = ' * ' + line;
+                javaDocs[i] = ' * ' + line;
             }
         }
         
-        const transpiledLines = Renderer.textToLines(SceneManager.transpiled, trayConfig.fontSize, trayConfig.textWidth, Renderer.defaultFont, false);
+        const transpiledLines = Renderer.textToLines(`return ${SceneManager.transpiled};`, trayConfig.fontSize, trayConfig.textWidth, Renderer.defaultFont, false);
         const justifiedLines = transpiledLines.map((line, i) => {
             if (i == 0 || !line.length) return line;
             return line[0] == '\t' ? line : '    ' + line;
         })
-        trayConfig.lines = promptLines.concat(justifiedLines);
+        trayConfig.lines = javaDocs.concat(justifiedLines);
 
 
         const linesHeight = (trayConfig.lines.length + 1) * trayConfig.lineGap;
