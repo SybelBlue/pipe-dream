@@ -29,20 +29,30 @@ class StackedMachine extends Machine {
         // draw body
         super.draw();
 
-        Renderer.newRenderable(this.drawLayer, () => {
-            noStroke();
+        const tailHeight = this.height - StackedMachine.tailHeight;
+        Renderer.newRenderable(this.drawLayer, 
+            regions => {
+                noStroke();
 
-            // clean interior
-            fill(this.innerBackgroundColor);
-            rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
+                // clean interior
+                fill(this.innerBackgroundColor);
+                rect(0, Machine.bodyHeight, Machine.width, this.innerHeight);
 
-            // draw arm
-            fill(this.color);
-            rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
+                // draw arm
+                fill(this.color);
+                rect(0, Machine.bodyHeight, Machine.bodyIndent, this.innerHeight);
 
-            // draw tail
-            rect(0, this.height - StackedMachine.tailHeight, Machine.width, StackedMachine.tailHeight, 0, 10, 10, 10);
-        });
+                // draw tail
+                rect(0, tailHeight, Machine.width, StackedMachine.tailHeight, 0, 10, 10, 10);
+
+                if (SceneManager.editable && !this.isDummy && regions.tail.clicked) {
+                    const lastMethod = Array.last(this.methodStack);
+                    const trayTipe = lastMethod ? lastMethod.outTipe : this.inTipe;
+                    SceneManager.tray.loadOptionsFor(trayTipe, this, this.methodStack.length - 1);
+                }
+            },
+            Renderer.regionStub('tail', 0, tailHeight, Machine.width, StackedMachine.tailHeight)
+        );
 
         // draw fragment stack
         Renderer.temporary(this, Machine.bodyIndent, Machine.bodyHeight, () => this.drawFragmentStack());

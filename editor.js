@@ -79,18 +79,20 @@ class Editor {
     drawIndicator() {
         const selectedMachine = lens(SceneManager, 'tray', 'mode', 'selectedMachine');
         const fragmentIndex = lens(SceneManager, 'tray', 'mode', 'fragmentIndex');
+        
         if ((!selectedMachine && this.pipeline.terminalMachine) || lens(selectedMachine, 'isTerminal')) return;
+
         const targetStart = this.pipeline.positionOf(selectedMachine);
         const arrowMidline = targetStart ? targetStart + selectedMachine.indicatorOffset(fragmentIndex) : this.pipeline.height;
         const bobOffset = 3 * sin(frameCount / 10);
-        const leftX = Editor.gutterSize - 20 + bobOffset;
+        const rightX = Editor.gutterSize + bobOffset + (SceneManager.tray.isFragmentMode ? Machine.bodyIndent - 2 : 0);
         Renderer.newRenderable(Layers.UI, () => {
             fill(0);
             stroke(0);
             strokeWeight(4);
-            line(Tray.maxWidth, arrowMidline, leftX + 15, arrowMidline);
-            line(leftX + 5, arrowMidline - 5, leftX + 15, arrowMidline);
-            line(leftX + 5, arrowMidline + 5, leftX + 15, arrowMidline);
+            line(Tray.maxWidth, arrowMidline, rightX, arrowMidline);
+            line(rightX - 5, arrowMidline - 5, rightX, arrowMidline);
+            line(rightX - 5, arrowMidline + 5, rightX, arrowMidline);
         });
     }
 

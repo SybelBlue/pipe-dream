@@ -3,6 +3,15 @@ class Tray {
     static indent = 10;
     static get backgroundColor() { return color(20, 20, 25); }
 
+    static modes = {
+        MACHINE: 'machine',
+        FRAGMENT: 'fragment'
+    };
+
+    get isFragmentMode() {
+        return lens(this.mode, 'type') === Tray.modes.FRAGMENT;
+    }
+
     drawable = [];
     mode = null;
 
@@ -18,7 +27,9 @@ class Tray {
         for (const option of this.drawable) {
             option.draw(() => this.optionClicked(option), true);
             Renderer.translate(0, option.height + 10);
-            if (this.mode.type !== 'fragment') continue;
+            
+            if (this.mode.type !== Tray.modes.FRAGMENT) continue;
+
             const varName = option.outTipe.variableName;
             const textHeight = Renderer.textHeight(16);
             const start = Tray.maxWidth - 2 * Tray.indent - Renderer.textWidth(varName, 16);
@@ -35,7 +46,7 @@ class Tray {
 
     loadOptionsFor(tipe={methods:[]}, machine, index) {
         this.mode = {
-            type: 'fragment',
+            type: Tray.modes.FRAGMENT,
             selectedMachine: machine,
             fragmentIndex: index,
             reducable: tipe.reductions && machine.isReduce,
@@ -50,7 +61,7 @@ class Tray {
 
     loadMachineOptions() {
         this.mode = { 
-            type: 'machine', 
+            type: Tray.modes.MACHINE, 
             reducable: Boolean(lens(SceneManager.editor, 'outputTipe', 'reductions')), 
         };
         this.drawable = lens(SceneManager.editor, 'pipeline', 'terminalMachine') ? [] : SceneManager.level.machines.filter(m => SceneManager.unsafeMode || !m.isReduce || this.mode.reducable);
@@ -58,11 +69,11 @@ class Tray {
 
     optionClicked(option) {
         if (!this.mode) return;
-        if (this.mode.type === 'fragment') {
+        if (this.mode.type === Tray.modes.FRAGMENT) {
             if (this.mode.selectedMachine) {
                 this.mode.selectedMachine.pushFragment(option, this.mode.fragmentIndex);
             }
-        } else if (this.mode.type === 'machine') {
+        } else if (this.mode.type === Tray.modes.MACHINE) {
             console.log('something weird happened');
         }
     }
