@@ -140,10 +140,7 @@ class TipeReduction extends TipeMethod {
     }
 
     transpile(_asRef=false) {
-        if (!_asRef) {
-            console.warn('Cannot deref a TipeReduction!');
-        }
-        return `${this.inTipe.name}::${this.name}`
+        return `${this.inTipe.name}::${this.name}`;
     }
 }
 
