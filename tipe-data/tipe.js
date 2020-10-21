@@ -36,6 +36,10 @@ const Tipe = {
 
     equals(other) {
         return exists(other) && other.name === this.name;
+    },
+
+    toString(_value) {
+        return this.name;
     }
 }
 

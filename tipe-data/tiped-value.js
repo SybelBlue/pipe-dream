@@ -11,6 +11,10 @@ class TipedValue {
         }
     }
 
+    toString() {
+        return this.tipe.toString(this);
+    }
+
     draw() { this.tipe.draw(this); }
 
     clone() { return new TipedValue(this.tipe, this.constructorArgs); }

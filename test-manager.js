@@ -118,13 +118,40 @@ const TestManager = {
         this.canContinue = false;
         this.exittingValues = {};
         this.currentSolutions = SceneManager.level.tests.map(t => SceneManager.editor.pipeline.process(t));
-        this.passedTests = this.currentSolutions.map((sol, i) => {
+        this.testResults = this.currentSolutions.map((sol, i) => {
             const solution = SceneManager.level.solutions[i];
             if (!(solution instanceof Array)) {
-                return solution.equals && solution.equals(sol);
+                return { 
+                    passed: solution.equals(sol), 
+                    error: 'direct-comparison', 
+                    expected: solution, 
+                    got: sol,
+                    msg: `Expected ${solution.toString()}, got ${sol.toString()}`
+                };
             }
-            return solution.length === sol.length && solution.every((s, j) => s.equals(sol[j]));
+            if (solution.length !== sol.length) {
+                return { 
+                    passed: false,
+                    error: 'length',
+                    expected: solution.length,
+                    got: sol.length,
+                    msg: `Expected ${solution.length} items to pass through the pipe, got ${sol.length}`
+                };
+            }
+            
+            const index = solution.findIndex((s, j) => !s.equals(sol[j]));
+            return index < 0 ?
+                { passed: true } :
+                { 
+                    passed: false, 
+                    error: 'comparison', 
+                    index: index, 
+                    expected: solution[index], 
+                    got: sol[index],
+                    msg: `Expected the ${''} item to be ${solution.toString()}, got ${sol.toString()}`
+                };
         });
+        this.passedTests = this.testResults.map(result => result.passed);
         this.runTest(0);
     },
 
