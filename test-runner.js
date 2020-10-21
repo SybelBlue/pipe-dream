@@ -1,8 +1,7 @@
 class TestRunner {
     static darkMargin = 300;
-    static speed = 4;
 
-    speed = TestRunner.speed;
+    get speed() { return TestManager.speed; }
     currentItem = null;
     output = [];
 
@@ -113,7 +112,7 @@ class TestRunner {
                     () => tipedValue.draw(), 
                     [0, -Tipe.maxDrawWidth],
                     [0, Pipe.height],
-                    this.speed,
+                    () => this.speed,
                     () => this.currentEnteredMachine(0)),
             }
         }
@@ -151,7 +150,7 @@ class TestRunner {
                 () => tipedValue.draw(), 
                 [0, start - StackedMachine.tailHeight], 
                 [0, start + Pipe.height], 
-                this.speed, 
+                () => this.speed, 
                 () => this.currentEnteredMachine(index + 1)
             ),
         };

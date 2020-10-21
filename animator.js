@@ -43,7 +43,7 @@ class LerpAnimator extends Animator {
                 this.dir = this.dir || [0, 1].map(i => (stop[i] - start[i]) / this.dist);
                 this.checkOps = this.checkOps || [0, 1].map(i => start[i] <= stop[i] ? min : max);
 
-                return [0, 1].map(i => this.checkOps[i](last[i] + this.dir[i] * speed, stop[i]));
+                return [0, 1].map(i => this.checkOps[i](last[i] + this.dir[i] * speed(), stop[i]));
             },
             curr => abs(curr[0] - stop[0]) <= 0.01 && abs(curr[1] - stop[1]) <= 0.01,
             callback
@@ -51,7 +51,6 @@ class LerpAnimator extends Animator {
 
         this.start = start;
         this.stop = stop;
-        this.speed = speed;
     }
 }
 

@@ -6,6 +6,10 @@ const TestManager = {
 
     canContinue: false,
 
+    get speed() {
+        return 4;
+    },
+
     get minHeight() {
         return lens(this.runner, 'height');
     },
@@ -127,7 +131,7 @@ const TestManager = {
                 this.testXOffset = offset;
             },
             0,
-            (offset) => offset - TestRunner.speed,
+            (offset) => offset - TestManager.speed,
             (offset) => offset <= -Editor.gutterSize,
             () => {
                 this.testXOffset = 0;
@@ -162,7 +166,7 @@ const TestManager = {
                 () => tipedValue.draw(),
                 [Editor.pipelineMidline, lens(this.runner, 'bottomMarginStart') || windowHeight - Editor.darkMargin],
                 [Editor.pipelineMidline, dimensions.height],
-                lens(this.runner, 'speed') || TestRunner.speed,
+                () => lens(this.runner, 'speed') || TestManager.speed,
                 () => delete this.exittingValues[key]
             );
     }
