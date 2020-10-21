@@ -88,17 +88,18 @@ const SceneManager = {
 
     drawHeaderButtons() {
         // constructs buttons right to left, updating nextStart each time
+        const flashing = SceneManager.editor.pipeTipeChecks ? 120 + 80 * sin(PI * frameCount / 32) : 80;
         let nextStart = this.drawHeaderButton(
             'Run', 
             windowWidth - 10, 
-            color(80, this.editor.pipeTipeChecks ? 250 : 150, 80), 
+            color(flashing, 250, flashing), 
             () => !this.prompt && TestManager.runLevel()
         ).start;
         
         nextStart = this.drawHeaderButton(
             'Prompt', 
             nextStart, 
-            this.editor.pipeTipeChecks ? color('#5C9EAD') : color(120, 210, 230),
+            color(120, 210, 230),
             () => this.showPrompt = true
         ).start;
 
