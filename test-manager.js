@@ -9,7 +9,7 @@ const TestManager = {
     fastForward: false,
 
     get speed() {
-        return this.fastForward ? 9 : 4;
+        return this.fastForward ? 12 : 4;
     },
 
     get minHeight() {
@@ -47,7 +47,7 @@ const TestManager = {
         for (var i = indexStart; i < min(indexStart + 4, SceneManager.level.tests.length); i++) {
             const test = SceneManager.level.tests[i];
             if (i !== this.testIndex || this.testXOffset !== 0) {
-                TestRunner.drawTestPreview(test); // make clickable
+                TestRunner.drawTestPreview(test);
             }
             Renderer.translate(slotWidth, 0);
         };
@@ -91,12 +91,30 @@ const TestManager = {
                 },
                 Renderer.regionStub('test', 0, 0, trayWidth - 20, height)
             );
-            Renderer.translate(0, height + 20)
+
+            Renderer.translate(0, height);
+
+            const result = this.testResults[i];
+            if (i < this.testIndex && !result.passed) {
+                const errorLines = Renderer.textToLines(result.msg, 18, trayWidth - margin);
+                const errorTextHeight = Renderer.textHeight(18);
+                for (const line of errorLines) {
+                    Renderer.newRenderable(Layers.UI, () => {
+                        fill(255);
+                        stroke(255);
+                        text(line, margin, errorTextHeight * 0.8);
+                    });
+                    Renderer.translate(0, errorTextHeight + 2);
+                }
+            }
+
+            Renderer.translate(0, 20);
         };
 
         if (this.canContinue) {
             Renderer.newUIButton('Next Level', color(80, 250, 80), () => updateLevelNumber((SceneManager.level.number + 1) % levels.length));
         }
+
         Renderer.pop(this);
     },
 
@@ -148,7 +166,7 @@ const TestManager = {
                     index: index, 
                     expected: solution[index], 
                     got: sol[index],
-                    msg: `Expected the ${''} item to be ${solution.asString()}, got ${sol.asString()}`
+                    msg: `Expected the ${ordinal(index + 1)} item to be ${solution[index].asString()}, got ${sol[index].asString()}`
                 };
         });
         this.passedTests = this.testResults.map(result => result.passed);

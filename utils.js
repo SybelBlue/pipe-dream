@@ -82,3 +82,17 @@ function lens(obj, ...lensLayers) {
 function robustMax(...objs) {
     return objs.length ? objs.filter(x => exists(x)).reduce((a, b) => a > b ? a : b) : null;
 }
+
+function ordinal(n) {
+    if (!exists(n) || Number.isNaN(n)) return n;
+    switch (floor(abs(n) % 10)) {
+        case 1:
+            return n + 'st';
+        case 2:
+            return n + 'nd';
+        case 3:
+            return n + 'rd';
+        default:
+            return n + 'th';
+    }
+}
