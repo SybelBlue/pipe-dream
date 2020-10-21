@@ -341,7 +341,7 @@ const ColorTipe = extendLiteral(Tipe, {
 
     drawShadow() { ColorTipe.draw(ColorTipe.new(), Layers.Shadow); },
 
-    asString(tipedColor) { return tipedColor.name; },
+    asString(tipedColor) { return tipedColor.name.asString(); },
 
     draw(color, layer=Layers.Data) {
         Renderer.newRenderable(layer, () => {
@@ -407,7 +407,7 @@ const BallTipe = extendLiteral(Tipe, {
         });
     },
 
-    asString(ball) { return `Ball(${ball.size.asString()}, ${ball.color.asString()})`; },
+    asString(ball) { return `Ball(${ball.size.asString()}, "${ball.color.asString()}")`; },
 
     draw(ball, layer=Layers.Data) {
         Renderer.newRenderable(layer, () => {
