@@ -38,7 +38,7 @@ const Tipe = {
         return exists(other) && other.name === this.name;
     },
 
-    toString(_value) {
+    asString(_value) {
         return this.name;
     }
 }
@@ -166,7 +166,9 @@ const BooleanTipe = extendLiteral(Tipe, {
 
     drawShadow() { TextTipe.draw('True/False', Layers.Shadow); },
 
-    draw(tipedBool) { TextTipe.draw(tipedBool.value ? 'True' : 'False'); },
+    draw(tipedBool) { TextTipe.draw(tipedBool.asString()); },
+
+    asString(tipedBool) { return tipedBool.value ? 'True' : 'False'; },
 
     shapeOutline(yOffset) {
         const halfWidth = Tipe.shapeHalfWidth * 0.8 + yOffset/2;
@@ -225,6 +227,8 @@ const NumberTipe = extendLiteral(Tipe, {
         Renderer.temporary(this, 0, -textAscent()/2, () => this.draw(this.shadowText, Layers.Shadow));
     },
 
+    asString(tipedNum) { return '' + tipedNum.value; },
+
     draw(tipedNum, layer=Layers.Data) {
         let num = exists(tipedNum.value) ? tipedNum.value : tipedNum;
         if (typeof(num) === typeof(0) && num > 9999) {
@@ -276,6 +280,8 @@ const TextTipe = extendLiteral(Tipe, {
     },
 
     drawShadow() { this.draw(this.shadowText, Layers.Shadow); },
+
+    asString(tipedStr) { return tipedStr.value; },
 
     draw(str, layer=Layers.Data) {
         str = str.value ? str.value : str;
@@ -335,6 +341,8 @@ const ColorTipe = extendLiteral(Tipe, {
 
     drawShadow() { ColorTipe.draw(ColorTipe.new(), Layers.Shadow); },
 
+    asString(tipedColor) { return tipedColor.name; },
+
     draw(color, layer=Layers.Data) {
         Renderer.newRenderable(layer, () => {
             fill(ColorTipe.asP5Color(color));
@@ -344,19 +352,19 @@ const ColorTipe = extendLiteral(Tipe, {
     }
 });
 
-const IDCardTipe = extendLiteral(Tipe, {
-    name: 'IDCard',
-    variableName: 'id',
-    get methods() {
-        return {
-            name: new TipeProperty('name', IDCardTipe, TextTipe),
-            age: new TipeProperty('age', IDCardTipe, NumberTipe),
-            eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
-        }
-    },
+// const IDCardTipe = extendLiteral(Tipe, {
+//     name: 'IDCard',
+//     variableName: 'id',
+//     get methods() {
+//         return {
+//             name: new TipeProperty('name', IDCardTipe, TextTipe),
+//             age: new TipeProperty('age', IDCardTipe, NumberTipe),
+//             eyes: new TipeProperty('eyes', IDCardTipe, ColorTipe),
+//         }
+//     },
 
-    new(defaults={}) { return new TipedValue(IDCardTipe, defaults); }
-});
+//     new(defaults={}) { return new TipedValue(IDCardTipe, defaults); }
+// });
 
 const BallTipe = extendLiteral(Tipe, {
     name: 'Ball',
@@ -398,6 +406,8 @@ const BallTipe = extendLiteral(Tipe, {
             arc(0, -radius * sin(deviation), 2 * radius, 2 * radius, deviation, PI - deviation, CHORD);
         });
     },
+
+    asString(ball) { return `Ball(${ball.size.asString()}, ${ball.color.asString()})`; },
 
     draw(ball, layer=Layers.Data) {
         Renderer.newRenderable(layer, () => {

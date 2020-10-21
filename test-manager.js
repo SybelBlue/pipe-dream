@@ -126,7 +126,7 @@ const TestManager = {
                     error: 'direct-comparison', 
                     expected: solution, 
                     got: sol,
-                    msg: `Expected ${solution.toString()}, got ${sol.toString()}`
+                    msg: `Expected ${solution.asString()}, got ${sol.asString()}`
                 };
             }
             if (solution.length !== sol.length) {
@@ -135,7 +135,7 @@ const TestManager = {
                     error: 'length',
                     expected: solution.length,
                     got: sol.length,
-                    msg: `Expected ${solution.length} items to pass through the pipe, got ${sol.length}`
+                    msg: `Expected ${solution.length} item${solution.length == 1 ? '' : 's'} to pass through the pipe, got ${sol.length}`
                 };
             }
             
@@ -148,7 +148,7 @@ const TestManager = {
                     index: index, 
                     expected: solution[index], 
                     got: sol[index],
-                    msg: `Expected the ${''} item to be ${solution.toString()}, got ${sol.toString()}`
+                    msg: `Expected the ${''} item to be ${solution.asString()}, got ${sol.asString()}`
                 };
         });
         this.passedTests = this.testResults.map(result => result.passed);

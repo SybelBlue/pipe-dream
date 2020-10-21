@@ -11,9 +11,7 @@ class TipedValue {
         }
     }
 
-    toString() {
-        return this.tipe.toString(this);
-    }
+    asString() { return this.tipe.asString(this); }
 
     draw() { this.tipe.draw(this); }
 
