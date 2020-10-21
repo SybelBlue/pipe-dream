@@ -6,8 +6,10 @@ const TestManager = {
 
     canContinue: false,
 
+    fastForward: false,
+
     get speed() {
-        return 4;
+        return this.fastForward ? 9 : 4;
     },
 
     get minHeight() {
@@ -59,6 +61,9 @@ const TestManager = {
         const start = windowWidth - Renderer.textWidth('Stop', 24) - 4 * margin;
         Renderer.temporary(this, start, margin, 
             () => Renderer.newUIButton('Stop', color(250, 80, 80), () => SceneManager.editable = true, margin));
+        const buttonText = this.fastForward ? 'Slow' : 'Fast';
+        Renderer.temporary(this, start - Renderer.textWidth(buttonText, 24) - 3 * margin, margin, 
+            () => Renderer.newUIButton(buttonText, color(80, this.fastForward ? 80 : 250, 80), () => TestManager.fastForward = !TestManager.fastForward, margin));
 
         Renderer.push(this);
         Renderer.translate(windowWidth - trayWidth, 2 * margin + textHeight + 2 * margin);
