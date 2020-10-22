@@ -72,7 +72,7 @@ const levels = [
         ),
     new Level(BallTipe, NumberTipe, test => test.map(x => x.size))
         .withMachines(() => [MapMachine.dummy])
-        .withPrompt('Use the map machine to turn each ball into its size!')
+        .withPrompt('Use the map machine to return the size of each ball!')
         .withTest(...[10, 20, 30, 40].map(n => Level.makeBall('blue', n)))
         .withTest(
             Level.makeBall('blue', 10),
