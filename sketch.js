@@ -6,7 +6,7 @@ const config = (function() {
     const urlParams = new URLSearchParams(window.location.search);
     const c  = {
         level: urlParams.get('l') || 1,
-        prompt: exists(urlParams.get('p')) && urlParams.get('p') == 'true',
+        prompt: exists(urlParams.get('p')) ? urlParams.get('p') == 'true' : true,
         unsafe: Boolean(urlParams.get('u')),
     };
     c.level = _min(_max(0, Number.parseInt(c.level)), levels.length - 1);
