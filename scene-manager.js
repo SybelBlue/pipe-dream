@@ -81,7 +81,7 @@ const SceneManager = {
     },
 
     suggestReload(issue) {
-        if (confirm(`There has been a ${issue}.\nWe recommend reloading the page, your data should be saved.\nMore details are in the console.`)) {
+        if (confirm(`There has been a ${issue}.\nWe recommend reloading the page, your data should be saved.\nMore details are in the console.\nPress Ok to reload.`)) {
             location.reload();      
         }
     },
